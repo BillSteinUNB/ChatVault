@@ -1,23 +1,31 @@
-import path from 'path';
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'path';
 
-export default defineConfig(({ mode }) => {
-    const env = loadEnv(mode, '.', '');
-    return {
-      server: {
-        port: 3000,
-        host: '0.0.0.0',
+export default defineConfig({
+  plugins: [react()],
+  base: './', // Ensure relative paths for assets
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+  build: {
+    outDir: 'dist',
+    rollupOptions: {
+      input: {
+        popup: path.resolve(__dirname, 'src/popup/index.html'),
+        sidepanel: path.resolve(__dirname, 'src/sidepanel/index.html'),
+        background: path.resolve(__dirname, 'src/background/service-worker.ts'),
       },
-      plugins: [react()],
-      define: {
-        'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
+      output: {
+        entryFileNames: (chunk) => {
+          if (chunk.name === 'background') {
+            return 'service-worker.js';
+          }
+          return 'assets/[name]-[hash].js';
+        },
       },
-      resolve: {
-        alias: {
-          '@': path.resolve(__dirname, '.'),
-        }
-      }
-    };
+    },
+  },
 });
