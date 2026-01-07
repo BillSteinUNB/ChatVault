@@ -1,4 +1,4 @@
-export type Platform = 'chatgpt' | 'claude' | 'gemini' | 'perplexity';
+export type Platform = 'chatgpt' | 'claude' | 'perplexity';
 
 export interface Chat {
   id: string;

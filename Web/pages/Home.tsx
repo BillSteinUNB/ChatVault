@@ -33,7 +33,7 @@ export const Home: React.FC = () => {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-emerald-400">AI Chaos.</span>
             </h1>
             <p className="text-xl text-neutral-400 mb-8 leading-relaxed max-w-lg">
-              The comprehensive workspace for ChatGPT, Claude, and Gemini. Search, tag, and organize 10,000+ prompts in milliseconds.
+              The comprehensive workspace for ChatGPT, Claude, and Perplexity. Search, tag, and organize 10,000+ prompts in milliseconds.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
@@ -150,7 +150,7 @@ export const Home: React.FC = () => {
                <Cpu />
             </div>
             <h3 className="text-xl font-bold text-white mb-2">Multi-Model</h3>
-            <p className="text-neutral-400 text-sm">Unified timeline for ChatGPT, Claude, and Gemini.</p>
+            <p className="text-neutral-400 text-sm">Unified timeline for ChatGPT, Claude, and Perplexity.</p>
           </Card>
 
           <Card className="md:col-span-2">

@@ -13,7 +13,6 @@ export const FilterChips: React.FC = () => {
     { id: 'all', label: 'All' },
     { id: 'chatgpt', label: 'ChatGPT' },
     { id: 'claude', label: 'Claude' },
-    { id: 'gemini', label: 'Gemini' },
     { id: 'perplexity', label: 'Perplexity' },
   ];
 

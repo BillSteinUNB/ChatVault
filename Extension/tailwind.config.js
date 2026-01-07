@@ -27,7 +27,6 @@ export default {
         platform: {
           chatgpt: '#10A37F',
           claude: '#D97757',
-          gemini: '#4285F4',
           perplexity: '#6B4FFF',
         }
       },

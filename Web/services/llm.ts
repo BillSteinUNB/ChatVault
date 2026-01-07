@@ -1,7 +1,7 @@
 // Web/services/llm.ts
 
 const AWS_API_URL = import.meta.env.VITE_AWS_API_URL;
-const AI_PROVIDER = import.meta.env.VITE_AI_PROVIDER || 'AWS'; // 'AWS' only (Gemini removed for security)
+const AI_PROVIDER = import.meta.env.VITE_AI_PROVIDER || 'AWS';
 
 export interface AIResponse {
   text: string;

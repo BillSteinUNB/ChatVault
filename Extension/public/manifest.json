@@ -22,8 +22,7 @@
   ],
   "host_permissions": [
     "https://chatgpt.com/*",
-    "https://claude.ai/*",
-    "https://gemini.google.com/*"
+    "https://claude.ai/*"
   ],
   "content_scripts": [
     {
@@ -34,11 +33,6 @@
     {
       "matches": ["https://claude.ai/*"],
       "js": ["content/claude.js"],
-      "run_at": "document_idle"
-    },
-    {
-      "matches": ["https://gemini.google.com/*"],
-      "js": ["content/gemini.js"],
       "run_at": "document_idle"
     }
   ],

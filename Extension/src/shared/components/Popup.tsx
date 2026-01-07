@@ -57,7 +57,7 @@ export const Popup: React.FC = () => {
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-1">No chats saved yet</h3>
                 <p className="text-xs text-gray-500 leading-relaxed">
-                    Visit ChatGPT, Claude, or Gemini to start saving your conversations.
+                    Visit ChatGPT or Claude to start saving your conversations.
                 </p>
             </div>
         ) : filteredChats.length === 0 ? (

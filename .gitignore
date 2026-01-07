@@ -35,6 +35,10 @@ generative-*/
 vertex-ai-*/
 nodejs-vertexai/
 
+# CDK
+cdk.out/
+*.asset
+
 # Temporary and Documentation files
 temp*/
 *_temp*/

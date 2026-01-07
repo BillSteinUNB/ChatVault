@@ -100,7 +100,7 @@ export const SidePanel: React.FC = () => {
                             </div>
                             <h3 className="text-lg font-semibold text-gray-900 mb-1">Your vault is empty</h3>
                             <p className="text-sm text-gray-500 max-w-xs leading-relaxed mb-4">
-                                Navigate to any chat on ChatGPT, Claude, or Gemini to automatically save it here.
+                                Navigate to any chat on ChatGPT or Claude to automatically save it here.
                             </p>
                         </div>
                     ) : (

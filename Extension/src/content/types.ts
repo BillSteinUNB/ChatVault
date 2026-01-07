@@ -7,7 +7,7 @@ export interface ScrapedMessage {
 }
 
 export interface ScraperConfig {
-  platform: 'chatgpt' | 'claude' | 'gemini';
+  platform: 'chatgpt' | 'claude' | 'perplexity';
   selectors: {
     container: string;
     message: string;
