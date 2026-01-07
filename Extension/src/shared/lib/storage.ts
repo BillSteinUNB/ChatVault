@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { Chat, Folder, Platform, PersistedChat, STORAGE_KEYS } from '../types';
-import { MOCK_FOLDERS } from '../constants';
 import { persistedChatsToChats } from './utils';
+
 
 interface Store {
   chats: Chat[];
@@ -72,7 +72,7 @@ export const useStore = create<Store>((set, get) => {
 
   return {
     chats: [], // Start empty, will be populated from storage
-    folders: MOCK_FOLDERS, // TODO: Load from storage in future phase
+    folders: [], // TODO: Load from storage in future phase
     isLoading: true,
     searchQuery: '',
     setSearchQuery: (query) => set({ searchQuery: query }),
