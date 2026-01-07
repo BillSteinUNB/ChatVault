@@ -1,8 +1,7 @@
 // Web/services/llm.ts
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const AWS_API_URL = import.meta.env.VITE_AWS_API_URL;
-const AI_PROVIDER = import.meta.env.VITE_AI_PROVIDER || 'GEMINI'; // 'GEMINI' or 'AWS'
+const AI_PROVIDER = import.meta.env.VITE_AI_PROVIDER || 'AWS'; // 'AWS' only (Gemini removed for security)
 
 export interface AIResponse {
   text: string;
@@ -10,11 +9,8 @@ export interface AIResponse {
 }
 
 export async function generateText(prompt: string): Promise<AIResponse> {
-  if (AI_PROVIDER === 'AWS') {
-    return callAwsBedrock(prompt);
-  } else {
-    return callGemini(prompt);
-  }
+  // Always use AWS Bedrock (security requirement: no client-side API keys)
+  return callAwsBedrock(prompt);
 }
 
 async function callAwsBedrock(prompt: string): Promise<AIResponse> {
@@ -44,29 +40,5 @@ async function callAwsBedrock(prompt: string): Promise<AIResponse> {
   return {
     text: data.completion,
     provider: data.provider
-  };
-}
-
-async function callGemini(prompt: string): Promise<AIResponse> {
-  if (!GEMINI_API_KEY) {
-    throw new Error("GEMINI_API_KEY is not set");
-  }
-
-  // Simple Gemini API call (conceptual - matches your existing logic)
-  // Replacing your direct calls with this function would centralize the logic
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }]
-    })
-  });
-
-  const data = await response.json();
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "Error generating response";
-  
-  return {
-    text,
-    provider: "Google Gemini"
   };
 }

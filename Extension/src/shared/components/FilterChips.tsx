@@ -2,17 +2,20 @@ import React from 'react';
 import { useStore } from '../lib/storage';
 import { cn } from '../lib/utils';
 import { motion } from 'framer-motion';
+import { Platform } from '../types';
+
+type FilterId = Platform | 'all';
 
 export const FilterChips: React.FC = () => {
   const { activeFilter, setFilter, chats } = useStore();
   
-  const filters = [
+  const filters: readonly { id: FilterId; label: string }[] = [
     { id: 'all', label: 'All' },
     { id: 'chatgpt', label: 'ChatGPT' },
     { id: 'claude', label: 'Claude' },
     { id: 'gemini', label: 'Gemini' },
     { id: 'perplexity', label: 'Perplexity' },
-  ] as const;
+  ];
 
   return (
     <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none mask-fade-right">
@@ -29,7 +32,7 @@ export const FilterChips: React.FC = () => {
             key={filter.id}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => setFilter(filter.id as any)}
+            onClick={() => setFilter(filter.id)}
             className={cn(
               "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors",
               isActive 

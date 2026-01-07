@@ -15,6 +15,8 @@ View your app in AI Studio: https://ai.studio/apps/drive/1ZvJB7-KsyCU29mXmLcATmd
 
 1. Install dependencies:
    `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+2. Configure AWS Backend:
+   - Deploy the backend first (see /aws-backend/README.md)
+   - Copy the API Gateway URL to your .env.local file
 3. Run the app:
    `npm run dev`

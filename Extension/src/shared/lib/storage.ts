@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Chat, Folder } from '../types';
+import { Chat, Folder, Platform } from '../types';
 import { MOCK_CHATS, MOCK_FOLDERS } from '../constants';
 
 interface Store {
@@ -9,6 +9,8 @@ interface Store {
   setSearchQuery: (query: string) => void;
   activeFolder: string | null;
   setActiveFolder: (id: string | null) => void;
+  activeFilter: Platform | 'all';
+  setFilter: (filter: Platform | 'all') => void;
   togglePin: (id: string) => void;
   deleteChat: (id: string) => void;
 }
@@ -20,6 +22,8 @@ export const useStore = create<Store>((set) => ({
   setSearchQuery: (query) => set({ searchQuery: query }),
   activeFolder: null,
   setActiveFolder: (id) => set({ activeFolder: id }),
+  activeFilter: 'all',
+  setFilter: (filter) => set({ activeFilter: filter }),
   togglePin: (id) => set((state) => ({
     chats: state.chats.map(chat =>
       chat.id === id ? { ...chat, isPinned: !chat.isPinned } : chat
