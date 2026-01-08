@@ -9,9 +9,10 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     autoRefreshToken: true,
     detectSessionInUrl: false,
     storage: {
-      getItem: async (key: string) => {
+      getItem: async (key: string): Promise<string | null> => {
         const result = await chrome.storage.local.get(key);
-        return result[key] || null;
+        const value = result[key];
+        return typeof value === 'string' ? value : null;
       },
       setItem: async (key: string, value: string) => {
         await chrome.storage.local.set({ [key]: value });

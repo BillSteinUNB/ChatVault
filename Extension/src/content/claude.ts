@@ -19,11 +19,47 @@ class ClaudeScraper extends BaseScraper {
   private lastMessageCount = 0;
   private debounceTimer: number | null = null;
 
+  private shouldIgnoreClaudeNode(node: Element): boolean {
+    const className = node.className || '';
+
+    for (const sel of ClaudeScraper.ARTIFACT_BLOCK_SELECTORS) {
+      if (node.matches(sel) || node.querySelector(sel)) return true;
+    }
+
+    const text = (node.textContent || '').trim().toLowerCase();
+    if (ClaudeScraper.THINKING_KEYWORDS.some(k => text === k || text.startsWith(k + ' '))) return true;
+
+    if (node.tagName === 'DETAILS' || node.tagName === 'SUMMARY') return true;
+
+    if (ClaudeScraper.UI_CHROME_SELECTORS.some(sel => node.matches(sel))) return true;
+
+    if (className.includes('pt-3') && className.includes('pb-3')) return true;
+
+    return false;
+  }
+
   // CSS classes used to identify message types and elements to exclude
   private static readonly USER_MESSAGE_CLASS = 'font-user-message';
   private static readonly CLAUDE_MESSAGE_CLASS = 'font-claude-message';
-  private static readonly THINKING_BLOCK_CLASS = 'transition-all';
-  private static readonly ARTIFACT_BLOCK_SELECTOR = '.artifact-block-cell';
+
+  private static readonly THINKING_KEYWORDS = ['thinking', 'thoughts'];
+
+  private static readonly ARTIFACT_BLOCK_SELECTORS = [
+    '#markdown-artifact',
+    '.artifact-block-cell',
+    '[data-testid*="artifact" i]',
+    '[aria-label*="artifact" i]',
+  ] as const;
+
+  private static readonly UI_CHROME_SELECTORS = [
+    'button',
+    'svg',
+    '[role="button"]',
+    '[aria-label^="Copy" i]',
+    '[aria-label*="Copy" i]',
+    '[data-testid*="copy" i]',
+    '[data-testid*="tooltip" i]',
+  ] as const;
 
   constructor() {
     super({
@@ -80,9 +116,7 @@ class ClaudeScraper extends BaseScraper {
         content = this.extractClaudeMessageContent(element);
       }
 
-      if (!content.trim()) {
-        return; // Skip empty messages
-      }
+       if (!content.trim()) return;
 
       messages.push({
         role,
@@ -106,8 +140,14 @@ class ClaudeScraper extends BaseScraper {
         : 'Untitled Chat';
     }
 
-    console.log(`[ChatVault] Claude: Scraped ${messages.length} messages`);
-    this.saveChat(title, messages);
+     console.log(`[ChatVault] Claude: Scraped ${messages.length} messages`);
+
+     const approxBytes = JSON.stringify(messages).length;
+     if (approxBytes > 2_000_000) {
+       console.warn(`[ChatVault] Claude: Large scrape payload (~${approxBytes} bytes). This may hit Chrome message size or storage limits.`);
+     }
+
+     this.saveChat(title, messages);
   }
 
   /**
@@ -115,41 +155,43 @@ class ClaudeScraper extends BaseScraper {
    * Filters out thinking blocks and artifact blocks
    */
   private extractClaudeMessageContent(element: Element): string {
-    const contentParts: string[] = [];
+    const blocks: string[] = [];
 
-    // Iterate through child elements
-    Array.from(element.children).forEach((child) => {
-      // Skip thinking blocks (identified by transition-all class)
-      if (child.className.includes(ClaudeScraper.THINKING_BLOCK_CLASS)) {
-        return;
-      }
+    const artifactSelector = ClaudeScraper.ARTIFACT_BLOCK_SELECTORS.join(',');
 
-      // Skip artifact blocks (identified by specific classes or child selectors)
-      const isArtifactBlock = 
-        (child.className.includes('pt-3') && child.className.includes('pb-3')) ||
-        child.querySelector(ClaudeScraper.ARTIFACT_BLOCK_SELECTOR);
-      
-      if (isArtifactBlock) {
-        return;
-      }
+    const root = element.cloneNode(true) as Element;
+    if (artifactSelector) root.querySelectorAll(artifactSelector).forEach((n) => n.remove());
+    root.querySelectorAll(ClaudeScraper.UI_CHROME_SELECTORS.join(',')).forEach((n) => n.remove());
+    root.querySelectorAll('details, summary').forEach((n) => n.remove());
 
-      // Look for content in grid-cols-1 containers (Claude's actual message content)
-      const contentGrid = child.querySelector('.grid-cols-1');
-      if (contentGrid) {
-        const text = contentGrid.textContent?.trim();
-        if (text) {
-          contentParts.push(text);
-        }
-      } else {
-        // Fallback: get text content if no specific structure found
-        const text = child.textContent?.trim();
-        if (text) {
-          contentParts.push(text);
-        }
+    const collectText = (text: string | null | undefined) => {
+      const cleaned = (text || '').replace(/\s+$/g, '').trim();
+      if (!cleaned) return;
+      const last = blocks[blocks.length - 1];
+      if (last === cleaned) return;
+      blocks.push(cleaned);
+    };
+
+    root.querySelectorAll('pre').forEach((pre) => {
+      if (!(pre instanceof HTMLElement)) return;
+      if (this.shouldIgnoreClaudeNode(pre)) return;
+      const codeText = pre.textContent;
+      if (codeText) {
+        const normalized = codeText.replace(/^\n+|\n+$/g, '');
+        if (normalized.trim()) blocks.push('```\n' + normalized + '\n```');
       }
+      pre.remove();
     });
 
-    return contentParts.join('\n\n');
+    root.querySelectorAll('p, li, h1, h2, h3, h4, h5, h6, blockquote').forEach((node) => {
+      if (!(node instanceof HTMLElement)) return;
+      if (this.shouldIgnoreClaudeNode(node)) return;
+      collectText(node.textContent);
+    });
+
+    if (blocks.length === 0) collectText(root.textContent);
+
+    return blocks.join('\n\n');
   }
 }
 
