@@ -85,3 +85,24 @@ CREATE POLICY "Users can delete their own chats"
 -- Create index for faster queries
 CREATE INDEX IF NOT EXISTS chats_user_id_idx ON public.chats(user_id);
 CREATE INDEX IF NOT EXISTS chats_created_at_idx ON public.chats(created_at DESC);
+
+-- Create waitlist table for pricing page
+CREATE TABLE IF NOT EXISTS public.waitlist (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  email TEXT NOT NULL,
+  tier TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Enable RLS for waitlist (public can insert, only admins can read)
+ALTER TABLE public.waitlist ENABLE ROW LEVEL SECURITY;
+
+-- Allow anyone to insert into waitlist
+CREATE POLICY "Anyone can join waitlist"
+  ON public.waitlist
+  FOR INSERT
+  WITH CHECK (true);
+
+-- Create index for waitlist queries
+CREATE INDEX IF NOT EXISTS waitlist_created_at_idx ON public.waitlist(created_at DESC);
+CREATE INDEX IF NOT EXISTS waitlist_email_idx ON public.waitlist(email);

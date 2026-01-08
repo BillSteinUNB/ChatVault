@@ -26,7 +26,7 @@ export const Home: React.FC = () => {
           >
             <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-primary-400 mb-6">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-2" />
-              v2.0 NOW LIVE
+              AWS ACTIVATE PARTNER
             </div>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-[1.1] mb-6">
               Bring Order to Your <br />

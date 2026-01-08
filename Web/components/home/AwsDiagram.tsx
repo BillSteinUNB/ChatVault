@@ -5,9 +5,9 @@ export const AwsDiagram: React.FC = () => {
   const nodes = [
     { id: 'client', label: 'Extension', x: 50, y: 150, color: '#A78BFA' },
     { id: 'gateway', label: 'API Gateway', x: 250, y: 150, color: '#34D399' },
-    { id: 'lambda', label: 'Lambda', x: 450, y: 150, color: '#F472B6' },
-    { id: 'dynamo', label: 'DynamoDB', x: 650, y: 150, color: '#60A5FA' },
-    { id: 's3', label: 'S3 Encrypted', x: 650, y: 250, color: '#FBBF24' },
+    { id: 'lambda', label: 'Lambda (Bedrock Proxy)', x: 450, y: 150, color: '#F472B6' },
+    { id: 'dynamo', label: 'DynamoDB (Request Logs)', x: 650, y: 150, color: '#60A5FA' },
+    { id: 's3', label: 'S3 (Export Archives)', x: 650, y: 250, color: '#FBBF24' },
   ];
 
   return (
