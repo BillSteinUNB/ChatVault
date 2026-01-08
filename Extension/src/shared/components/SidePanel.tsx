@@ -2,6 +2,7 @@ import React from 'react';
 import { useStore } from '../lib/storage';
 import { ChatItem } from './ChatItem';
 import { SearchBar } from './SearchBar';
+import { AuthBanner } from './AuthBanner';
 import { Button } from './ui/Button';
 import { Folder, PieChart, Star, Clock, Plus, Loader2, MessageSquare } from 'lucide-react';
 import { PLATFORM_CONFIG } from '../constants';
@@ -82,6 +83,10 @@ export const SidePanel: React.FC = () => {
                     <div className="max-w-md">
                         <SearchBar />
                     </div>
+                </div>
+
+                <div className="px-6 pb-4">
+                    <AuthBanner />
                 </div>
 
                 {/* Chat Grid */}

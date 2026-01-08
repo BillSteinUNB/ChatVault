@@ -56,7 +56,7 @@ export const STORAGE_KEYS = {
 } as const;
 
 /** Message types for chrome.runtime messaging */
-export type MessageType = 'PING' | 'PONG' | 'SAVE_CHAT' | 'GET_CHATS';
+export type MessageType = 'PING' | 'PONG' | 'SAVE_CHAT' | 'GET_CHATS' | 'GET_AUTH_STATUS' | 'SIGN_OUT';
 
 export interface SaveChatPayload {
   platform: Platform;

@@ -1,6 +1,7 @@
 /// <reference types="chrome" />
 
 import { PersistedChat, STORAGE_KEYS, SaveChatPayload, ExtensionMessage } from '../shared/types';
+import { supabase } from '../shared/lib/supabase';
 
 /**
  * Generate a unique ID from URL (simple hash for deduplication)
@@ -92,7 +93,6 @@ async function handleSaveChat(payload: SaveChatPayload): Promise<{ success: bool
 
 chrome.runtime.onInstalled.addListener(() => {
   console.log('[ChatVault] Extension Installed');
-  // Initialize storage if needed
   chrome.storage.local.get(null, (result) => {
     if (Object.keys(result).length === 0) {
       chrome.storage.local.set({
@@ -107,6 +107,21 @@ chrome.runtime.onInstalled.addListener(() => {
       console.log('[ChatVault] Initialized storage with empty chats/folders');
     }
   });
+  
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    if (session) {
+      console.log('[ChatVault] User authenticated:', session.user.email);
+    } else {
+      console.log('[ChatVault] No active session');
+    }
+  });
+});
+
+supabase.auth.onAuthStateChange((event, session) => {
+  console.log('[ChatVault] Auth state changed:', event);
+  if (session) {
+    console.log('[ChatVault] User:', session.user.email);
+  }
 });
 
 // Allow opening side panel from action click if configured
@@ -116,24 +131,40 @@ chrome.action.onClicked.addListener((tab) => {
   }
 });
 
-// Message handling - supports PING, SAVE_CHAT
 chrome.runtime.onMessage.addListener((message: ExtensionMessage, sender, sendResponse) => {
   console.log('[ChatVault] Message received:', message.type);
   
   if (message.type === 'PING') {
     sendResponse({ type: 'PONG' });
-    return false; // Synchronous response
+    return false;
   }
   
   if (message.type === 'SAVE_CHAT' && message.payload) {
-    // Async handler - must return true to indicate we'll call sendResponse later
     handleSaveChat(message.payload as SaveChatPayload)
       .then(result => sendResponse(result))
       .catch(err => sendResponse({ success: false, error: err.message }));
-    return true; // Keep message channel open for async response
+    return true;
   }
   
-  // Unknown message type
+  if (message.type === 'GET_AUTH_STATUS') {
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        sendResponse({ 
+          authenticated: !!session, 
+          user: session?.user || null 
+        });
+      })
+      .catch(err => sendResponse({ authenticated: false, error: err.message }));
+    return true;
+  }
+  
+  if (message.type === 'SIGN_OUT') {
+    supabase.auth.signOut()
+      .then(() => sendResponse({ success: true }))
+      .catch(err => sendResponse({ success: false, error: err.message }));
+    return true;
+  }
+  
   console.warn('[ChatVault] Unknown message type:', message.type);
   return false;
 });

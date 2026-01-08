@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Button } from '../ui/Button';
-import { Layers, Shield, Menu, X } from 'lucide-react';
+import { Layers, Shield, Menu, X, LogOut, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../../hooks/useAuth';
 
 export const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user, signOut, loading } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -58,10 +61,35 @@ export const Navbar: React.FC = () => {
 
         {/* CTA */}
         <div className="hidden md:flex items-center gap-4">
-          <NavLink to="/login" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">
-            Login
-          </NavLink>
-          <Button size="sm">Get Extension</Button>
+          {!loading && (
+            <>
+              {user ? (
+                <>
+                  <div className="flex items-center gap-2 text-sm text-neutral-400">
+                    <User size={16} />
+                    <span>{user.email}</span>
+                  </div>
+                  <Button 
+                    size="sm" 
+                    variant="secondary"
+                    onClick={async () => {
+                      await signOut();
+                      navigate('/');
+                    }}
+                  >
+                    <LogOut size={16} />
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <NavLink to="/login" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">
+                    Login
+                  </NavLink>
+                  <Button size="sm">Get Extension</Button>
+                </>
+              )}
+            </>
+          )}
         </div>
 
         {/* Mobile Toggle */}
@@ -94,8 +122,34 @@ export const Navbar: React.FC = () => {
                 </NavLink>
               ))}
               <div className="h-px bg-white/10 w-full my-2" />
-              <NavLink to="/login" className="text-lg font-medium text-neutral-300">Login</NavLink>
-              <Button className="w-full">Get Extension</Button>
+              {!loading && (
+                <>
+                  {user ? (
+                    <>
+                      <div className="flex items-center gap-2 text-neutral-400">
+                        <User size={18} />
+                        <span>{user.email}</span>
+                      </div>
+                      <Button 
+                        className="w-full" 
+                        variant="secondary"
+                        onClick={async () => {
+                          await signOut();
+                          setMobileOpen(false);
+                          navigate('/');
+                        }}
+                      >
+                        Logout
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <NavLink to="/login" onClick={() => setMobileOpen(false)} className="text-lg font-medium text-neutral-300">Login</NavLink>
+                      <Button className="w-full">Get Extension</Button>
+                    </>
+                  )}
+                </>
+              )}
             </div>
           </motion.div>
         )}

@@ -5,6 +5,8 @@ import { Footer } from './components/layout/Footer';
 import { Home } from './pages/Home';
 import { Pricing } from './pages/Pricing';
 import { Security } from './pages/Security';
+import { Login } from './pages/Login';
+import { Signup } from './pages/Signup';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -26,7 +28,8 @@ const App: React.FC = () => {
             <Route path="/" element={<Home />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/security" element={<Security />} />
-            <Route path="/login" element={<div className="min-h-screen flex items-center justify-center text-neutral-500">Login Dashboard Demo Placeholder</div>} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
           </Routes>
         </main>
         <Footer />
