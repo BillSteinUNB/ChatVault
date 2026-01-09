@@ -27,22 +27,22 @@ export const Footer: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="font-bold text-white mb-4">Product</h4>
-            <ul className="space-y-2 text-sm text-neutral-400">
-              <li><Link to="/features" className="hover:text-primary-400">Features</Link></li>
-              <li><Link to="/pricing" className="hover:text-primary-400">Pricing</Link></li>
-              <li><a href="#" className="hover:text-primary-400">Changelog</a></li>
-              <li><a href="#" className="hover:text-primary-400">Download</a></li>
-            </ul>
+              <h4 className="font-bold text-white mb-4">Product</h4>
+              <ul className="space-y-2 text-sm text-neutral-400">
+                <li><Link to="/#features" className="hover:text-primary-400">Features</Link></li>
+                <li><Link to="/pricing" className="hover:text-primary-400">Pricing</Link></li>
+                <li><Link to="/security" className="hover:text-primary-400">Security</Link></li>
+                <li><Link to="/contact" className="hover:text-primary-400">Contact</Link></li>
+              </ul>
           </div>
 
           <div>
-            <h4 className="font-bold text-white mb-4">Legal</h4>
-            <ul className="space-y-2 text-sm text-neutral-400">
-              <li><Link to="/legal" className="hover:text-primary-400">Privacy Policy</Link></li>
-              <li><Link to="/legal" className="hover:text-primary-400">Terms of Service</Link></li>
-              <li><Link to="/security" className="hover:text-primary-400">Security</Link></li>
-            </ul>
+              <h4 className="font-bold text-white mb-4">Legal</h4>
+              <ul className="space-y-2 text-sm text-neutral-400">
+                <li><Link to="/contact#privacy" className="hover:text-primary-400">Privacy Policy</Link></li>
+                <li><Link to="/contact#terms" className="hover:text-primary-400">Terms of Service</Link></li>
+                <li><Link to="/security" className="hover:text-primary-400">Security</Link></li>
+              </ul>
           </div>
 
           <div>
@@ -62,7 +62,9 @@ export const Footer: React.FC = () => {
 
         </div>
         <div className="border-t border-white/5 pt-8 text-center text-neutral-600 text-xs">
-          &copy; 2024 ChatVault Inc. All rights reserved.
+          &copy; 2026 ChatVault. All rights reserved. Contact: 
+          <a href="mailto:contact@chatvault.live" className="hover:text-neutral-300">contact@chatvault.live</a>
+          .
         </div>
       </div>
     </footer>
