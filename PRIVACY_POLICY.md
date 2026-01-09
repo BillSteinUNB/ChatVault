@@ -3,14 +3,14 @@
 **Last Updated:** January 6, 2026
 
 ## Introduction
-ChatVault ("we", "our", or "us") is dedicated to protecting your privacy. This Privacy Policy explains how the ChatVault Chrome Extension collects, uses, and safeguards your information.
+ChatVault ("we", "our", or "us") is dedicated to protecting your privacy. This Privacy Policy explains how ChatVault collects, uses, and safeguards your information across the Chrome Extension and related services.
 
 ## Data Collection
-ChatVault is designed as a **local-first** application. 
+ChatVault includes a **local-first** Chrome Extension and an optional web experience. 
 
 1.  **Local Storage:**
     *   We use the Chrome Extension `storage` permission to save your chat history, folders, and tags directly on your local device.
-    *   This data remains in your browser and is not sent to our servers unless you explicitly configure a sync backend (if available).
+    *   By default, this data remains in your browser and is not sent to our servers unless you explicitly enable a sync/account-backed experience.
 
 2.  **User Content:**
     *   We process the text content of the AI chats you choose to save (e.g., from ChatGPT, Claude, Gemini) solely for the purpose of displaying and organizing them within the extension.
@@ -36,4 +36,4 @@ ChatVault requests the following permissions to function:
 We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.
 
 ## Contact Us
-If you have any questions about this Privacy Policy, please contact us via our GitHub repository issues page.
+If you have any questions about this Privacy Policy, please email us at contact@chatvault.live.
