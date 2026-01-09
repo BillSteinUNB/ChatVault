@@ -5,7 +5,7 @@ import { Button } from '../components/ui/Button';
 
 type SubmitStatus = 'idle' | 'success' | 'error';
 
-const SUPPORT_EMAIL = 'support@chatvault.live';
+const SUPPORT_EMAIL = 'contact@chatvault.live';
 
 export const Contact: React.FC = () => {
   const [name, setName] = useState('');
