@@ -35,9 +35,7 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
         <NavLink to="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-emerald-400 flex items-center justify-center text-white font-bold shadow-lg shadow-primary-500/20 group-hover:shadow-primary-500/40 transition-shadow">
-            <Layers size={18} />
-          </div>
+          <img src="/logo.jpg" alt="ChatVault Logo" className="w-8 h-8 rounded-lg shadow-lg shadow-primary-500/20 group-hover:shadow-primary-500/40 transition-shadow object-cover" />
           <span className="text-xl font-bold tracking-tight text-white">
             ChatVault
           </span>
