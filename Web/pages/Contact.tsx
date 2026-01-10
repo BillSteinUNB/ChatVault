@@ -53,14 +53,6 @@ export const Contact: React.FC = () => {
         <p className="text-xl text-neutral-400 leading-relaxed">
           Questions, feedback, or security concerns? Send a note—we read every message.
         </p>
-        <div className="mt-4 flex flex-wrap gap-4 text-sm">
-          <a href="#privacy" className="text-primary-400 hover:text-primary-300 transition-colors">
-            Privacy Policy
-          </a>
-          <a href="#terms" className="text-primary-400 hover:text-primary-300 transition-colors">
-            Terms of Service
-          </a>
-        </div>
       </header>
 
       <div className="grid grid-cols-1 gap-8">
@@ -153,7 +145,7 @@ export const Contact: React.FC = () => {
                   Privacy Policy
                 </a>{' '}
                 and{' '}
-                <a href="#terms" className="underline hover:text-neutral-300">
+                <a href="/terms" className="underline hover:text-neutral-300">
                   Terms of Service
                 </a>
                 .
@@ -264,70 +256,6 @@ export const Contact: React.FC = () => {
               <h3 className="text-xl font-bold text-white mb-2">6. Contact</h3>
               <p className="text-neutral-400">
                 Questions about privacy? Email us at{' '}
-                <a href={`mailto:${SUPPORT_EMAIL}`} className="text-primary-400 hover:text-primary-300 transition-colors">
-                  {SUPPORT_EMAIL}
-                </a>
-                .
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section id="terms" className="scroll-mt-28">
-          <h2 className="text-3xl font-bold text-white mb-4">Terms of Service</h2>
-          <div className="space-y-6 text-neutral-300 leading-relaxed">
-            <p className="text-sm text-neutral-500">Last updated: January 9, 2026</p>
-
-            <p>
-              These Terms of Service ("Terms") govern your use of ChatVault. By accessing or using the service, you agree to
-              these Terms.
-            </p>
-
-            <div>
-              <h3 className="text-xl font-bold text-white mb-2">1. Service overview</h3>
-              <p className="text-neutral-400">
-                ChatVault provides tools to store, organize, and search AI conversation data. Features may change over time,
-                and we may add or remove capabilities to improve the product.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold text-white mb-2">2. Your responsibilities</h3>
-              <ul className="list-disc pl-5 space-y-2 text-neutral-400">
-                <li>You are responsible for maintaining the confidentiality of your account credentials.</li>
-                <li>You agree not to misuse the service, including attempting to disrupt, reverse engineer, or access systems without authorization.</li>
-                <li>You agree to comply with applicable laws when using ChatVault, including privacy and intellectual property laws.</li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold text-white mb-2">3. Acceptable use</h3>
-              <p className="text-neutral-400">
-                You may not use ChatVault to store or transmit unlawful content, malware, or content that violates the rights of others.
-                We may suspend or terminate access if we reasonably believe you are violating these Terms or creating risk for the service.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold text-white mb-2">4. Disclaimers</h3>
-              <p className="text-neutral-400">
-                ChatVault is provided on an "as is" and "as available" basis. While we work hard to keep the service reliable,
-                we do not guarantee uninterrupted operation or that all functionality will be error-free.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold text-white mb-2">5. Limitation of liability</h3>
-              <p className="text-neutral-400">
-                To the maximum extent permitted by law, ChatVault and its affiliates will not be liable for any indirect, incidental,
-                special, consequential, or punitive damages, or any loss of data, profits, or revenues.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold text-white mb-2">6. Contact</h3>
-              <p className="text-neutral-400">
-                For questions about these Terms, contact{' '}
                 <a href={`mailto:${SUPPORT_EMAIL}`} className="text-primary-400 hover:text-primary-300 transition-colors">
                   {SUPPORT_EMAIL}
                 </a>

@@ -26,7 +26,7 @@ export const Home: React.FC = () => {
           >
             <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-primary-400 mb-6">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse mr-2" />
-              AWS ACTIVATE PARTNER
+              BUILT ON AWS
             </div>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-[1.1] mb-6">
               Bring Order to Your <br />
@@ -44,10 +44,10 @@ export const Home: React.FC = () => {
                   className="bg-white/5 border border-white/10 rounded-lg px-4 py-3 w-64 text-white placeholder:text-neutral-600 focus:outline-none focus:border-primary-500 transition-colors"
                 />
               </div>
-              <Button>Add to Chrome - Free</Button>
+              <Button onClick={() => alert("Thank you for your interest! We'll notify you when the beta is ready.")}>Join Waitlist</Button>
             </div>
             <p className="mt-4 text-xs text-neutral-500">
-              No credit card required. Rated 4.9/5 by 10k+ devs.
+              Private Beta. No credit card required.
             </p>
           </motion.div>
 
@@ -188,7 +188,7 @@ export const Home: React.FC = () => {
       <section className="max-w-4xl mx-auto px-6 mb-32 text-center">
         <h2 className="text-4xl font-bold text-white mb-6">Your second brain deserves an upgrade.</h2>
         <div className="flex justify-center gap-4">
-          <Button size="lg" onClick={() => window.open('https://chrome.google.com', '_blank')}>Install Extension</Button>
+          <Button size="lg" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Join Waitlist</Button>
           <Button variant="secondary" size="lg" onClick={() => navigate('/pricing')}>View Pricing</Button>
         </div>
       </section>

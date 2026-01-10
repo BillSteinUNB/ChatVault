@@ -20,9 +20,9 @@ export const Footer: React.FC = () => {
               Built for precision, privacy, and speed.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="text-neutral-500 hover:text-white transition-colors"><Twitter size={18} /></a>
+              {/* <a href="#" className="text-neutral-500 hover:text-white transition-colors"><Twitter size={18} /></a>
               <a href="#" className="text-neutral-500 hover:text-white transition-colors"><Github size={18} /></a>
-              <a href="#" className="text-neutral-500 hover:text-white transition-colors"><Linkedin size={18} /></a>
+              <a href="#" className="text-neutral-500 hover:text-white transition-colors"><Linkedin size={18} /></a> */}
             </div>
           </div>
 

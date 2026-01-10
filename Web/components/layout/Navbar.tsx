@@ -86,7 +86,7 @@ export const Navbar: React.FC = () => {
                   <NavLink to="/login" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">
                     Login
                   </NavLink>
-                  <Button size="sm">Get Extension</Button>
+                  <Button size="sm" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Get Extension</Button>
                 </>
               )}
             </>
@@ -146,7 +146,7 @@ export const Navbar: React.FC = () => {
                   ) : (
                     <>
                       <NavLink to="/login" onClick={() => setMobileOpen(false)} className="text-lg font-medium text-neutral-300">Login</NavLink>
-                      <Button className="w-full">Get Extension</Button>
+                      <Button className="w-full" onClick={() => { setMobileOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Get Extension</Button>
                     </>
                   )}
                 </>
