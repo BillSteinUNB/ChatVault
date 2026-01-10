@@ -40,7 +40,7 @@ export const Footer: React.FC = () => {
               <h4 className="font-bold text-white mb-4">Legal</h4>
               <ul className="space-y-2 text-sm text-neutral-400">
                 <li><Link to="/contact#privacy" className="hover:text-primary-400">Privacy Policy</Link></li>
-                <li><Link to="/contact#terms" className="hover:text-primary-400">Terms of Service</Link></li>
+                <li><Link to="/terms" className="hover:text-primary-400">Terms of Service</Link></li>
                 <li><Link to="/security" className="hover:text-primary-400">Security</Link></li>
               </ul>
           </div>

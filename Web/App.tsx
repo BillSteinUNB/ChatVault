@@ -6,6 +6,7 @@ import { Home } from './pages/Home';
 import { Pricing } from './pages/Pricing';
 import { Security } from './pages/Security';
 import { Contact } from './pages/Contact';
+import { Terms } from './pages/Terms';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 
@@ -30,6 +31,7 @@ const App: React.FC = () => {
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/security" element={<Security />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/terms" element={<Terms />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
           </Routes>
