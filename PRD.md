@@ -1936,7 +1936,7 @@ Create security settings section.
 
 ---
 
-- [ ] PRD-47: Data & Privacy Section
+- [x] PRD-47: Data & Privacy Section
 
 # PRD-47: Data & Privacy Section
 
