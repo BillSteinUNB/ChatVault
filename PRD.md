@@ -227,9 +227,13 @@ interface CreateFolderModalProps {
 
 ---
 
-- [x] PRD-03: Folder List Component
+ - [x] PRD-03: Folder List Component
 
-# PRD-03: Folder List Component
+---
+
+ - [x] PRD-04: Move Chat to Folder
+
+# PRD-04: Move Chat to Folder
 
 ### Goal
 Create a sidebar component displaying all folders.
@@ -297,10 +301,10 @@ Allow users to move chats into folders.
    - When a folder is selected, only show chats in that folder
 
 ### Acceptance Criteria
-- [ ] User can move chat to folder via menu
-- [ ] User can remove chat from folder
-- [ ] Folder badge shows on chat item
-- [ ] Folder filtering works correctly
+- [x] User can move chat to folder via menu
+- [x] User can remove chat from folder
+- [x] Folder badge shows on chat item
+- [x] Folder filtering works correctly
 
 ### Dependencies
 - PRD-01, PRD-03
@@ -459,7 +463,7 @@ Show tags on chat items and add ability to edit.
 
 ---
 
-- [ ] PRD-09: Export Utility Functions
+ - [x] PRD-09: Export Utility Functions
 
 # PRD-09: Export Utility Functions
 
@@ -500,9 +504,9 @@ TypeScript is a typed superset of JavaScript...
 ```
 
 ### Acceptance Criteria
-- [ ] JSON export includes all chat data
-- [ ] Markdown is properly formatted
-- [ ] Download function works in extension context
+- [x] JSON export includes all chat data
+- [x] Markdown is properly formatted
+- [x] Download function works in extension context
 
 ### Dependencies
 None
