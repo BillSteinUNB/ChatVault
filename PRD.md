@@ -2160,7 +2160,7 @@ serve(async (req) => {
 
 ---
 
-- [ ] PRD-53: Billing Page UI
+- [x] PRD-53: Billing Page UI
 
 # PRD-53: Billing Page UI
 

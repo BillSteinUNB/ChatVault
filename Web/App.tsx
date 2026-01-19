@@ -15,6 +15,7 @@ import { ResetPassword } from './pages/ResetPassword';
 import { AuthCallback } from './pages/AuthCallback';
 import { Settings } from './pages/Settings';
 import { Dashboard } from './pages/Dashboard';
+import { Billing } from './pages/Billing';
 import { useAuth } from './hooks/useAuth';
 
 // Scroll to top on route change
@@ -48,6 +49,7 @@ const AppContent: React.FC = () => {
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/billing" element={<Billing />} />
         </Routes>
       </main>
       <Footer />

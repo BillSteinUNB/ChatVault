@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { Settings, User, Shield, Database, CreditCard, ChevronRight } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -26,6 +26,7 @@ const settingsNavItems: SettingsNavItem[] = [
 
 export const Settings: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState<SettingsSection>('profile');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -116,18 +117,17 @@ export const Settings: React.FC = () => {
                 </h2>
                 <div className="space-y-6">
                   <div className="p-6 bg-neutral-800/50 rounded-lg border border-white/10">
-                    <p className="text-white font-medium mb-2">Current Plan</p>
-                    <p className="text-2xl font-bold text-primary-400 mb-2">Hobbyist (Free)</p>
-                    <p className="text-sm text-neutral-400">
-                      You are currently on the free tier. Upgrade to unlock more features and higher limits.
+                    <p className="text-white font-medium mb-2">Manage your subscription</p>
+                    <p className="text-neutral-400 text-sm mb-4">
+                      View your current plan, upgrade to higher tiers, or manage your payment methods.
                     </p>
+                    <Button
+                      variant="primary"
+                      onClick={() => navigate('/billing')}
+                    >
+                      Go to Billing
+                    </Button>
                   </div>
-                  <Button
-                    variant="primary"
-                    onClick={() => window.location.href = '/pricing'}
-                  >
-                    View Plans
-                  </Button>
                 </div>
               </section>
             )}
