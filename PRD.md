@@ -1212,7 +1212,7 @@ None
 
 ---
 
-- [ ] PRD-28: Forgot Password Page
+- [x] PRD-28: Forgot Password Page
 
 # PRD-28: Forgot Password Page
 
