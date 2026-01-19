@@ -23,6 +23,7 @@ class ChatGPTScraper extends BaseScraper {
       platform: 'chatgpt',
       selectors: {
         container: 'main',
+        chatContainer: 'main',
         message: 'div[data-message-author-role]',
         roleUser: 'div[data-message-author-role="user"]',
         roleAssistant: 'div[data-message-author-role="assistant"]'

@@ -23,13 +23,14 @@ export default defineConfig({
         background: path.resolve(__dirname, 'src/background/service-worker.ts'),
         chatgpt: path.resolve(__dirname, 'src/content/chatgpt.ts'),
         claude: path.resolve(__dirname, 'src/content/claude.ts'),
+        perplexity: path.resolve(__dirname, 'src/content/perplexity.ts'),
       },
       output: {
         entryFileNames: (chunk) => {
           if (chunk.name === 'background') {
             return 'service-worker.js';
           }
-          if (chunk.name === 'chatgpt' || chunk.name === 'claude') {
+          if (chunk.name === 'chatgpt' || chunk.name === 'claude' || chunk.name === 'perplexity') {
             return `content/${chunk.name}.js`;
           }
           return 'assets/[name]-[hash].js';

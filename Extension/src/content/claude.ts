@@ -66,6 +66,7 @@ class ClaudeScraper extends BaseScraper {
       platform: 'claude',
       selectors: {
         container: 'main',
+        chatContainer: 'main',
         // Select both user and Claude messages, excluding artifact markdown
         message: '.font-claude-message:not(#markdown-artifact), .font-user-message',
         roleUser: '.font-user-message',

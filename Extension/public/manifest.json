@@ -22,7 +22,8 @@
   ],
   "host_permissions": [
     "https://chatgpt.com/*",
-    "https://claude.ai/*"
+    "https://claude.ai/*",
+    "https://www.perplexity.ai/*"
   ],
   "content_scripts": [
     {
@@ -33,6 +34,11 @@
     {
       "matches": ["https://claude.ai/*"],
       "js": ["content/claude.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://www.perplexity.ai/*"],
+      "js": ["content/perplexity.js"],
       "run_at": "document_idle"
     }
   ],

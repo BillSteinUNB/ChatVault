@@ -980,7 +980,7 @@ None
 
 ---
 
-- [ ] PRD-22: Perplexity DOM Analysis & Scraper
+- [x] PRD-22: Perplexity DOM Analysis & Scraper
 
 # PRD-22: Perplexity DOM Analysis & Scraper
 
