@@ -179,3 +179,24 @@ All acceptance criteria met:
 - Backspace removes last tag when input is empty
 
 Note: Test framework not yet set up (PRD-72), so no tests were written. No linting scripts configured in package.json. TypeScript type checking passed for TagInput component.
+
+---
+
+2026-01-19: Completed PRD-07: Tag Filter Component
+
+Fixed bug in Extension/src/shared/components/TagFilter.tsx:
+- Fixed undefined variable bug (line 96: selectedTags → activeTags)
+
+Updated Extension/src/shared/components/SidePanel.tsx:
+- Imported TagFilter component
+- Added activeTags to useStore hook
+- Updated filteredChats logic to filter by activeFolder AND activeTags using AND logic (chat must have all selected tags)
+- Added TagFilter component to UI below search bar (between SearchBar and AuthBanner)
+
+All acceptance criteria met:
+- All tags display as filter chips with color indicators
+- Can select multiple tags via toggleActiveTag (multi-select functionality)
+- Chat list filters correctly using AND logic (chat must have all selected tags)
+- Clear all button resets filter via setActiveTags([])
+
+Note: Test framework not yet set up (PRD-72), so no tests were written. No linting scripts configured in package.json. TypeScript type checking passed for all modified components.

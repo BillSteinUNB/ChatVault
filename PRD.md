@@ -392,7 +392,7 @@ interface TagInputProps {
 
 ---
 
-- [ ] PRD-07: Tag Filter Component
+- [x] PRD-07: Tag Filter Component
 
 # PRD-07: Tag Filter Component
 
@@ -418,10 +418,10 @@ Create filter UI for filtering chats by tags.
    - Use AND logic (chat must have all selected tags)
 
 ### Acceptance Criteria
-- [ ] All tags display as filter chips
-- [ ] Can select multiple tags
-- [ ] Chat list filters correctly
-- [ ] Clear all resets filter
+- [x] All tags display as filter chips
+- [x] Can select multiple tags
+- [x] Chat list filters correctly
+- [x] Clear all resets filter
 
 ### Dependencies
 - PRD-05, PRD-06

@@ -8,16 +8,23 @@ import { Folder, PieChart, Star, Clock, Plus, Loader2, MessageSquare } from 'luc
 import { PLATFORM_CONFIG } from '../constants';
 import { FolderList } from './FolderList';
 import { CreateFolderModal } from './CreateFolderModal';
+import { TagFilter } from './TagFilter';
 
 import { motion } from 'framer-motion';
 
 export const SidePanel: React.FC = () => {
-    const { chats, isLoading, activeFolder } = useStore();
+    const { chats, isLoading, activeFolder, activeTags } = useStore();
     const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
 
-    const filteredChats = activeFolder
-        ? chats.filter(chat => chat.folderId === activeFolder)
-        : chats;
+    const filteredChats = chats.filter(chat => {
+        if (activeFolder && chat.folderId !== activeFolder) {
+            return false;
+        }
+        if (activeTags.length > 0) {
+            return activeTags.every(tagId => chat.tags.includes(tagId));
+        }
+        return true;
+    });
 
     const totalChats = chats.length;
 
@@ -87,6 +94,10 @@ export const SidePanel: React.FC = () => {
                     <div className="max-w-md">
                         <SearchBar />
                     </div>
+                </div>
+
+                <div className="px-6 pb-4">
+                    <TagFilter />
                 </div>
 
                 <div className="px-6 pb-4">
