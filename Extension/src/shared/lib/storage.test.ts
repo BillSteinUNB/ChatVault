@@ -133,15 +133,31 @@ describe('PRD-13: Settings Data Model & Storage', () => {
     });
   });
 
-  describe('View Mode State', () => {
-    it('should have viewMode state in store', () => {
+  describe('PRD-24: View State Management', () => {
+    it('should have viewState in store', () => {
       const state = useStore.getState();
-      expect('viewMode' in state).toBe(true);
+      expect('viewState' in state).toBe(true);
     });
 
-    it('should default to "main" view mode', () => {
+    it('should have settingsOpen in store', () => {
       const state = useStore.getState();
-      expect(state.viewMode).toBe('main');
+      expect('settingsOpen' in state).toBe(true);
+    });
+
+    it('should have viewState with mode property', () => {
+      const state = useStore.getState();
+      expect(state.viewState).toBeDefined();
+      expect(state.viewState.mode).toBeDefined();
+    });
+
+    it('should default to "all" view mode', () => {
+      const state = useStore.getState();
+      expect(state.viewState.mode).toBe('all');
+    });
+
+    it('should default to settingsOpen false', () => {
+      const state = useStore.getState();
+      expect(state.settingsOpen).toBe(false);
     });
 
     it('should have setViewMode action', () => {
@@ -149,32 +165,82 @@ describe('PRD-13: Settings Data Model & Storage', () => {
       expect(typeof state.setViewMode).toBe('function');
     });
 
-    it('should switch view mode to "settings" when setViewMode is called', () => {
-      const { setViewMode } = useStore.getState();
-      setViewMode('settings');
+    it('should have setSelectedFolder action', () => {
       const state = useStore.getState();
-      expect(state.viewMode).toBe('settings');
+      expect(typeof state.setSelectedFolder).toBe('function');
     });
 
-    it('should switch view mode to "main" when setViewMode is called', () => {
-      const { setViewMode } = useStore.getState();
-      setViewMode('settings');
-      setViewMode('main');
+    it('should have setSettingsOpen action', () => {
       const state = useStore.getState();
-      expect(state.viewMode).toBe('main');
+      expect(typeof state.setSettingsOpen).toBe('function');
     });
 
-    it('should support both "main" and "settings" view modes', () => {
+    it('should switch view mode to "starred" when setViewMode is called', () => {
+      const { setViewMode } = useStore.getState();
+      setViewMode('starred');
+      const state = useStore.getState();
+      expect(state.viewState.mode).toBe('starred');
+    });
+
+    it('should switch view mode to "analytics" when setViewMode is called', () => {
+      const { setViewMode } = useStore.getState();
+      setViewMode('analytics');
+      const state = useStore.getState();
+      expect(state.viewState.mode).toBe('analytics');
+    });
+
+    it('should switch view mode to "all" when setViewMode is called', () => {
+      const { setViewMode } = useStore.getState();
+      setViewMode('starred');
+      setViewMode('all');
+      const state = useStore.getState();
+      expect(state.viewState.mode).toBe('all');
+    });
+
+    it('should support "all", "starred", and "analytics" view modes', () => {
       const { setViewMode } = useStore.getState();
 
-      setViewMode('main');
-      expect(useStore.getState().viewMode).toBe('main');
+      setViewMode('all');
+      expect(useStore.getState().viewState.mode).toBe('all');
 
-      setViewMode('settings');
-      expect(useStore.getState().viewMode).toBe('settings');
+      setViewMode('starred');
+      expect(useStore.getState().viewState.mode).toBe('starred');
 
-      setViewMode('main');
-      expect(useStore.getState().viewMode).toBe('main');
+      setViewMode('analytics');
+      expect(useStore.getState().viewState.mode).toBe('analytics');
+
+      setViewMode('all');
+      expect(useStore.getState().viewState.mode).toBe('all');
+    });
+
+    it('should set selected folder when setSelectedFolder is called', () => {
+      const { setSelectedFolder } = useStore.getState();
+      setSelectedFolder('folder-123');
+      const state = useStore.getState();
+      expect(state.viewState.selectedFolderId).toBe('folder-123');
+    });
+
+    it('should clear selected folder when setSelectedFolder is called with null', () => {
+      const { setSelectedFolder } = useStore.getState();
+      setSelectedFolder('folder-123');
+      setSelectedFolder(null);
+      const state = useStore.getState();
+      expect(state.viewState.selectedFolderId).toBeUndefined();
+    });
+
+    it('should set settingsOpen to true when setSettingsOpen is called', () => {
+      const { setSettingsOpen } = useStore.getState();
+      setSettingsOpen(true);
+      const state = useStore.getState();
+      expect(state.settingsOpen).toBe(true);
+    });
+
+    it('should set settingsOpen to false when setSettingsOpen is called', () => {
+      const { setSettingsOpen } = useStore.getState();
+      setSettingsOpen(true);
+      setSettingsOpen(false);
+      const state = useStore.getState();
+      expect(state.settingsOpen).toBe(false);
     });
   });
 

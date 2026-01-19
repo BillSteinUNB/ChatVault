@@ -1,4 +1,9 @@
-export type ViewMode = 'main' | 'settings';
+export type ViewMode = 'all' | 'starred' | 'analytics';
+
+export interface ViewState {
+  mode: ViewMode;
+  selectedFolderId?: string;
+}
 
 export type Platform = 'chatgpt' | 'claude' | 'perplexity';
 

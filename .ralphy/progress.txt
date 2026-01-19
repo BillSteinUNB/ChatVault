@@ -663,3 +663,72 @@
 - All TypeScript compilation verified with no errors
 - 9/9 tests passing for PRD-23 integration
 - Total test count: 216 passing (207 existing + 9 new)
+
+
+## 2026-01-19 - PRD-24: View State Management
+
+### Completed
+- Changed ViewMode type from 'main' | 'settings' to 'all' | 'starred' | 'analytics'
+- Added ViewState interface with mode and selectedFolderId properties
+- Added viewState: ViewState state to Zustand store
+- Added settingsOpen: boolean state to store (separate from view modes)
+- Added setViewMode(mode: ViewMode) action to store
+- Added setSelectedFolder(folderId: string | null) action to store
+- Added setSettingsOpen(open: boolean) action to store
+- Updated SidePanel to use settingsOpen instead of viewMode for settings navigation
+- Updated Popup to use settingsOpen instead of viewMode for settings navigation
+- Updated viewMode tests to test new ViewState and settingsOpen functionality
+
+### Files Modified
+- Extension/src/shared/types.ts - Updated ViewMode type and added ViewState interface
+- Extension/src/shared/lib/storage.ts - Added viewState, settingsOpen state and actions
+- Extension/src/shared/components/SidePanel.tsx - Updated to use settingsOpen state
+- Extension/src/shared/components/Popup.tsx - Updated to use settingsOpen state
+- Extension/src/shared/lib/storage.test.ts - Updated tests for PRD-24 with 17 new tests
+- PRD.md - Marked PRD-24 as complete
+
+### Test Setup
+- Updated test suite with 17 new tests for PRD-24 functionality
+- All 17 PRD-24 tests passing
+- Total of 39 storage tests passing (22 existing + 17 new)
+
+### Test Coverage (17 tests)
+- should have viewState in store
+- should have settingsOpen in store
+- should have viewState with mode property
+- should default to "all" view mode
+- should default to settingsOpen false
+- should have setViewMode action
+- should have setSelectedFolder action
+- should have setSettingsOpen action
+- should switch view mode to "starred" when setViewMode is called
+- should switch view mode to "analytics" when setViewMode is called
+- should switch view mode to "all" when setViewMode is called
+- should support "all", "starred", and "analytics" view modes
+- should set selected folder when setSelectedFolder is called
+- should clear selected folder when setSelectedFolder is called with null
+- should set settingsOpen to true when setSettingsOpen is called
+- should set settingsOpen to false when setSettingsOpen is called
+
+### Implementation Details
+- ViewMode type changed to support navigation views: 'all', 'starred', 'analytics'
+- ViewState interface tracks mode and selectedFolderId
+- settingsOpen boolean tracks settings page visibility (separate from view modes)
+- viewState initialized with mode: 'all'
+- settingsOpen initialized to false
+- setViewMode updates viewState.mode while preserving selectedFolderId
+- setSelectedFolder updates viewState.selectedFolderId (null converts to undefined)
+- setSettingsOpen toggles settings page visibility
+- SidePanel and Popup updated to use settingsOpen instead of viewMode === 'settings'
+- Settings button in SidePanel uses setSettingsOpen(true)
+- Settings button in Popup uses setSettingsOpen(true)
+- Back button in SettingsPage calls setSettingsOpen(false)
+- All acceptance criteria met:
+  - View state tracked in storage ✓
+  - Can switch between view modes ✓
+  - Selected folder tracked ✓
+- No lint script configured (skipped linting step)
+- All TypeScript compilation verified with no errors
+- 17/17 tests passing for PRD-24
+- Total test count: 233 passing (216 from previous + 17 new)
+

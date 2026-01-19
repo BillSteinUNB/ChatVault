@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Chat, Folder, Tag, Platform, PersistedChat, STORAGE_KEYS, Settings, DEFAULT_SETTINGS, ViewMode } from '../types';
+import { Chat, Folder, Tag, Platform, PersistedChat, STORAGE_KEYS, Settings, DEFAULT_SETTINGS, ViewMode, ViewState } from '../types';
 import { persistedChatsToChats } from './utils';
 import { SearchIndexEntry, buildSearchIndex, searchChats } from './search';
 
@@ -9,7 +9,8 @@ interface Store {
   folders: Folder[];
   tags: Tag[];
   settings: Settings;
-  viewMode: ViewMode;
+  viewState: ViewState;
+  settingsOpen: boolean;
   isLoading: boolean;
   searchQuery: string;
   searchIndex: SearchIndexEntry[];
@@ -38,6 +39,8 @@ interface Store {
   removeTagFromChat: (chatId: string, tagId: string) => void;
   updateSettings: (updates: Partial<Settings>) => void;
   setViewMode: (mode: ViewMode) => void;
+  setSelectedFolder: (folderId: string | null) => void;
+  setSettingsOpen: (open: boolean) => void;
   focusSearch: () => void;
 }
 
@@ -205,7 +208,8 @@ export const useStore = create<Store>((set, get) => {
     folders: [],
     tags: [],
     settings: DEFAULT_SETTINGS,
-    viewMode: 'main',
+    viewState: { mode: 'all' },
+    settingsOpen: false,
     isLoading: true,
     searchQuery: '',
     searchIndex: [],
@@ -438,7 +442,11 @@ export const useStore = create<Store>((set, get) => {
         chrome.storage.local.set({ [STORAGE_KEYS.SETTINGS]: newSettings });
       }
     },
-    setViewMode: (mode) => set({ viewMode: mode }),
+    setViewMode: (mode) => set(state => ({ viewState: { ...state.viewState, mode } })),
+    setSelectedFolder: (folderId) => set(state => ({
+      viewState: { ...state.viewState, selectedFolderId: folderId || undefined }
+    })),
+    setSettingsOpen: (open) => set({ settingsOpen: open }),
     focusSearch: () => set(state => ({ focusSearchTrigger: state.focusSearchTrigger + 1 })),
   };
 });

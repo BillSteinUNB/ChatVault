@@ -16,14 +16,14 @@ import { SettingsPage } from './SettingsPage';
 import { motion } from 'framer-motion';
 
 export const SidePanel: React.FC = () => {
-    const { chats, isLoading, activeFolder, activeTags, viewMode, setViewMode } = useStore();
+    const { chats, isLoading, activeFolder, activeTags, settingsOpen, setSettingsOpen } = useStore();
     const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
     const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
     const exportButtonRef = React.useRef<HTMLButtonElement>(null);
 
     // Handle settings view
-    if (viewMode === 'settings') {
-        return <SettingsPage onBack={() => setViewMode('main')} />;
+    if (settingsOpen) {
+        return <SettingsPage onBack={() => setSettingsOpen(false)} />;
     }
 
     const filteredChats = chats.filter(chat => {
@@ -70,7 +70,7 @@ export const SidePanel: React.FC = () => {
                     <NavItem icon={<Folder size={20} />} />
                     <NavItem icon={<Star size={20} />} />
                     <NavItem icon={<PieChart size={20} />} />
-                    <NavItem icon={<Settings size={20} />} onClick={() => setViewMode('settings')} />
+                    <NavItem icon={<Settings size={20} />} onClick={() => setSettingsOpen(true)} />
                 </nav>
 
                 <div className="mt-auto">
