@@ -1844,7 +1844,7 @@ Add recent chats list and action buttons.
 
 ---
 
-- [ ] PRD-44: Web Settings Page Layout
+- [x] PRD-44: Web Settings Page Layout
 
 # PRD-44: Web Settings Page Layout
 
@@ -1877,7 +1877,7 @@ None
 
 ---
 
-- [ ] PRD-45: Profile Section
+- [x] PRD-45: Profile Section
 
 # PRD-45: Profile Section
 
