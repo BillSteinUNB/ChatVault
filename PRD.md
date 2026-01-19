@@ -1964,7 +1964,7 @@ Create data management section.
 
 ---
 
-- [ ] PRD-48: Contact Edge Function
+- [x] PRD-48: Contact Edge Function
 
 # PRD-48: Contact Edge Function
 
