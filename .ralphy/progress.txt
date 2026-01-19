@@ -1521,3 +1521,67 @@
 - QR code displayed in white container for better contrast and scanning
 - Mobile-friendly with numeric keyboard input mode
 - Ready for manual testing or when Web project test setup is available
+
+## 2026-01-19 - PRD-37: 2FA Login Challenge
+
+### Completed
+- Created TwoFactorChallenge component with comprehensive 2FA verification flow
+- Updated Login page to check for MFA requirement after password authentication
+- Implemented two-step login flow: credentials → MFA challenge (if required)
+- Added MFA check using getAuthenticatorAssuranceLevel() to detect aal2 requirement
+- Added support for TOTP verification codes (6-digit input)
+- Added support for backup codes (alphanumeric input with toggle)
+- Integrated MFA verification with Supabase mfa.challenge() and mfa.verify() methods
+- Added proper error handling and loading states throughout the flow
+- Added cancel functionality to return to credentials screen
+- Styled component consistently with existing auth pages
+
+### Files Created
+- Web/components/TwoFactorChallenge.tsx - Complete 2FA challenge component with TOTP and backup code support
+
+### Files Modified
+- Web/pages/Login.tsx - Added two-step login flow with MFA detection and TwoFactorChallenge integration
+- PRD.md - Marked PRD-37 as complete
+
+### Test Setup
+- Web project lacks testing infrastructure (no vitest or test setup configured)
+- Previous Web PRDs (28-31, 33-36) also skipped test creation due to this limitation
+- Component implementation verified manually for correct implementation
+- TypeScript compilation verified with no errors for Login.tsx and TwoFactorChallenge.tsx
+
+### Implementation Details
+- TwoFactorChallenge component:
+  - Checks MFA requirement on mount using getAuthenticatorAssuranceLevel()
+  - Lists verified TOTP factors using mfa.listFactors()
+  - Creates challenge using mfa.challenge() with factor ID
+  - Verifies code using mfa.verify() with factorId, challengeId, and code
+  - Supports 6-digit TOTP code input with numeric keyboard
+  - Supports backup code input with alphanumeric keyboard
+  - Toggle between TOTP and backup code inputs via "Use backup code" link
+  - Proper error handling and display for invalid codes
+  - Loading states during challenge creation and verification
+  - Cancel button to return to login credentials
+
+- Login page integration:
+  - Added LoginStep type: 'credentials' | 'mfa'
+  - Modified handleSubmit to check MFA requirement after successful password auth
+  - Checks if aalData.nextLevel === 'aal2' to determine if MFA is required
+  - Finds first verified TOTP factor using mfa.listFactors()
+  - Stores factorId and switches to 'mfa' step when 2FA required
+  - Directs to dashboard when no MFA required
+  - handleMFASuccess navigates to dashboard after successful verification
+  - handleMFACancel returns to credentials screen and resets state
+  - Conditional rendering: TwoFactorChallenge when loginStep === 'mfa', otherwise login form
+
+- Factor interface updated to match Supabase types (friendly_name?: string | undefined)
+
+### Acceptance Criteria Status
+- 2FA challenge shown when required ✓ (aal2 check in handleSubmit)
+- Can enter and verify code ✓ (TwoFactorChallenge with mfa.verify)
+- Login completes after 2FA ✓ (handleMFASuccess navigates to dashboard)
+
+### Notes
+- Web project pre-existing TypeScript errors in Settings.tsx (unrelated to PRD-37)
+- Web project lacks testing infrastructure - consistent with previous Web PRDs
+- TwoFactorChallenge follows same patterns as Enable2FAModal from PRD-36
+- Ready for manual testing or integration with Web project test setup when available

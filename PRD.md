@@ -1554,7 +1554,7 @@ None
 
 ---
 
-- [ ] PRD-37: 2FA Login Challenge
+- [x] PRD-37: 2FA Login Challenge
 
 # PRD-37: 2FA Login Challenge
 
