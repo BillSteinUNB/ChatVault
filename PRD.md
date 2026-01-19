@@ -269,7 +269,7 @@ Create a sidebar component displaying all folders.
 
 ---
 
-- [ ] PRD-04: Move Chat to Folder
+- [x] PRD-04: Move Chat to Folder
 
 # PRD-04: Move Chat to Folder
 

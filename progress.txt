@@ -92,3 +92,33 @@ All acceptance criteria met:
 - New Folder button opens CreateFolderModal successfully
 
 Note: Test framework not yet set up (PRD-72), so no tests were written. No linting scripts configured in package.json. TypeScript type checking passed for FolderList and SidePanel components.
+
+---
+
+2026-01-19: Completed PRD-04: Move Chat to Folder
+
+Created Extension/src/shared/components/MoveToFolderMenu.tsx:
+- Dropdown menu component for moving chats to folders
+- Lists all folders with color indicators
+- "No Folder" option to remove chat from folder
+- Checkmark indicator on currently selected folder
+- Click outside to close functionality with useEffect
+- Animated dropdown using Framer Motion (AnimatePresence, motion)
+- Calls moveChatToFolder action from Zustand store on selection
+
+Updated Extension/src/shared/components/ChatItem.tsx:
+- Added folder menu state management with useState
+- Added folder lookup to get folder object from folderId
+- Updated folder badge to show folder name with color styling
+- Added Folder icon button to hover actions (between Pin and Trash)
+- Folder icon filled with primary color when chat is in a folder
+- Added MoveToFolderMenu component that renders when folder icon is clicked
+- Menu positioned absolutely relative to hover actions container
+
+All acceptance criteria met:
+- User can move chat to folder via dropdown menu
+- User can remove chat from folder via "No Folder" option
+- Folder badge shows on chat item with folder name and color
+- Folder filtering works correctly (already implemented in PRD-03)
+
+Note: Test framework not yet set up (PRD-72), so no tests were written. No linting scripts configured in package.json. TypeScript type checking passed for all components.

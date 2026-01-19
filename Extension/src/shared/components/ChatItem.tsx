@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Chat } from '../types';
 import { formatRelativeTime } from '../lib/utils';
-import { Pin, Trash2, ExternalLink } from 'lucide-react';
+import { Pin, Trash2, ExternalLink, Folder } from 'lucide-react';
 import { useStore } from '../lib/storage';
 import { motion } from 'framer-motion';
 import { cn } from '../lib/utils';
+import { MoveToFolderMenu } from './MoveToFolderMenu';
 
 interface ChatItemProps {
   chat: Chat;
@@ -12,13 +13,16 @@ interface ChatItemProps {
 }
 
 export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact }) => {
-  const { togglePin, deleteChat } = useStore();
+  const { togglePin, deleteChat, folders } = useStore();
+  const [showFolderMenu, setShowFolderMenu] = useState(false);
 
   const platformColors = {
     chatgpt: 'border-l-[#10A37F]',
     claude: 'border-l-[#D97757]',
     perplexity: 'border-l-[#6B4FFF]',
   };
+
+  const folder = chat.folderId ? folders.find(f => f.id === chat.folderId) : null;
 
   return (
     <motion.div
@@ -46,31 +50,49 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact }) => {
             <span className="capitalize font-medium">{chat.platform}</span>
             <span>•</span>
             <span>{formatRelativeTime(chat.timestamp)}</span>
-            {chat.folderId && (
-               <>
-               <span>•</span>
-               <span className="bg-gray-100 px-1.5 py-0.5 rounded text-gray-500">
-                 {chat.folderId}
-               </span>
-               </>
+            {folder && (
+              <>
+                <span>•</span>
+                <span
+                  className="px-1.5 py-0.5 rounded font-medium"
+                  style={{ backgroundColor: `${folder.color}20`, color: folder.color }}
+                >
+                  {folder.name}
+                </span>
+              </>
             )}
           </div>
         </div>
         
         {/* Hover Actions */}
-        <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity absolute right-2 top-2 bg-white/80 backdrop-blur-sm rounded p-1">
-           <button 
+        <div className="relative flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity absolute right-2 top-2 bg-white/80 backdrop-blur-sm rounded p-1">
+           <button
              onClick={(e) => { e.stopPropagation(); togglePin(chat.id); }}
              className={cn("p-1.5 rounded hover:bg-gray-100", chat.isPinned ? "text-primary-500" : "text-gray-400")}
            >
              <Pin size={14} className={cn(chat.isPinned && "fill-current")} />
            </button>
-           <button 
+           <button
+             onClick={(e) => { e.stopPropagation(); setShowFolderMenu(!showFolderMenu); }}
+             className={cn("p-1.5 rounded hover:bg-gray-100", folder ? "text-primary-500" : "text-gray-400")}
+           >
+             <Folder size={14} className={cn(folder && "fill-current")} />
+           </button>
+           <button
              onClick={(e) => { e.stopPropagation(); deleteChat(chat.id); }}
              className="p-1.5 rounded hover:bg-red-50 text-gray-400 hover:text-red-500"
            >
              <Trash2 size={14} />
            </button>
+
+           {/* Move to Folder Menu */}
+           {showFolderMenu && (
+             <MoveToFolderMenu
+               chatId={chat.id}
+               currentFolderId={chat.folderId || null}
+               onClose={() => setShowFolderMenu(false)}
+             />
+           )}
         </div>
 
         {/* Persistent Pin Indicator if Pinned */}
