@@ -264,3 +264,36 @@ All acceptance criteria met:
 - Download function works in extension context (uses Blob API)
 
 Note: Test framework not yet set up (PRD-72), so no tests were written. No linting scripts configured in package.json. TypeScript type checking passed for export.ts.
+
+---
+
+2026-01-19: Completed PRD-10: Export Menu Component
+
+Created Extension/src/shared/components/ExportMenu.tsx:
+- Dropdown menu component for export options using Framer Motion (AnimatePresence, motion)
+- Export as JSON option for single chats
+- Export as Markdown option for single chats
+- Export All Chats option for bulk export
+- Handles single chat vs bulk export based on chat prop
+- Generates appropriate filenames:
+  * Single: {sanitized-title}-{date}.{ext}
+  * Bulk: chatvault-backup-{date}.json
+- Filename sanitization using getSanitizedTitle to replace non-alphanumeric characters with dashes
+- Click outside to close functionality with useRef and useEffect
+- Integration with export utility functions (exportToJSON, exportToMarkdown, downloadFile)
+
+Updated Extension/src/shared/components/SidePanel.tsx:
+- Imported ExportMenu component
+- Added isExportMenuOpen state to track menu visibility
+- Added exportButtonRef for menu positioning
+- Wrapped Export button in relative div
+- Wired up Export button onClick to toggle menu
+- Added ExportMenu component rendering when menu is open
+
+All acceptance criteria met:
+- Menu shows export options (Export as JSON, Export as Markdown, Export All Chats)
+- Single chat export works (when chat prop is provided)
+- Bulk export works (Export All Chats option)
+- Files download with correct names (sanitized title + date + extension)
+
+Note: Test framework not yet set up (PRD-72), so no tests were written. No linting scripts configured in package.json. TypeScript type checking passed for ExportMenu and SidePanel components.

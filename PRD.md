@@ -513,7 +513,7 @@ None
 
 ---
 
-- [ ] PRD-10: Export Menu Component
+- [x] PRD-10: Export Menu Component
 
 # PRD-10: Export Menu Component
 
@@ -546,10 +546,10 @@ interface ExportMenuProps {
 ```
 
 ### Acceptance Criteria
-- [ ] Menu shows export options
-- [ ] Single chat export works
-- [ ] Bulk export works
-- [ ] Files download with correct names
+- [x] Menu shows export options
+- [x] Single chat export works
+- [x] Bulk export works
+- [x] Files download with correct names
 
 ### Dependencies
 - PRD-09

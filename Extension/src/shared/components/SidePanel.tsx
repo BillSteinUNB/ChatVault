@@ -9,12 +9,15 @@ import { PLATFORM_CONFIG } from '../constants';
 import { FolderList } from './FolderList';
 import { CreateFolderModal } from './CreateFolderModal';
 import { TagFilter } from './TagFilter';
+import { ExportMenu } from './ExportMenu';
 
 import { motion } from 'framer-motion';
 
 export const SidePanel: React.FC = () => {
     const { chats, isLoading, activeFolder, activeTags } = useStore();
     const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
+    const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
+    const exportButtonRef = React.useRef<HTMLButtonElement>(null);
 
     const filteredChats = chats.filter(chat => {
         if (activeFolder && chat.folderId !== activeFolder) {
@@ -76,7 +79,17 @@ export const SidePanel: React.FC = () => {
                         <p className="text-sm text-gray-500">Manage and organize your AI chats</p>
                     </div>
                     <div className="flex items-center gap-3">
-                        <Button variant="secondary" size="sm">Export</Button>
+                        <div className="relative">
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => setIsExportMenuOpen(!isExportMenuOpen)}
+                                ref={exportButtonRef}
+                            >
+                                Export
+                            </Button>
+                            {isExportMenuOpen && <ExportMenu onClose={() => setIsExportMenuOpen(false)} />}
+                        </div>
                         <Button size="sm" className="gap-2" onClick={() => setIsCreateFolderModalOpen(true)}>
                             <Plus size={16} /> New Folder
                         </Button>
