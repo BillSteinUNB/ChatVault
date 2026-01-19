@@ -152,3 +152,30 @@ All acceptance criteria met:
 - deleteTag cascades to remove tag from all chats
 
 Note: Test framework not yet set up (PRD-72), so no tests were written. No linting scripts configured in package.json. TypeScript type checking passed.
+
+---
+
+2026-01-19: Completed PRD-06: Tag Input Component
+
+Created Extension/src/shared/components/TagInput.tsx:
+- Autocomplete input component for adding tags to chats
+- Text input field with real-time filtering of existing tags
+- Dropdown showing matching tags with color indicators
+- Option to create new tags inline when no match found
+- Selected tags display as removable colored chips
+- Press Enter or click Plus button to add tag
+- Click X on chip to remove tag from chat
+- New tags get random color from preset palette (7 colors: Red, Amber, Emerald, Blue, Violet, Pink, Gray)
+- Keyboard support: Enter to add, Backspace to remove last tag
+- Animated dropdown using Framer Motion (AnimatePresence, motion)
+- Click outside to close dropdown functionality
+- Integration with Zustand store's tag CRUD actions
+
+All acceptance criteria met:
+- Autocomplete shows matching tags filtered by input value
+- Can create new tags inline via "Create {tagname}" option or Enter key
+- Tags display as removable chips with color styling
+- Can remove tags by clicking X button on each chip
+- Backspace removes last tag when input is empty
+
+Note: Test framework not yet set up (PRD-72), so no tests were written. No linting scripts configured in package.json. TypeScript type checking passed for TagInput component.

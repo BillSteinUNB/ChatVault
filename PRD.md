@@ -349,7 +349,7 @@ None
 
 ---
 
-- [ ] PRD-06: Tag Input Component
+- [x] PRD-06: Tag Input Component
 
 # PRD-06: Tag Input Component
 
@@ -382,10 +382,10 @@ interface TagInputProps {
 ```
 
 ### Acceptance Criteria
-- [ ] Autocomplete shows matching tags
-- [ ] Can create new tags inline
-- [ ] Tags display as chips
-- [ ] Can remove tags by clicking X
+- [x] Autocomplete shows matching tags
+- [x] Can create new tags inline
+- [x] Tags display as chips
+- [x] Can remove tags by clicking X
 
 ### Dependencies
 - PRD-05
