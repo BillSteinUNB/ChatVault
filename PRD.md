@@ -751,7 +751,7 @@ Settings
 
 ---
 
-- [ ] PRD-16: Settings Controls Implementation
+- [x] PRD-16: Settings Controls Implementation
 
 # PRD-16: Settings Controls Implementation
 
@@ -778,10 +778,10 @@ Make all settings controls functional.
    - Clear data button → confirmation dialog → clear storage
 
 ### Acceptance Criteria
-- [ ] Theme changes immediately
-- [ ] Toggles update settings
-- [ ] Storage usage shows correctly
-- [ ] Clear data works with confirmation
+- [x] Theme changes immediately
+- [x] Toggles update settings
+- [x] Storage usage shows correctly
+- [x] Clear data works with confirmation
 
 ### Dependencies
 - PRD-15, PRD-09 (for export)
