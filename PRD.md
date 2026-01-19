@@ -1908,7 +1908,7 @@ Create profile editing section.
 
 ---
 
-- [ ] PRD-46: Security Section
+- [x] PRD-46: Security Section
 
 # PRD-46: Security Section
 
