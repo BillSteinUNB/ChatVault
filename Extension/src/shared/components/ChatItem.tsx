@@ -31,7 +31,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact, isSelected, o
   const platformColors = {
     chatgpt: 'border-l-[#10A37F]',
     claude: 'border-l-[#D97757]',
-    perplexity: 'border-l-[#6B4FFF]',
+    perplexity: 'border-l-[#20B2AA]',
   };
 
   const folder = chat.folderId ? folders.find(f => f.id === chat.folderId) : null;

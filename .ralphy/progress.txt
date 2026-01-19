@@ -602,3 +602,64 @@
  -   A l l   T y p e S c r i p t   c o m p i l a t i o n   v e r i f i e d   w i t h   n o   e r r o r s  
  -   2 5 / 2 5   t e s t s   p a s s i n g   f o r   P e r p l e x i t y   s c r a p e r  
  
+
+## 2026-01-19 - PRD-23: Perplexity Manifest & Integration
+
+### Completed
+- Verified manifest.json has Perplexity content script configured (already present)
+- Updated PLATFORM_CONFIG in constants.ts with PRD-specified values:
+  - Changed color from #6B4FFF to #20B2AA (light sea green)
+  - Changed icon from 'Perplexity' string to '🔍' emoji
+  - Added urlPattern property: /perplexity\.ai/
+- Updated ChatItem.tsx platformColors to use new Perplexity color #20B2AA
+- Updated existing test file perplexity-integration.test.tsx to expect new values
+- Created new comprehensive test suite in perplexity-integration.test.ts with 9 tests
+- All tests passing: 9/9 for new integration tests
+- TypeScript compilation verified with no errors
+
+### Files Created
+- Extension/src/shared/lib/perplexity-integration.test.ts - Comprehensive test suite with 9 tests
+
+### Files Modified
+- Extension/src/shared/constants.ts - Updated Perplexity PLATFORM_CONFIG with PRD values (color, icon, urlPattern)
+- Extension/src/shared/components/ChatItem.tsx - Updated platformColors for Perplexity to #20B2AA
+- Extension/src/shared/lib/perplexity-integration.test.tsx - Updated test expectations to match new PRD values
+- PRD.md - Marked PRD-23 as complete
+
+### Test Setup
+- Created comprehensive test suite with 9 tests passing
+- All tests verify PRD-23 requirements:
+  - Perplexity platform configuration exists
+  - Correct name, color, icon values
+  - urlPattern for matching perplexity.ai URLs
+  - All platforms configured with required properties
+
+### Test Coverage (9 tests)
+- should include perplexity platform configuration
+- should have correct name for perplexity
+- should have correct color #20B2AA for perplexity
+- should have 🔍 icon for perplexity
+- should have urlPattern for perplexity
+- should match perplexity.ai URLs
+- should not match non-perplexity URLs
+- should have all three platforms configured
+- should have required properties for each platform
+
+### Implementation Details
+- manifest.json already had Perplexity content script configured:
+  - matches: ["https://www.perplexity.ai/*"]
+  - js: ["content/perplexity.js"]
+- PLATFORM_CONFIG updates:
+  - name: 'Perplexity' (unchanged)
+  - color: '#20B2AA' (changed from '#6B4FFF')
+  - icon: '🔍' (changed from 'Perplexity')
+  - urlPattern: /perplexity\.ai/ (newly added)
+- ChatItem component uses border-l-[#20B2AA] for Perplexity chats
+- All acceptance criteria met:
+  - Extension runs on Perplexity pages ✓ (manifest already configured)
+  - Perplexity appears in platform filter ✓ (PLATFORM_CONFIG has perplexity)
+  - Perplexity chats show correct icon/color ✓ (icon: 🔍, color: #20B2AA)
+- No lint script configured (skipped linting step)
+- All TypeScript compilation verified with no errors
+- 9/9 tests passing for PRD-23 integration
+- Total test count: 216 passing (207 existing + 9 new)

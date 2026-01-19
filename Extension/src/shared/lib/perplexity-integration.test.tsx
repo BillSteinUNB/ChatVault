@@ -25,11 +25,11 @@ describe('PRD-23: Perplexity Manifest & Integration', () => {
     });
 
     it('has Perplexity color defined', () => {
-      expect(PLATFORM_CONFIG.perplexity.color).toBe('#6B4FFF');
+      expect(PLATFORM_CONFIG.perplexity.color).toBe('#20B2AA');
     });
 
     it('has Perplexity icon defined', () => {
-      expect(PLATFORM_CONFIG.perplexity.icon).toBe('Perplexity');
+      expect(PLATFORM_CONFIG.perplexity.icon).toBe('🔍');
     });
   });
 
@@ -94,10 +94,10 @@ describe('PRD-23: Perplexity Manifest & Integration', () => {
     it('renders Perplexity chat with correct border color', () => {
       const { container } = render(<ChatItem chat={mockChat} />);
 
-      // ChatItem uses border-l-[#6B4FFF] for perplexity
+      // ChatItem uses border-l-[#20B2AA] for perplexity
       const chatItem = container.querySelector('.group');
       expect(chatItem).toBeTruthy();
-      expect(chatItem?.classList.contains('border-l-[#6B4FFF]')).toBe(true);
+      expect(chatItem?.classList.contains('border-l-[#20B2AA]')).toBe(true);
     });
 
     it('shows Perplexity platform name', () => {
@@ -143,7 +143,7 @@ describe('PRD-23: Perplexity Manifest & Integration', () => {
       const chatItem = container.querySelector('.group');
 
       expect(chatItem).toBeTruthy();
-      expect(chatItem?.classList.contains('border-l-[#6B4FFF]')).toBe(true);
+      expect(chatItem?.classList.contains('border-l-[#20B2AA]')).toBe(true);
     });
 
     it('uses different border colors for different platforms', () => {
@@ -196,7 +196,7 @@ describe('PRD-23: Perplexity Manifest & Integration', () => {
 
       expect(chatgptItem?.classList.contains('border-l-[#10A37F]')).toBe(true);
       expect(claudeItem?.classList.contains('border-l-[#D97757]')).toBe(true);
-      expect(perplexityItem?.classList.contains('border-l-[#6B4FFF]')).toBe(true);
+      expect(perplexityItem?.classList.contains('border-l-[#20B2AA]')).toBe(true);
     });
   });
 });

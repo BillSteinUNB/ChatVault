@@ -1034,7 +1034,7 @@ None
 
 ---
 
-- [ ] PRD-23: Perplexity Manifest & Integration
+- [x] PRD-23: Perplexity Manifest & Integration
 
 # PRD-23: Perplexity Manifest & Integration
 
