@@ -14,6 +14,9 @@ interface Store {
   setActiveFolder: (id: string | null) => void;
   activeFilter: Platform | 'all';
   setFilter: (filter: Platform | 'all') => void;
+  activeTags: string[];
+  setActiveTags: (tags: string[]) => void;
+  toggleActiveTag: (tagId: string) => void;
   togglePin: (id: string) => void;
   deleteChat: (id: string) => void;
   loadChatsFromStorage: () => Promise<void>;
@@ -162,6 +165,13 @@ export const useStore = create<Store>((set, get) => {
     setActiveFolder: (id) => set({ activeFolder: id }),
     activeFilter: 'all',
     setFilter: (filter) => set({ activeFilter: filter }),
+    activeTags: [],
+    setActiveTags: (tags) => set({ activeTags: tags }),
+    toggleActiveTag: (tagId) => set(state => ({
+      activeTags: state.activeTags.includes(tagId)
+        ? state.activeTags.filter(id => id !== tagId)
+        : [...state.activeTags, tagId]
+    })),
     togglePin: (id) => {
       set((state) => ({
         chats: state.chats.map(chat =>
