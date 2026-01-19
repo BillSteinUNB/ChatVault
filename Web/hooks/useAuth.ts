@@ -71,10 +71,24 @@ export function useAuth() {
     }
   };
 
+  const requestPasswordReset = async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`
+    });
+    return { error };
+  };
+
+  const updatePassword = async (newPassword: string) => {
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    return { error };
+  };
+
   return {
     ...authState,
     signIn,
     signUp,
     signOut,
+    requestPasswordReset,
+    updatePassword,
   };
 }

@@ -1300,7 +1300,7 @@ await supabase.auth.updateUser({ password: newPassword });
 
 ---
 
-- [ ] PRD-30: Auth Hook Updates
+- [x] PRD-30: Auth Hook Updates
 
 # PRD-30: Auth Hook Updates
 
