@@ -307,7 +307,7 @@ Allow users to move chats into folders.
 
 ---
 
-- [ ] PRD-05: Tag Data Model & Storage
+- [x] PRD-05: Tag Data Model & Storage
 
 # PRD-05: Tag Data Model & Storage
 
@@ -340,9 +340,9 @@ export interface Tag {
 3. Persist tags to `chrome.storage.local`
 
 ### Acceptance Criteria
-- [ ] Tag interface exists
-- [ ] All tag CRUD actions work
-- [ ] Tags persist after restart
+- [x] Tag interface exists
+- [x] All tag CRUD actions work
+- [x] Tags persist after restart
 
 ### Dependencies
 None

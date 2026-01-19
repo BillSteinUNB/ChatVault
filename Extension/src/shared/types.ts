@@ -20,6 +20,13 @@ export interface Folder {
   updatedAt: number;
 }
 
+export interface Tag {
+  id: string;
+  name: string;
+  color: string;
+  createdAt: number;
+}
+
 export interface UserSettings {
   theme: 'light' | 'dark' | 'system';
   autoSave: boolean;
@@ -54,6 +61,7 @@ export interface PersistedChat {
 export const STORAGE_KEYS = {
   CHATS: 'chatvault_chats',
   FOLDERS: 'chatvault_folders',
+  TAGS: 'chatvault_tags',
   SETTINGS: 'chatvault_settings',
 } as const;
 

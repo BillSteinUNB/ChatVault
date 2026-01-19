@@ -1,11 +1,12 @@
 import { create } from 'zustand';
-import { Chat, Folder, Platform, PersistedChat, STORAGE_KEYS } from '../types';
+import { Chat, Folder, Tag, Platform, PersistedChat, STORAGE_KEYS } from '../types';
 import { persistedChatsToChats } from './utils';
 
 
 interface Store {
   chats: Chat[];
   folders: Folder[];
+  tags: Tag[];
   isLoading: boolean;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
@@ -21,6 +22,11 @@ interface Store {
   updateFolder: (id: string, updates: Partial<Folder>) => void;
   deleteFolder: (id: string) => void;
   moveChatToFolder: (chatId: string, folderId: string | null) => void;
+  addTag: (tag: Tag) => void;
+  updateTag: (id: string, updates: Partial<Tag>) => void;
+  deleteTag: (id: string) => void;
+  addTagToChat: (chatId: string, tagId: string) => void;
+  removeTagFromChat: (chatId: string, tagId: string) => void;
 }
 
 /**
@@ -68,9 +74,35 @@ async function loadPersistedFolders(): Promise<Folder[]> {
 }
 
 /**
+ * Load persisted tags from chrome.storage.local
+ * Falls back to empty array if storage is empty or unavailable
+ */
+async function loadPersistedTags(): Promise<Tag[]> {
+  try {
+    if (typeof chrome === 'undefined' || !chrome.storage?.local) {
+      console.log('[ChatVault] chrome.storage not available, using empty state');
+      return [];
+    }
+    
+    const result = await chrome.storage.local.get(STORAGE_KEYS.TAGS);
+    const persisted = (result[STORAGE_KEYS.TAGS] as Tag[] | undefined) ?? [];
+    
+    console.log('[ChatVault] Loaded', persisted.length, 'tags from storage');
+    return persisted;
+  } catch (error) {
+    console.error('[ChatVault] Failed to load tags from storage:', error);
+    return [];
+  }
+}
+
+/**
  * Setup listener for storage changes to update store reactively
  */
-function setupStorageListener(setChats: (chats: Chat[]) => void, setFolders: (folders: Folder[]) => void): void {
+function setupStorageListener(
+  setChats: (chats: Chat[]) => void,
+  setFolders: (folders: Folder[]) => void,
+  setTags: (tags: Tag[]) => void
+): void {
   if (typeof chrome === 'undefined' || !chrome.storage?.onChanged) {
     return;
   }
@@ -91,12 +123,20 @@ function setupStorageListener(setChats: (chats: Chat[]) => void, setFolders: (fo
         setFolders(newValue);
       }
     }
+    
+    if (areaName === 'local' && changes[STORAGE_KEYS.TAGS]) {
+      const newValue = changes[STORAGE_KEYS.TAGS].newValue as Tag[] | undefined;
+      if (newValue !== undefined) {
+        console.log('[ChatVault] Tags storage changed, updating store with', newValue.length, 'tags');
+        setTags(newValue);
+      }
+    }
   });
 }
 
 export const useStore = create<Store>((set, get) => {
   // Setup storage listener on store creation
-  setupStorageListener((chats) => set({ chats }), (folders) => set({ folders }));
+  setupStorageListener((chats) => set({ chats }), (folders) => set({ folders }), (tags) => set({ tags }));
   
   // Trigger initial load (async, will update state when ready)
   loadPersistedChats().then(chats => {
@@ -106,10 +146,15 @@ export const useStore = create<Store>((set, get) => {
   loadPersistedFolders().then(folders => {
     set({ folders });
   });
+  
+  loadPersistedTags().then(tags => {
+    set({ tags });
+  });
 
   return {
     chats: [],
     folders: [],
+    tags: [],
     isLoading: true,
     searchQuery: '',
     setSearchQuery: (query) => set({ searchQuery: query }),
@@ -208,6 +253,108 @@ export const useStore = create<Store>((set, get) => {
           const persisted = (result[STORAGE_KEYS.CHATS] as PersistedChat[] | undefined) ?? [];
           const updated = persisted.map(chat =>
             chat.id === chatId ? { ...chat, folderId: folderId || undefined } : chat
+          );
+          chrome.storage.local.set({ [STORAGE_KEYS.CHATS]: updated });
+        });
+      }
+    },
+    addTag: (tag) => {
+      set((state) => ({
+        tags: [...state.tags, tag]
+      }));
+      
+      if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+        chrome.storage.local.get(STORAGE_KEYS.TAGS).then(result => {
+          const persisted = (result[STORAGE_KEYS.TAGS] as Tag[] | undefined) ?? [];
+          const updated = [...persisted, tag];
+          chrome.storage.local.set({ [STORAGE_KEYS.TAGS]: updated });
+        });
+      }
+    },
+    updateTag: (id, updates) => {
+      set((state) => ({
+        tags: state.tags.map(tag =>
+          tag.id === id ? { ...tag, ...updates } : tag
+        )
+      }));
+      
+      if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+        chrome.storage.local.get(STORAGE_KEYS.TAGS).then(result => {
+          const persisted = (result[STORAGE_KEYS.TAGS] as Tag[] | undefined) ?? [];
+          const updated = persisted.map(tag =>
+            tag.id === id ? { ...tag, ...updates } : tag
+          );
+          chrome.storage.local.set({ [STORAGE_KEYS.TAGS]: updated });
+        });
+      }
+    },
+    deleteTag: (id) => {
+      set((state) => {
+        const updatedTags = state.tags.filter(tag => tag.id !== id);
+        const updatedChats = state.chats.map(chat => ({
+          ...chat,
+          tags: chat.tags.filter(tagId => tagId !== id)
+        }));
+        return {
+          tags: updatedTags,
+          chats: updatedChats
+        };
+      });
+      
+      if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+        chrome.storage.local.get(STORAGE_KEYS.TAGS).then(result => {
+          const persisted = (result[STORAGE_KEYS.TAGS] as Tag[] | undefined) ?? [];
+          const updatedTags = persisted.filter(tag => tag.id !== id);
+          chrome.storage.local.set({ [STORAGE_KEYS.TAGS]: updatedTags });
+        });
+        
+        chrome.storage.local.get(STORAGE_KEYS.CHATS).then(result => {
+          const persisted = (result[STORAGE_KEYS.CHATS] as PersistedChat[] | undefined) ?? [];
+          const updatedChats = persisted.map(chat => ({
+            ...chat,
+            tags: chat.tags.filter(tagId => tagId !== id)
+          }));
+          chrome.storage.local.set({ [STORAGE_KEYS.CHATS]: updatedChats });
+        });
+      }
+    },
+    addTagToChat: (chatId, tagId) => {
+      set((state) => ({
+        chats: state.chats.map(chat =>
+          chat.id === chatId && !chat.tags.includes(tagId)
+            ? { ...chat, tags: [...chat.tags, tagId] }
+            : chat
+        )
+      }));
+      
+      if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+        chrome.storage.local.get(STORAGE_KEYS.CHATS).then(result => {
+          const persisted = (result[STORAGE_KEYS.CHATS] as PersistedChat[] | undefined) ?? [];
+          const updated = persisted.map(chat =>
+            chat.id === chatId && !chat.tags.includes(tagId)
+              ? { ...chat, tags: [...chat.tags, tagId] }
+              : chat
+          );
+          chrome.storage.local.set({ [STORAGE_KEYS.CHATS]: updated });
+        });
+      }
+    },
+    removeTagFromChat: (chatId, tagId) => {
+      set((state) => ({
+        chats: state.chats.map(chat =>
+          chat.id === chatId
+            ? { ...chat, tags: chat.tags.filter(id => id !== tagId) }
+            : chat
+        )
+      }));
+      
+      if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+        chrome.storage.local.get(STORAGE_KEYS.CHATS).then(result => {
+          const persisted = (result[STORAGE_KEYS.CHATS] as PersistedChat[] | undefined) ?? [];
+          const updated = persisted.map(chat =>
+            chat.id === chatId
+              ? { ...chat, tags: chat.tags.filter(id => id !== tagId) }
+              : chat
           );
           chrome.storage.local.set({ [STORAGE_KEYS.CHATS]: updated });
         });

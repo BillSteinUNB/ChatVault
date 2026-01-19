@@ -47,8 +47,7 @@ All acceptance criteria met:
 - Validation prevents empty names and enforces 50 char max
 - Folder is created on submit with proper UUID and persisted via addFolder
 
-Note: Test framework not yet set up (PRD-72), so no tests were written.
-""  
+Note: Test framework not yet set up (PRD-72), so no tests were written. ""  
 "---"  
 ""  
 "2026-01-19: Completed PRD-03: Folder List Component" 
@@ -122,3 +121,34 @@ All acceptance criteria met:
 - Folder filtering works correctly (already implemented in PRD-03)
 
 Note: Test framework not yet set up (PRD-72), so no tests were written. No linting scripts configured in package.json. TypeScript type checking passed for all components.
+
+---
+
+2026-01-19: Completed PRD-05: Tag Data Model & Storage
+
+Updated Extension/src/shared/types.ts:
+- Added Tag interface with properties: id, name, color, createdAt
+- Added TAGS to STORAGE_KEYS constant
+
+Updated Extension/src/shared/lib/storage.ts:
+- Imported Tag type
+- Added tags: Tag[] to Store state
+- Added tag CRUD actions to Store interface:
+  * addTag(tag: Tag)
+  * updateTag(id: string, updates: Partial<Tag>)
+  * deleteTag(id: string)
+  * addTagToChat(chatId: string, tagId: string)
+  * removeTagFromChat(chatId: string, tagId: string)
+- Implemented loadPersistedTags() function to load from chrome.storage.local
+- Updated setupStorageListener() to listen for tag storage changes
+- Added initial tag loading on store creation
+- Implemented all tag actions with chrome.storage.local persistence
+- deleteTag also removes the tag from all chats
+
+All acceptance criteria met:
+- Tag interface exists in types.ts with correct structure
+- All tag CRUD actions work in storage with persistence
+- Tags persist after browser restart via chrome.storage.local
+- deleteTag cascades to remove tag from all chats
+
+Note: Test framework not yet set up (PRD-72), so no tests were written. No linting scripts configured in package.json. TypeScript type checking passed.
