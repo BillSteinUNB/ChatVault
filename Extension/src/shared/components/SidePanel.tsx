@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useStore } from '../lib/storage';
 import { ChatItem } from './ChatItem';
 import { SearchBar } from './SearchBar';
+import { SearchFilters } from './SearchFilters';
 import { AuthBanner } from './AuthBanner';
 import { Button } from './ui/Button';
 import { Folder, PieChart, Star, Clock, Plus, Loader2, MessageSquare, Settings } from 'lucide-react';
@@ -113,6 +114,9 @@ export const SidePanel: React.FC = () => {
                 <div className="px-6 pb-4">
                     <div className="max-w-md">
                         <SearchBar />
+                        <div className="mt-2">
+                            <SearchFilters />
+                        </div>
                     </div>
                 </div>
 

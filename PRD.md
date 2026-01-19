@@ -174,10 +174,10 @@ export interface Folder {
 4. Add persistence: Load/save folders from `chrome.storage.local`
 
 ### Acceptance Criteria
-- [x] Folder interface exists in types.ts
-- [x] Chat interface has folderId field
-- [x] All folder CRUD actions work in storage
-- [x] Folders persist after browser restart
+- Folder interface exists in types.ts
+- Chat interface has folderId field
+- All folder CRUD actions work in storage
+- Folders persist after browser restart
 
 ### Dependencies
 None
@@ -216,11 +216,11 @@ interface CreateFolderModalProps {
 ```
 
 ### Acceptance Criteria
-- [x] Modal opens/closes properly
-- [x] User can enter folder name
-- [x] User can select color
-- [x] Validation prevents empty names
-- [x] Folder is created on submit
+- Modal opens/closes properly
+- User can enter folder name
+- User can select color
+- Validation prevents empty names
+- Folder is created on submit
 
 ### Dependencies
 - PRD-01 (storage actions)
@@ -262,11 +262,11 @@ Create a sidebar component displaying all folders.
    - Wire up "New Folder" button to open CreateFolderModal
 
 ### Acceptance Criteria
-- [x] All folders display in list
-- [x] Clicking folder filters chat list
-- [x] "All Chats" shows everything
-- [x] Context menu works
-- [x] New Folder button opens modal
+- All folders display in list
+- Clicking folder filters chat list
+- "All Chats" shows everything
+- Context menu works
+- New Folder button opens modal
 
 ### Dependencies
 - PRD-01, PRD-02
@@ -301,10 +301,10 @@ Allow users to move chats into folders.
    - When a folder is selected, only show chats in that folder
 
 ### Acceptance Criteria
-- [x] User can move chat to folder via menu
-- [x] User can remove chat from folder
-- [x] Folder badge shows on chat item
-- [x] Folder filtering works correctly
+- User can move chat to folder via menu
+- User can remove chat from folder
+- Folder badge shows on chat item
+- Folder filtering works correctly
 
 ### Dependencies
 - PRD-01, PRD-03
@@ -344,9 +344,9 @@ export interface Tag {
 3. Persist tags to `chrome.storage.local`
 
 ### Acceptance Criteria
-- [x] Tag interface exists
-- [x] All tag CRUD actions work
-- [x] Tags persist after restart
+- Tag interface exists
+- All tag CRUD actions work
+- Tags persist after restart
 
 ### Dependencies
 None
@@ -386,10 +386,10 @@ interface TagInputProps {
 ```
 
 ### Acceptance Criteria
-- [x] Autocomplete shows matching tags
-- [x] Can create new tags inline
-- [x] Tags display as chips
-- [x] Can remove tags by clicking X
+- Autocomplete shows matching tags
+- Can create new tags inline
+- Tags display as chips
+- Can remove tags by clicking X
 
 ### Dependencies
 - PRD-05
@@ -422,10 +422,10 @@ Create filter UI for filtering chats by tags.
    - Use AND logic (chat must have all selected tags)
 
 ### Acceptance Criteria
-- [x] All tags display as filter chips
-- [x] Can select multiple tags
-- [x] Chat list filters correctly
-- [x] Clear all resets filter
+- All tags display as filter chips
+- Can select multiple tags
+- Chat list filters correctly
+- Clear all resets filter
 
 ### Dependencies
 - PRD-05, PRD-06
@@ -454,9 +454,9 @@ Show tags on chat items and add ability to edit.
 3. Style tags to match folder colors for consistency
 
 ### Acceptance Criteria
-- [x] Tags display on chat items
-- [x] Can add/remove tags from chat item
-- [x] Overflow handled gracefully
+- Tags display on chat items
+- Can add/remove tags from chat item
+- Overflow handled gracefully
 
 ### Dependencies
 - PRD-05, PRD-06
@@ -504,9 +504,9 @@ TypeScript is a typed superset of JavaScript...
 ```
 
 ### Acceptance Criteria
-- [x] JSON export includes all chat data
-- [x] Markdown is properly formatted
-- [x] Download function works in extension context
+- JSON export includes all chat data
+- Markdown is properly formatted
+- Download function works in extension context
 
 ### Dependencies
 None
@@ -546,10 +546,10 @@ interface ExportMenuProps {
 ```
 
 ### Acceptance Criteria
-- [x] Menu shows export options
-- [x] Single chat export works
-- [x] Bulk export works
-- [x] Files download with correct names
+- Menu shows export options
+- Single chat export works
+- Bulk export works
+- Files download with correct names
 
 ### Dependencies
 - PRD-09
@@ -573,9 +573,9 @@ Connect the existing Export button to functionality.
 4. When chat selected, show single chat options
 
 ### Acceptance Criteria
-- [x] Export button in SidePanel works
-- [x] Can export all chats
-- [x] Can export selected chat
+- Export button in SidePanel works
+- Can export all chats
+- Can export selected chat
 
 ### Dependencies
 - PRD-10
@@ -598,9 +598,9 @@ Add export option to individual chat item menu.
 3. On click, trigger export for that chat
 
 ### Acceptance Criteria
-- [x] Export option appears in chat menu
-- [x] Can export individual chat from menu
-- [x] Both formats available
+- Export option appears in chat menu
+- Can export individual chat from menu
+- Both formats available
 
 ### Dependencies
 - PRD-09, PRD-10
@@ -651,9 +651,9 @@ export const DEFAULT_SETTINGS: Settings = {
    - Persist to chrome.storage.local
 
 ### Acceptance Criteria
-- [x] Settings interface exists
-- [x] Default settings defined
-- [x] Settings persist after restart
+- Settings interface exists
+- Default settings defined
+- Settings persist after restart
 
 ### Dependencies
 None
@@ -690,10 +690,10 @@ Create theme context and provider for dark/light mode.
 4. Update CSS/Tailwind for dark mode support
 
 ### Acceptance Criteria
-- [x] Theme context available throughout app
-- [x] System preference detected
-- [x] Theme applies to UI
-- [x] Theme persists
+- Theme context available throughout app
+- System preference detected
+- Theme applies to UI
+- Theme persists
 
 ### Dependencies
 - PRD-13
@@ -742,9 +742,9 @@ Settings
 ```
 
 ### Acceptance Criteria
-- [x] Settings page renders
-- [x] All sections display
-- [x] Back navigation works
+- Settings page renders
+- All sections display
+- Back navigation works
 
 ### Dependencies
 - PRD-13, PRD-14
@@ -778,10 +778,10 @@ Make all settings controls functional.
    - Clear data button → confirmation dialog → clear storage
 
 ### Acceptance Criteria
-- [x] Theme changes immediately
-- [x] Toggles update settings
-- [x] Storage usage shows correctly
-- [x] Clear data works with confirmation
+- Theme changes immediately
+- Toggles update settings
+- Storage usage shows correctly
+- Clear data works with confirmation
 
 ### Dependencies
 - PRD-15, PRD-09 (for export)
@@ -809,9 +809,9 @@ Connect settings button in Popup to settings page.
 3. Add back button to return from settings
 
 ### Acceptance Criteria
-- [x] Settings button opens settings
-- [x] Can navigate back to main view
-- [x] Works in both popup and sidepanel
+- Settings button opens settings
+- Can navigate back to main view
+- Works in both popup and sidepanel
 
 ### Dependencies
 - PRD-15
@@ -857,9 +857,9 @@ interface SearchIndexEntry {
    - Store index in memory (not persisted)
 
 ### Acceptance Criteria
-- [x] Search index builds from chats
-- [x] Full-text search finds matches in content
-- [x] Search is case-insensitive
+- Search index builds from chats
+- Full-text search finds matches in content
+- Search is case-insensitive
 
 ### Dependencies
 None
@@ -904,16 +904,16 @@ function parseSearchQuery(query: string): ParsedQuery
 3. Update search function to use parsed operators
 
 ### Acceptance Criteria
-- [x] Operators are parsed correctly
-- [x] Free text extracted separately
-- [x] Invalid operators ignored gracefully
+- Operators are parsed correctly
+- Free text extracted separately
+- Invalid operators ignored gracefully
 
 ### Dependencies
 - PRD-18
 
 ---
 
-- [ ] PRD-20: Search Filters UI
+- [x] PRD-20: Search Filters UI
 
 # PRD-20: Search Filters UI
 
@@ -939,10 +939,10 @@ Add visual date range and platform filters.
    - Update results on filter change
 
 ### Acceptance Criteria
-- [ ] Filter panel expands/collapses
-- [ ] Date range filter works
-- [ ] Platform filter works
-- [ ] Filters combine with text search
+- Filter panel expands/collapses
+- Date range filter works
+- Platform filter works
+- Filters combine with text search
 
 ### Dependencies
 - PRD-18, PRD-19
@@ -971,9 +971,9 @@ Make Cmd+K / Ctrl+K focus search globally.
 3. Escape key to blur search
 
 ### Acceptance Criteria
-- [ ] Cmd/Ctrl+K focuses search
-- [ ] Works from anywhere in extension
-- [ ] Escape unfocuses
+- Cmd/Ctrl+K focuses search
+- Works from anywhere in extension
+- Escape unfocuses
 
 ### Dependencies
 None
@@ -1023,11 +1023,11 @@ export class PerplexityScraper extends BaseScraper {
 4. Add entry point in vite.config.ts
 
 ### Acceptance Criteria
-- [ ] Scraper detects Perplexity conversations
-- [ ] User queries extracted
-- [ ] AI responses extracted
-- [ ] Source citations preserved
-- [ ] Title extracted from thread
+- Scraper detects Perplexity conversations
+- User queries extracted
+- AI responses extracted
+- Source citations preserved
+- Title extracted from thread
 
 ### Dependencies
 None
@@ -1071,9 +1071,9 @@ export const PLATFORM_CONFIG = {
 3. Add Perplexity icon to chat list display
 
 ### Acceptance Criteria
-- [ ] Extension runs on Perplexity pages
-- [ ] Perplexity appears in platform filter
-- [ ] Perplexity chats show correct icon
+- Extension runs on Perplexity pages
+- Perplexity appears in platform filter
+- Perplexity chats show correct icon
 
 ### Dependencies
 - PRD-22
@@ -1108,9 +1108,9 @@ interface ViewState {
    - `setSelectedFolder(folderId: string | null)` action
 
 ### Acceptance Criteria
-- [ ] View state tracked in storage
-- [ ] Can switch between view modes
-- [ ] Selected folder tracked
+- View state tracked in storage
+- Can switch between view modes
+- Selected folder tracked
 
 ### Dependencies
 None
@@ -1142,10 +1142,10 @@ Wire up navigation icons in SidePanel.
 3. Update ChatList rendering based on viewMode
 
 ### Acceptance Criteria
-- [ ] Clicking Home shows all chats
-- [ ] Clicking Star shows only pinned chats
-- [ ] Active nav item highlighted
-- [ ] Tooltips show on hover
+- Clicking Home shows all chats
+- Clicking Star shows only pinned chats
+- Active nav item highlighted
+- Tooltips show on hover
 
 ### Dependencies
 - PRD-24
@@ -1174,10 +1174,10 @@ Create simple analytics dashboard.
 3. Show when viewMode === 'analytics'
 
 ### Acceptance Criteria
-- [ ] Analytics view displays
-- [ ] Shows correct chat counts
-- [ ] Shows platform breakdown
-- [ ] Shows popular tags
+- Analytics view displays
+- Shows correct chat counts
+- Shows platform breakdown
+- Shows popular tags
 
 ### Dependencies
 - PRD-24, PRD-25
@@ -1204,8 +1204,8 @@ Wire up View Dashboard button and add tooltips.
    - Any other icon buttons
 
 ### Acceptance Criteria
-- [ ] Dashboard button opens web app
-- [ ] All buttons have tooltips
+- Dashboard button opens web app
+- All buttons have tooltips
 
 ### Dependencies
 None
@@ -1245,10 +1245,10 @@ await supabase.auth.resetPasswordForEmail(email, {
 4. Add link to Login page: "Forgot password?"
 
 ### Acceptance Criteria
-- [ ] Page renders at /forgot-password
-- [ ] Can enter email and submit
-- [ ] Shows success message
-- [ ] Link on login page works
+- Page renders at /forgot-password
+- Can enter email and submit
+- Shows success message
+- Link on login page works
 
 ### Dependencies
 None
@@ -1289,11 +1289,11 @@ await supabase.auth.updateUser({ password: newPassword });
 4. Add route: `/reset-password`
 
 ### Acceptance Criteria
-- [ ] Page renders at /reset-password
-- [ ] Password validation works
-- [ ] Confirmation must match
-- [ ] Password updates successfully
-- [ ] Redirects to login after
+- Page renders at /reset-password
+- Password validation works
+- Confirmation must match
+- Password updates successfully
+- Redirects to login after
 
 ### Dependencies
 - PRD-28
@@ -1329,9 +1329,9 @@ const updatePassword = async (newPassword: string) => {
 2. Return methods from hook
 
 ### Acceptance Criteria
-- [ ] requestPasswordReset method works
-- [ ] updatePassword method works
-- [ ] Methods return errors properly
+- requestPasswordReset method works
+- updatePassword method works
+- Methods return errors properly
 
 ### Dependencies
 None
@@ -1371,10 +1371,10 @@ await supabase.auth.resend({ type: 'signup', email: user.email });
 4. Show banner when logged in but not verified
 
 ### Acceptance Criteria
-- [ ] Banner shows for unverified users
-- [ ] Can resend verification email
-- [ ] Can dismiss banner
-- [ ] Verified users don't see banner
+- Banner shows for unverified users
+- Can resend verification email
+- Can dismiss banner
+- Verified users don't see banner
 
 ### Dependencies
 None
@@ -1401,9 +1401,9 @@ Show verification status in extension.
 3. Update styling to indicate verification state
 
 ### Acceptance Criteria
-- [ ] Shows verification status
-- [ ] Can resend from extension
-- [ ] Clear visual difference verified vs not
+- Shows verification status
+- Can resend from extension
+- Clear visual difference verified vs not
 
 ### Dependencies
 None
@@ -1442,9 +1442,9 @@ serve(async (req) => {
 2. Ensure cascading deletes in schema
 
 ### Acceptance Criteria
-- [ ] Function deletes all user data
-- [ ] Requires authentication
-- [ ] Returns success/error status
+- Function deletes all user data
+- Requires authentication
+- Returns success/error status
 
 ### Dependencies
 None
@@ -1476,10 +1476,10 @@ Create confirmation modal for account deletion.
    - Redirect to home
 
 ### Acceptance Criteria
-- [ ] Modal shows with warnings
-- [ ] Must type DELETE to enable button
-- [ ] Account deleted on confirm
-- [ ] User logged out and redirected
+- Modal shows with warnings
+- Must type DELETE to enable button
+- Account deleted on confirm
+- User logged out and redirected
 
 ### Dependencies
 - PRD-33
@@ -1505,9 +1505,9 @@ Allow users to export data before deleting account.
 3. Use existing export utilities or create web version
 
 ### Acceptance Criteria
-- [ ] Can download data from deletion modal
-- [ ] Export includes all user data
-- [ ] Works before deletion is confirmed
+- Can download data from deletion modal
+- Export includes all user data
+- Works before deletion is confirmed
 
 ### Dependencies
 - PRD-34
@@ -1544,10 +1544,10 @@ await supabase.auth.mfa.challengeAndVerify({ factorId: data.id, code: userCode }
 3. Display QR code using data URL
 
 ### Acceptance Criteria
-- [ ] QR code displays correctly
-- [ ] Manual secret shown for backup
-- [ ] Verification code required
-- [ ] 2FA enabled after verification
+- QR code displays correctly
+- Manual secret shown for backup
+- Verification code required
+- 2FA enabled after verification
 
 ### Dependencies
 None
@@ -1591,9 +1591,9 @@ if (data.nextLevel === 'aal2') {
 ```
 
 ### Acceptance Criteria
-- [ ] 2FA challenge shown when required
-- [ ] Can enter and verify code
-- [ ] Login completes after 2FA
+- 2FA challenge shown when required
+- Can enter and verify code
+- Login completes after 2FA
 
 ### Dependencies
 - PRD-36
@@ -1624,10 +1624,10 @@ Display and manage backup codes.
    - Settings security section
 
 ### Acceptance Criteria
-- [ ] Backup codes display clearly
-- [ ] Can copy all codes
-- [ ] Can download as file
-- [ ] Can regenerate codes
+- Backup codes display clearly
+- Can copy all codes
+- Can download as file
+- Can regenerate codes
 
 ### Dependencies
 - PRD-36
@@ -1674,10 +1674,10 @@ const signInWithGoogle = async () => {
 4. Add to Login and Signup pages with "or" divider
 
 ### Acceptance Criteria
-- [ ] Google button shows and works
-- [ ] GitHub button shows and works
-- [ ] Redirects to OAuth provider
-- [ ] Buttons styled correctly
+- Google button shows and works
+- GitHub button shows and works
+- Redirects to OAuth provider
+- Buttons styled correctly
 
 ### Dependencies
 - GitHub Issue #7 (OAuth Setup)
@@ -1721,10 +1721,10 @@ useEffect(() => {
 3. Add route: `/auth/callback`
 
 ### Acceptance Criteria
-- [ ] Callback page handles redirect
-- [ ] Session established after OAuth
-- [ ] Redirects to dashboard
-- [ ] Errors displayed
+- Callback page handles redirect
+- Session established after OAuth
+- Redirects to dashboard
+- Errors displayed
 
 ### Dependencies
 - PRD-39
@@ -1756,10 +1756,10 @@ Create basic dashboard page structure.
 3. Add Dashboard link to Navbar (show when logged in)
 
 ### Acceptance Criteria
-- [ ] Dashboard page renders
-- [ ] Only accessible when logged in
-- [ ] Navbar has dashboard link
-- [ ] Responsive layout works
+- Dashboard page renders
+- Only accessible when logged in
+- Navbar has dashboard link
+- Responsive layout works
 
 ### Dependencies
 None
@@ -1799,9 +1799,9 @@ interface StatsCardProps {
 3. Style cards with consistent look
 
 ### Acceptance Criteria
-- [ ] Stats cards display
-- [ ] Show correct values
-- [ ] Consistent styling
+- Stats cards display
+- Show correct values
+- Consistent styling
 
 ### Dependencies
 - PRD-41
@@ -1834,10 +1834,10 @@ Add recent chats list and action buttons.
    - "Upgrade" button (if free tier)
 
 ### Acceptance Criteria
-- [ ] Recent chats display
-- [ ] Quick actions work
-- [ ] Export triggers download
-- [ ] Upgrade links to pricing
+- Recent chats display
+- Quick actions work
+- Export triggers download
+- Upgrade links to pricing
 
 ### Dependencies
 - PRD-41, PRD-42
@@ -1868,9 +1868,9 @@ Create settings page structure for web app.
 3. Tab/section navigation
 
 ### Acceptance Criteria
-- [ ] Settings page renders
-- [ ] Section navigation works
-- [ ] Protected route works
+- Settings page renders
+- Section navigation works
+- Protected route works
 
 ### Dependencies
 None
@@ -1899,9 +1899,9 @@ Create profile editing section.
    - Save button
 
 ### Acceptance Criteria
-- [ ] Profile loads from Supabase
-- [ ] Can update display name
-- [ ] Changes save correctly
+- Profile loads from Supabase
+- Can update display name
+- Changes save correctly
 
 ### Dependencies
 - PRD-44
@@ -1927,9 +1927,9 @@ Create security settings section.
 2. Integrate with existing auth components
 
 ### Acceptance Criteria
-- [ ] Change password accessible
-- [ ] 2FA toggle works
-- [ ] Clear security overview
+- Change password accessible
+- 2FA toggle works
+- Clear security overview
 
 ### Dependencies
 - PRD-44, PRD-28 (password), PRD-36 (2FA)
@@ -1955,9 +1955,9 @@ Create data management section.
 2. Wire up export and delete functionality
 
 ### Acceptance Criteria
-- [ ] Can export all data
-- [ ] Delete account accessible
-- [ ] Privacy policy linked
+- Can export all data
+- Delete account accessible
+- Privacy policy linked
 
 ### Dependencies
 - PRD-44, PRD-33 (deletion)
@@ -1992,9 +1992,9 @@ serve(async (req) => {
    - Body: message with reply-to email
 
 ### Acceptance Criteria
-- [ ] Function receives form data
-- [ ] Email sent to support
-- [ ] Returns success/error
+- Function receives form data
+- Email sent to support
+- Returns success/error
 
 ### Dependencies
 - GitHub Issue #6 (Email Service)
@@ -2029,9 +2029,9 @@ export async function submitContactForm(data: ContactForm) {
    - Handle errors
 
 ### Acceptance Criteria
-- [ ] Form calls real API
-- [ ] Success message shows
-- [ ] Errors handled
+- Form calls real API
+- Success message shows
+- Errors handled
 
 ### Dependencies
 - PRD-48
@@ -2067,9 +2067,9 @@ CREATE TABLE subscriptions (
 2. Add RLS policies
 
 ### Acceptance Criteria
-- [ ] Subscriptions table created
-- [ ] RLS policies work
-- [ ] Can query user's subscription
+- Subscriptions table created
+- RLS policies work
+- Can query user's subscription
 
 ### Dependencies
 None
@@ -2108,9 +2108,9 @@ serve(async (req) => {
 ```
 
 ### Acceptance Criteria
-- [ ] Function creates checkout session
-- [ ] Returns checkout URL
-- [ ] Handles errors
+- Function creates checkout session
+- Returns checkout URL
+- Handles errors
 
 ### Dependencies
 - GitHub Issue #5 (Stripe Setup)
@@ -2151,9 +2151,9 @@ serve(async (req) => {
 ```
 
 ### Acceptance Criteria
-- [ ] Webhook verifies signature
-- [ ] Handles subscription events
-- [ ] Updates database correctly
+- Webhook verifies signature
+- Handles subscription events
+- Updates database correctly
 
 ### Dependencies
 - PRD-50, PRD-51
@@ -2185,9 +2185,9 @@ Create billing management page.
    - Manage subscription link (Stripe portal)
 
 ### Acceptance Criteria
-- [ ] Shows current subscription
-- [ ] Can initiate upgrade
-- [ ] Links to Stripe portal
+- Shows current subscription
+- Can initiate upgrade
+- Links to Stripe portal
 
 ### Dependencies
 - PRD-50, PRD-51, PRD-52
@@ -2230,9 +2230,9 @@ interface Chat {
 3. Add sync state to storage
 
 ### Acceptance Criteria
-- [ ] Sync types defined
-- [ ] Chat has sync tracking fields
-- [ ] Sync state in storage
+- Sync types defined
+- Chat has sync tracking fields
+- Sync state in storage
 
 ### Dependencies
 None
@@ -2274,9 +2274,9 @@ CREATE INDEX idx_chats_user_id ON chats(user_id);
    - Insert/update/delete restricted to owner
 
 ### Acceptance Criteria
-- [ ] Chats table created
-- [ ] RLS policies work
-- [ ] Indexes created
+- Chats table created
+- RLS policies work
+- Indexes created
 
 ### Dependencies
 None
@@ -2314,9 +2314,9 @@ async function uploadChat(chat: Chat): Promise<void> {
 3. Track upload errors
 
 ### Acceptance Criteria
-- [ ] Single chat uploads
-- [ ] Bulk upload works
-- [ ] Errors tracked
+- Single chat uploads
+- Bulk upload works
+- Errors tracked
 
 ### Dependencies
 - PRD-54, PRD-55
@@ -2351,9 +2351,9 @@ async function downloadChats(): Promise<Chat[]> {
    - Deleted cloud chats → remove locally
 
 ### Acceptance Criteria
-- [ ] Downloads all user chats
-- [ ] Merges with local correctly
-- [ ] Handles conflicts
+- Downloads all user chats
+- Merges with local correctly
+- Handles conflicts
 
 ### Dependencies
 - PRD-56
@@ -2389,10 +2389,10 @@ Add sync status indicator and trigger sync.
    - Manual trigger
 
 ### Acceptance Criteria
-- [ ] Sync status displays
-- [ ] Manual sync works
-- [ ] Auto-sync on changes
-- [ ] Shows errors clearly
+- Sync status displays
+- Manual sync works
+- Auto-sync on changes
+- Shows errors clearly
 
 ### Dependencies
 - PRD-56, PRD-57
@@ -2436,9 +2436,9 @@ export function canUseFeature(tier: string, feature: string): boolean;
 ```
 
 ### Acceptance Criteria
-- [ ] Tier limits defined
-- [ ] Helper functions work
-- [ ] Easy to check limits
+- Tier limits defined
+- Helper functions work
+- Easy to check limits
 
 ### Dependencies
 None
@@ -2478,10 +2478,10 @@ const saveChat = (chat: Chat) => {
 3. Show warning at 80% (40/50)
 
 ### Acceptance Criteria
-- [ ] Cannot save beyond limit
-- [ ] Warning at 80%
-- [ ] Upgrade prompt shows
-- [ ] Can dismiss prompt
+- Cannot save beyond limit
+- Warning at 80%
+- Upgrade prompt shows
+- Can dismiss prompt
 
 ### Dependencies
 - PRD-59
@@ -2510,9 +2510,9 @@ Show usage progress in UI.
 2. Add to SidePanel footer or settings
 
 ### Acceptance Criteria
-- [ ] Usage meter displays
-- [ ] Color changes with usage
-- [ ] Shows upgrade prompt when high
+- Usage meter displays
+- Color changes with usage
+- Shows upgrade prompt when high
 
 ### Dependencies
 - PRD-59
@@ -2561,9 +2561,9 @@ export const ERROR_MESSAGES: Record<ErrorCode, string> = {
 3. Create `createAppError(code, originalError)` helper
 
 ### Acceptance Criteria
-- [ ] Error types defined
-- [ ] User-friendly messages mapped
-- [ ] Helper function works
+- Error types defined
+- User-friendly messages mapped
+- Helper function works
 
 ### Dependencies
 None
@@ -2610,9 +2610,9 @@ class ErrorBoundary extends React.Component {
    - "Report Issue" link
 
 ### Acceptance Criteria
-- [ ] Catches render errors
-- [ ] Shows fallback UI
-- [ ] Can recover with retry
+- Catches render errors
+- Shows fallback UI
+- Can recover with retry
 
 ### Dependencies
 - PRD-62
@@ -2647,10 +2647,10 @@ Create toast notifications for errors.
    - Network errors
 
 ### Acceptance Criteria
-- [ ] Toast displays on error
-- [ ] Can dismiss manually
-- [ ] Auto-dismisses
-- [ ] Shows user-friendly message
+- Toast displays on error
+- Can dismiss manually
+- Auto-dismisses
+- Shows user-friendly message
 
 ### Dependencies
 - PRD-62
@@ -2686,9 +2686,9 @@ interface OnboardingState {
    - skip()
 
 ### Acceptance Criteria
-- [ ] Onboarding state tracks progress
-- [ ] Persists between sessions
-- [ ] Can skip or complete
+- Onboarding state tracks progress
+- Persists between sessions
+- Can skip or complete
 
 ### Dependencies
 None
@@ -2726,9 +2726,9 @@ Create individual step components.
    - "Go to Dashboard" button
 
 ### Acceptance Criteria
-- [ ] Each step renders correctly
-- [ ] Navigation between steps works
-- [ ] Install detection works (if possible)
+- Each step renders correctly
+- Navigation between steps works
+- Install detection works (if possible)
 
 ### Dependencies
 - PRD-65
@@ -2761,10 +2761,10 @@ Combine steps into wizard page.
 3. Add route: `/onboarding`
 
 ### Acceptance Criteria
-- [ ] Wizard displays steps in order
-- [ ] Progress indicator updates
-- [ ] Can skip at any time
-- [ ] Redirects to dashboard on complete
+- Wizard displays steps in order
+- Progress indicator updates
+- Can skip at any time
+- Redirects to dashboard on complete
 
 ### Dependencies
 - PRD-65, PRD-66
@@ -2797,9 +2797,9 @@ Add ARIA labels to all interactive elements.
    - Add `aria-labelledby`
 
 ### Acceptance Criteria
-- [ ] All buttons have labels
-- [ ] All inputs have labels
-- [ ] Modals properly labeled
+- All buttons have labels
+- All inputs have labels
+- Modals properly labeled
 
 ### Dependencies
 None
@@ -2833,9 +2833,9 @@ Ensure full keyboard accessibility.
    - Arrow keys for menus
 
 ### Acceptance Criteria
-- [ ] Can navigate entire app with keyboard
-- [ ] Focus moves logically
-- [ ] Escape closes overlays
+- Can navigate entire app with keyboard
+- Focus moves logically
+- Escape closes overlays
 
 ### Dependencies
 None
@@ -2872,9 +2872,9 @@ Add clear focus indicators.
 3. Test with keyboard navigation
 
 ### Acceptance Criteria
-- [ ] Focus visible on all elements
-- [ ] Good contrast on all backgrounds
-- [ ] No outline on mouse click
+- Focus visible on all elements
+- Good contrast on all backgrounds
+- No outline on mouse click
 
 ### Dependencies
 None
@@ -2915,9 +2915,9 @@ const prefersReducedMotion = window.matchMedia(
 ```
 
 ### Acceptance Criteria
-- [ ] Animations disabled when preferred
-- [ ] App still functional
-- [ ] Transitions still work minimally
+- Animations disabled when preferred
+- App still functional
+- Transitions still work minimally
 
 ### Dependencies
 None
@@ -2969,9 +2969,9 @@ export default defineConfig({
 ```
 
 ### Acceptance Criteria
-- [ ] Vitest runs successfully
-- [ ] Tests can import React components
-- [ ] Coverage reports generate
+- Vitest runs successfully
+- Tests can import React components
+- Coverage reports generate
 
 ### Dependencies
 None
@@ -3002,9 +3002,9 @@ Test storage/state management functions.
 4. Mock chrome.storage.local
 
 ### Acceptance Criteria
-- [ ] All storage actions tested
-- [ ] Edge cases covered
-- [ ] 80%+ coverage
+- All storage actions tested
+- Edge cases covered
+- 80%+ coverage
 
 ### Dependencies
 - PRD-72
@@ -3037,9 +3037,9 @@ Test export functions.
    - Mock download behavior
 
 ### Acceptance Criteria
-- [ ] Export functions tested
-- [ ] Output format verified
-- [ ] Edge cases covered
+- Export functions tested
+- Output format verified
+- Edge cases covered
 
 ### Dependencies
 - PRD-72, PRD-09
@@ -3072,9 +3072,9 @@ Test key React components.
 3. Use React Testing Library patterns
 
 ### Acceptance Criteria
-- [ ] Key components tested
-- [ ] User interactions tested
-- [ ] Accessibility checked
+- Key components tested
+- User interactions tested
+- Accessibility checked
 
 ### Dependencies
 - PRD-72
@@ -3118,11 +3118,11 @@ jobs:
 3. Add type-check script if missing
 
 ### Acceptance Criteria
-- [ ] CI runs on push/PR
-- [ ] Linting passes
-- [ ] Type checking passes
-- [ ] Tests pass
-- [ ] Build succeeds
+- CI runs on push/PR
+- Linting passes
+- Type checking passes
+- Tests pass
+- Build succeeds
 
 ### Dependencies
 - PRD-72
@@ -3164,9 +3164,9 @@ jobs:
 2. Or configure for Netlify/S3
 
 ### Acceptance Criteria
-- [ ] Deploys on main push
-- [ ] Only runs when Web/ changes
-- [ ] Deployment succeeds
+- Deploys on main push
+- Only runs when Web/ changes
+- Deployment succeeds
 
 ### Dependencies
 - PRD-76
@@ -3209,9 +3209,9 @@ jobs:
 2. Creates GitHub release with zip
 
 ### Acceptance Criteria
-- [ ] Builds on version tag
-- [ ] Creates zip artifact
-- [ ] Attaches to GitHub release
+- Builds on version tag
+- Creates zip artifact
+- Attaches to GitHub release
 
 ### Dependencies
 - PRD-76
