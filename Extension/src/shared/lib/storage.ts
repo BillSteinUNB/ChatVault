@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Chat, Folder, Tag, Platform, PersistedChat, STORAGE_KEYS } from '../types';
+import { Chat, Folder, Tag, Platform, PersistedChat, STORAGE_KEYS, Settings, DEFAULT_SETTINGS } from '../types';
 import { persistedChatsToChats } from './utils';
 
 
@@ -7,6 +7,7 @@ interface Store {
   chats: Chat[];
   folders: Folder[];
   tags: Tag[];
+  settings: Settings;
   isLoading: boolean;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
@@ -30,6 +31,7 @@ interface Store {
   deleteTag: (id: string) => void;
   addTagToChat: (chatId: string, tagId: string) => void;
   removeTagFromChat: (chatId: string, tagId: string) => void;
+  updateSettings: (updates: Partial<Settings>) => void;
 }
 
 /**
@@ -86,10 +88,10 @@ async function loadPersistedTags(): Promise<Tag[]> {
       console.log('[ChatVault] chrome.storage not available, using empty state');
       return [];
     }
-    
+
     const result = await chrome.storage.local.get(STORAGE_KEYS.TAGS);
     const persisted = (result[STORAGE_KEYS.TAGS] as Tag[] | undefined) ?? [];
-    
+
     console.log('[ChatVault] Loaded', persisted.length, 'tags from storage');
     return persisted;
   } catch (error) {
@@ -99,17 +101,40 @@ async function loadPersistedTags(): Promise<Tag[]> {
 }
 
 /**
+ * Load persisted settings from chrome.storage.local
+ * Falls back to DEFAULT_SETTINGS if storage is empty or unavailable
+ */
+async function loadPersistedSettings(): Promise<Settings> {
+  try {
+    if (typeof chrome === 'undefined' || !chrome.storage?.local) {
+      console.log('[ChatVault] chrome.storage not available, using default settings');
+      return DEFAULT_SETTINGS;
+    }
+
+    const result = await chrome.storage.local.get(STORAGE_KEYS.SETTINGS);
+    const persisted = (result[STORAGE_KEYS.SETTINGS] as Settings | undefined) ?? DEFAULT_SETTINGS;
+
+    console.log('[ChatVault] Loaded settings from storage:', persisted);
+    return persisted;
+  } catch (error) {
+    console.error('[ChatVault] Failed to load settings from storage:', error);
+    return DEFAULT_SETTINGS;
+  }
+}
+
+/**
  * Setup listener for storage changes to update store reactively
  */
 function setupStorageListener(
   setChats: (chats: Chat[]) => void,
   setFolders: (folders: Folder[]) => void,
-  setTags: (tags: Tag[]) => void
+  setTags: (tags: Tag[]) => void,
+  setSettings: (settings: Settings) => void
 ): void {
   if (typeof chrome === 'undefined' || !chrome.storage?.onChanged) {
     return;
   }
-  
+
   chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === 'local' && changes[STORAGE_KEYS.CHATS]) {
       const newValue = changes[STORAGE_KEYS.CHATS].newValue as PersistedChat[] | undefined;
@@ -118,7 +143,7 @@ function setupStorageListener(
         setChats(persistedChatsToChats(newValue));
       }
     }
-    
+
     if (areaName === 'local' && changes[STORAGE_KEYS.FOLDERS]) {
       const newValue = changes[STORAGE_KEYS.FOLDERS].newValue as Folder[] | undefined;
       if (newValue !== undefined) {
@@ -126,7 +151,7 @@ function setupStorageListener(
         setFolders(newValue);
       }
     }
-    
+
     if (areaName === 'local' && changes[STORAGE_KEYS.TAGS]) {
       const newValue = changes[STORAGE_KEYS.TAGS].newValue as Tag[] | undefined;
       if (newValue !== undefined) {
@@ -134,30 +159,43 @@ function setupStorageListener(
         setTags(newValue);
       }
     }
+
+    if (areaName === 'local' && changes[STORAGE_KEYS.SETTINGS]) {
+      const newValue = changes[STORAGE_KEYS.SETTINGS].newValue as Settings | undefined;
+      if (newValue !== undefined) {
+        console.log('[ChatVault] Settings storage changed:', newValue);
+        setSettings(newValue);
+      }
+    }
   });
 }
 
 export const useStore = create<Store>((set, get) => {
   // Setup storage listener on store creation
-  setupStorageListener((chats) => set({ chats }), (folders) => set({ folders }), (tags) => set({ tags }));
-  
+  setupStorageListener((chats) => set({ chats }), (folders) => set({ folders }), (tags) => set({ tags }), (settings) => set({ settings }));
+
   // Trigger initial load (async, will update state when ready)
   loadPersistedChats().then(chats => {
     set({ chats, isLoading: false });
   });
-  
+
   loadPersistedFolders().then(folders => {
     set({ folders });
   });
-  
+
   loadPersistedTags().then(tags => {
     set({ tags });
+  });
+
+  loadPersistedSettings().then(settings => {
+    set({ settings });
   });
 
   return {
     chats: [],
     folders: [],
     tags: [],
+    settings: DEFAULT_SETTINGS,
     isLoading: true,
     searchQuery: '',
     setSearchQuery: (query) => set({ searchQuery: query }),
@@ -357,7 +395,7 @@ export const useStore = create<Store>((set, get) => {
             : chat
         )
       }));
-      
+
       if (typeof chrome !== 'undefined' && chrome.storage?.local) {
         chrome.storage.local.get(STORAGE_KEYS.CHATS).then(result => {
           const persisted = (result[STORAGE_KEYS.CHATS] as PersistedChat[] | undefined) ?? [];
@@ -368,6 +406,14 @@ export const useStore = create<Store>((set, get) => {
           );
           chrome.storage.local.set({ [STORAGE_KEYS.CHATS]: updated });
         });
+      }
+    },
+    updateSettings: (updates) => {
+      const newSettings = { ...get().settings, ...updates };
+      set({ settings: newSettings });
+
+      if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+        chrome.storage.local.set({ [STORAGE_KEYS.SETTINGS]: newSettings });
       }
     },
   };

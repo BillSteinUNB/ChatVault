@@ -21,3 +21,40 @@
 - Both export options generate proper filenames with date and sanitized title
 - Menu closes after successful export
 
+
+## 2026-01-19 - PRD-13: Settings Data Model & Storage
+
+### Completed
+- Replaced UserSettings interface with Settings interface matching PRD requirements
+- Added DEFAULT_SETTINGS constant with all required fields
+- Added settings: Settings state to Zustand store
+- Added updateSettings(updates: Partial<Settings>) action to store
+- Implemented loadPersistedSettings() function for loading settings from chrome.storage.local
+- Updated setupStorageListener to handle settings changes
+- Integrated settings loading into store initialization
+
+### Files Modified
+- Extension/src/shared/types.ts - Added Settings interface and DEFAULT_SETTINGS constant
+- Extension/src/shared/lib/storage.ts - Added settings state and updateSettings action
+
+### Test Setup
+- Installed vitest, @vitest/ui, and jsdom dependencies
+- Created vitest.config.ts for test configuration
+- Created comprehensive test suite in Extension/src/shared/lib/storage.test.ts
+- All 8 tests passing, covering Settings interface, default values, and storage integration
+
+### Test Coverage
+- Settings interface structure validation
+- All theme options (light, dark, system)
+- DEFAULT_SETTINGS constant validation
+- Settings state in store
+- updateSettings action availability
+- Settings default structure validation
+- enabledPlatforms properties validation
+
+### Implementation Details
+- Settings interface includes: theme, autoSave, autoSaveInterval, enabledPlatforms, compactMode
+- DEFAULT_SETTINGS initializes with sensible defaults (system theme, auto-save enabled, all platforms enabled)
+- updateSettings merges partial updates with existing settings
+- Settings persist to chrome.storage.local under 'chatvault_settings' key
+- TypeScript compilation verified with no errors

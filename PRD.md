@@ -607,7 +607,7 @@ Add export option to individual chat item menu.
 
 ---
 
-- [ ] PRD-13: Settings Data Model & Storage
+- [x] PRD-13: Settings Data Model & Storage
 
 # PRD-13: Settings Data Model & Storage
 
@@ -651,9 +651,9 @@ export const DEFAULT_SETTINGS: Settings = {
    - Persist to chrome.storage.local
 
 ### Acceptance Criteria
-- [ ] Settings interface exists
-- [ ] Default settings defined
-- [ ] Settings persist after restart
+- [x] Settings interface exists
+- [x] Default settings defined
+- [x] Settings persist after restart
 
 ### Dependencies
 None

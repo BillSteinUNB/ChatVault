@@ -27,11 +27,25 @@ export interface Tag {
   createdAt: number;
 }
 
-export interface UserSettings {
+export interface Settings {
   theme: 'light' | 'dark' | 'system';
   autoSave: boolean;
-  platforms: Record<Platform, boolean>;
+  autoSaveInterval: number;
+  enabledPlatforms: {
+    chatgpt: boolean;
+    claude: boolean;
+    perplexity: boolean;
+  };
+  compactMode: boolean;
 }
+
+export const DEFAULT_SETTINGS: Settings = {
+  theme: 'system',
+  autoSave: true,
+  autoSaveInterval: 30,
+  enabledPlatforms: { chatgpt: true, claude: true, perplexity: true },
+  compactMode: false,
+};
 
 export interface Stats {
   totalChats: number;
