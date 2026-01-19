@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Settings, User, Shield, Database, Trash2 } from 'lucide-react';
+import { Settings, User, Shield, Database, Trash2, Lock } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { DeleteAccountModal } from '../components/DeleteAccountModal';
+import { Enable2FAModal } from '../components/Enable2FAModal';
 import { useAuth } from '../hooks/useAuth';
 
 export const Settings: React.FC = () => {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [is2FAModalOpen, setIs2FAModalOpen] = useState(false);
+  const [is2FAEnabled, setIs2FAEnabled] = useState(false);
 
   const handleSignOut = async () => {
     try {
@@ -18,6 +21,10 @@ export const Settings: React.FC = () => {
     } catch (error) {
       console.error('Error signing out:', error);
     }
+  };
+
+  const handle2FASuccess = () => {
+    setIs2FAEnabled(true);
   };
 
   return (
@@ -60,6 +67,28 @@ export const Settings: React.FC = () => {
           </h2>
           <Card className="p-6">
             <div className="space-y-4">
+              {/* 2FA Status */}
+              <div className="flex items-center justify-between p-4 bg-neutral-800/50 rounded-lg border border-white/10">
+                <div className="flex items-center gap-3">
+                  <Lock className={is2FAEnabled ? 'text-emerald-500' : 'text-neutral-500'} size={20} />
+                  <div>
+                    <p className="text-white font-medium">Two-Factor Authentication</p>
+                    <p className={`text-sm ${is2FAEnabled ? 'text-emerald-400' : 'text-neutral-500'}`}>
+                      {is2FAEnabled ? 'Enabled' : 'Disabled'}
+                    </p>
+                  </div>
+                </div>
+                {!is2FAEnabled && (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setIs2FAModalOpen(true)}
+                  >
+                    Enable
+                  </Button>
+                )}
+              </div>
+
               <p className="text-neutral-300">
                 You can manage your password and authentication settings.
               </p>
@@ -101,6 +130,13 @@ export const Settings: React.FC = () => {
       <DeleteAccountModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
+      />
+
+      {/* 2FA Enrollment Modal */}
+      <Enable2FAModal
+        isOpen={is2FAModalOpen}
+        onClose={() => setIs2FAModalOpen(false)}
+        onSuccess={handle2FASuccess}
       />
     </div>
   );

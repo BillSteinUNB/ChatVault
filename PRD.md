@@ -1486,7 +1486,7 @@ Create confirmation modal for account deletion.
 
 ---
 
-- [ ] PRD-35: Data Export Before Deletion
+- [x] PRD-35: Data Export Before Deletion
 
 # PRD-35: Data Export Before Deletion
 
@@ -1514,7 +1514,7 @@ Allow users to export data before deleting account.
 
 ---
 
-- [ ] PRD-36: 2FA Enrollment UI
+- [x] PRD-36: 2FA Enrollment UI
 
 # PRD-36: 2FA Enrollment UI
 
