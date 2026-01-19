@@ -1381,7 +1381,7 @@ None
 
 ---
 
-- [ ] PRD-32: Extension Auth Banner Update
+- [x] PRD-32: Extension Auth Banner Update
 
 # PRD-32: Extension Auth Banner Update
 

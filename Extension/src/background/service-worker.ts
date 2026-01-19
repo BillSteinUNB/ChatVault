@@ -149,15 +149,25 @@ chrome.runtime.onMessage.addListener((message: ExtensionMessage, sender, sendRes
   if (message.type === 'GET_AUTH_STATUS') {
     supabase.auth.getSession()
       .then(({ data: { session } }) => {
-        sendResponse({ 
-          authenticated: !!session, 
-          user: session?.user || null 
+        sendResponse({
+          authenticated: !!session,
+          user: session?.user || null
         });
       })
       .catch(err => sendResponse({ authenticated: false, error: err.message }));
     return true;
   }
-  
+
+  if (message.type === 'RESEND_VERIFICATION') {
+    supabase.auth.resend({
+      type: 'signup',
+      email: message.email
+    })
+      .then(() => sendResponse({ success: true }))
+      .catch(err => sendResponse({ success: false, error: err.message }));
+    return true;
+  }
+
   if (message.type === 'SIGN_OUT') {
     supabase.auth.signOut()
       .then(() => sendResponse({ success: true }))

@@ -1193,3 +1193,86 @@
 - Component code is syntactically correct and follows React best practices
 - Ready for manual testing or when Web project build issues are resolved
 
+
+
+## 2026-01-19 - PRD-32: Extension Auth Banner Update
+
+### Completed
+- Updated AuthBanner component to show verification status
+- Added AlertCircle and CheckCircle icons from lucide-react
+- Implemented verification status check using user?.email_confirmed_at != null
+- Added warning styling (yellow) for unverified users
+- Added success styling (emerald) for verified users
+- Added resend button for unverified users with loading state
+- Implemented handleResendVerification function
+- Added success/error message display after resend operation
+- Updated background service-worker to handle RESEND_VERIFICATION message
+- Added RESEND_VERIFICATION to MessageType in types.ts
+- Created comprehensive test suite with 18 tests passing
+
+### Files Created
+- Extension/src/shared/components/AuthBanner.test.tsx - Comprehensive test suite with 18 tests
+- Extension/vitest.setup.ts - Setup file for @testing-library/jest-dom matchers
+
+### Files Modified
+- Extension/src/shared/components/AuthBanner.tsx - Added verification status display and resend functionality
+- Extension/src/background/service-worker.ts - Added RESEND_VERIFICATION message handler
+- Extension/src/shared/types.ts - Added RESEND_VERIFICATION to MessageType
+- vitest.config.ts - Added setupFiles configuration
+
+### Test Setup
+- Created comprehensive test suite with 18 tests passing
+- Total of 313 tests passing (295 from previous + 18 new)
+- Added vitest.setup.ts for jest-dom matchers
+
+### Test Coverage (18 tests)
+#### When loading (1 test)
+- Returns null while loading
+
+#### When user is not authenticated (3 tests)
+- Shows sign in prompt
+- Shows sign in button
+- Opens login page when sign in button is clicked
+
+#### When user is verified (6 tests)
+- Shows verified status
+- Shows green/emerald styling for verified user
+- Shows sign out button
+- Does not show resend button
+- Signs out when sign out button is clicked
+
+#### When user is not verified (8 tests)
+- Shows unverified status
+- Shows yellow/warning styling for unverified user
+- Shows resend button
+- Shows sign out button
+- Resends verification email when resend button is clicked
+- Shows success message after successful resend
+- Shows error message after failed resend
+- Shows "Sending..." text while resending
+- Disables resend button while resending
+
+### Implementation Details
+- Verification status determined by user.email_confirmed_at != null
+- Unverified users see yellow banner with AlertCircle icon and "Verify email" message
+- Verified users see emerald banner with CheckCircle icon and "Verified" status
+- Resend button only shown for unverified users
+- Resend button shows "Sending..." text and is disabled while resending
+- Success messages displayed in green, error messages in red
+- Success message auto-clears (not implemented in this version, but prepared for future)
+- Service worker handles RESEND_VERIFICATION message using supabase.auth.resend()
+- MessageType updated to include 'RESEND_VERIFICATION'
+- Banner styling uses conditional classes based on isVerified state
+- All TypeScript compilation verified with no errors
+
+### Acceptance Criteria Status
+- Shows verification status ✓ (isVerified check with proper styling)
+- Can resend from extension ✓ (handleResendVerification with service worker)
+- Clear visual difference verified vs not ✓ (emerald vs yellow, checkmark vs warning icon)
+
+### Notes
+- All 18 tests passing for AuthBanner component
+- React act(...) warnings are non-critical and common in async tests
+- No lint script configured (skipped linting step)
+- Implementation follows same patterns as other auth components (VerificationBanner in Web)
+- Ready for manual testing or integration with Supabase auth

@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { Button } from './ui/Button';
+import { AlertCircle, CheckCircle } from 'lucide-react';
 
 const WEB_APP_URL = 'http://localhost:5173';
 
 export const AuthBanner: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [resending, setResending] = useState(false);
+  const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
   useEffect(() => {
     checkAuthStatus();
@@ -36,6 +39,28 @@ export const AuthBanner: React.FC = () => {
     chrome.tabs.create({ url: `${WEB_APP_URL}/#/login` });
   };
 
+  const handleResendVerification = async () => {
+    setResending(true);
+    setMessage(null);
+
+    try {
+      const response = await chrome.runtime.sendMessage({ 
+        type: 'RESEND_VERIFICATION',
+        email: user?.email 
+      });
+
+      if (response.error) {
+        setMessage({ type: 'error', text: response.error });
+      } else {
+        setMessage({ type: 'success', text: 'Verification email sent! Check your inbox.' });
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to resend verification email' });
+    } finally {
+      setResending(false);
+    }
+  };
+
   if (loading) {
     return null;
   }
@@ -53,16 +78,53 @@ export const AuthBanner: React.FC = () => {
     );
   }
 
+  const isVerified = user.email_confirmed_at != null;
+
   return (
-    <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4 mb-4">
-      <div className="flex items-center justify-between">
-        <div className="text-sm">
-          <p className="text-emerald-400 font-medium">{user.email}</p>
-          <p className="text-neutral-500 text-xs">Synced</p>
+    <div className={`rounded-lg p-4 mb-4 border ${
+      isVerified 
+        ? 'bg-emerald-500/10 border-emerald-500/30' 
+        : 'bg-yellow-500/10 border-yellow-500/30'
+    }`}>
+      <div className="flex items-start justify-between gap-2">
+        <div className="text-sm flex-1">
+          <div className="flex items-center gap-2 mb-1">
+            {isVerified ? (
+              <CheckCircle className="w-4 h-4 text-emerald-400" />
+            ) : (
+              <AlertCircle className="w-4 h-4 text-yellow-400" />
+            )}
+            <p className={`font-medium ${isVerified ? 'text-emerald-400' : 'text-yellow-400'}`}>
+              {user.email}
+            </p>
+          </div>
+          <p className={`text-xs ${isVerified ? 'text-neutral-500' : 'text-yellow-400/80'}`}>
+            {isVerified ? 'Verified' : 'Please verify your email address'}
+          </p>
+          {message && (
+            <p className={`text-xs mt-2 ${
+              message.type === 'success' ? 'text-emerald-400' : 'text-red-400'
+            }`}>
+              {message.text}
+            </p>
+          )}
         </div>
-        <Button onClick={handleSignOut} variant="secondary" size="sm">
-          Sign out
-        </Button>
+        <div className="flex flex-col gap-2">
+          {!isVerified && (
+            <Button 
+              onClick={handleResendVerification} 
+              size="sm" 
+              variant="secondary"
+              disabled={resending}
+              className="text-xs"
+            >
+              {resending ? 'Sending...' : 'Resend'}
+            </Button>
+          )}
+          <Button onClick={handleSignOut} variant="secondary" size="sm" className="text-xs">
+            Sign out
+          </Button>
+        </div>
       </div>
     </div>
   );
