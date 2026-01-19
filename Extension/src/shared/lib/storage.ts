@@ -13,6 +13,7 @@ interface Store {
   isLoading: boolean;
   searchQuery: string;
   searchIndex: SearchIndexEntry[];
+  focusSearchTrigger: number;
   setSearchQuery: (query: string) => void;
   searchChats: () => string[];
   activeFolder: string | null;
@@ -37,6 +38,7 @@ interface Store {
   removeTagFromChat: (chatId: string, tagId: string) => void;
   updateSettings: (updates: Partial<Settings>) => void;
   setViewMode: (mode: ViewMode) => void;
+  focusSearch: () => void;
 }
 
 /**
@@ -207,6 +209,7 @@ export const useStore = create<Store>((set, get) => {
     isLoading: true,
     searchQuery: '',
     searchIndex: [],
+    focusSearchTrigger: 0,
     setSearchQuery: (query) => set({ searchQuery: query }),
     searchChats: () => {
       const { searchQuery, searchIndex } = get();
@@ -436,5 +439,6 @@ export const useStore = create<Store>((set, get) => {
       }
     },
     setViewMode: (mode) => set({ viewMode: mode }),
+    focusSearch: () => set(state => ({ focusSearchTrigger: state.focusSearchTrigger + 1 })),
   };
 });
