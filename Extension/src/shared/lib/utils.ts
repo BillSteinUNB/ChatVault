@@ -14,7 +14,7 @@ export function formatRelativeTime(timestamp: number): string {
 /**
  * Maps PersistedChat (storage schema) to Chat (UI schema)
  * PersistedChat has: url, messageCount, createdAt, updatedAt
- * Chat expects: preview, timestamp
+ * Chat expects: preview, timestamp, syncedAt, localUpdatedAt
  */
 export function persistedChatToChat(persisted: PersistedChat): Chat {
   return {
@@ -26,6 +26,8 @@ export function persistedChatToChat(persisted: PersistedChat): Chat {
     folderId: persisted.folderId,
     isPinned: persisted.isPinned,
     tags: persisted.tags,
+    localUpdatedAt: persisted.updatedAt,
+    syncedAt: undefined, // Will be populated when cloud sync is implemented
   };
 }
 

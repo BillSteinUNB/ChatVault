@@ -182,8 +182,7 @@ describe('search.ts', () => {
           timestamp: 1234567890,
           folderId: 'folder1',
           isPinned: false,
-          tags: ['tag1', 'tag2'],
-          localUpdatedAt: 1234567890
+          tags: ['tag1', 'tag2']
         }
       ];
 
@@ -211,8 +210,7 @@ describe('search.ts', () => {
           timestamp: 1234567890,
           folderId: null,
           isPinned: false,
-          tags: [],
-          localUpdatedAt: 1234567890
+          tags: []
         },
         {
           id: 'chat2',
@@ -222,8 +220,7 @@ describe('search.ts', () => {
           timestamp: 1234567900,
           folderId: undefined,
           isPinned: true,
-          tags: ['tag1'],
-          localUpdatedAt: 1234567890
+          tags: ['tag1']
         },
         {
           id: 'chat3',
@@ -233,8 +230,7 @@ describe('search.ts', () => {
           timestamp: 1234567910,
           folderId: 'folder2',
           isPinned: false,
-          tags: ['tag2', 'tag3'],
-          localUpdatedAt: 1234567890
+          tags: ['tag2', 'tag3']
         }
       ];
 
@@ -256,8 +252,7 @@ describe('search.ts', () => {
           timestamp: 1234567890,
           folderId: undefined,
           isPinned: false,
-          tags: [],
-          localUpdatedAt: 1234567890
+          tags: []
         }
       ];
 
@@ -276,8 +271,7 @@ describe('search.ts', () => {
           timestamp: 1700000000000,
           folderId: 'folder-xyz',
           isPinned: true,
-          tags: ['work', 'important'],
-          localUpdatedAt: 1234567890
+          tags: ['work', 'important']
         }
       ];
 
@@ -308,8 +302,7 @@ describe('search.ts', () => {
           timestamp: 1234567920,
           folderId: null,
           isPinned: false,
-          tags: [],
-          localUpdatedAt: 1234567890
+          tags: []
         },
         {
           id: 'chat2',
@@ -319,8 +312,7 @@ describe('search.ts', () => {
           timestamp: 1234567930,
           folderId: null,
           isPinned: false,
-          tags: [],
-          localUpdatedAt: 1234567890
+          tags: []
         },
         {
           id: 'chat3',
@@ -330,8 +322,7 @@ describe('search.ts', () => {
           timestamp: 1234567940,
           folderId: null,
           isPinned: false,
-          tags: [],
-          localUpdatedAt: 1234567890
+          tags: []
         },
         {
           id: 'chat4',
@@ -341,8 +332,7 @@ describe('search.ts', () => {
           timestamp: 1234567950,
           folderId: null,
           isPinned: false,
-          tags: [],
-          localUpdatedAt: 1234567890
+          tags: []
         }
       ];
 
@@ -484,8 +474,7 @@ describe('search.ts', () => {
           timestamp: 1,
           folderId: null,
           isPinned: false,
-          tags: ['work'],
-          localUpdatedAt: 1234567890
+          tags: ['work']
         },
         {
           id: 'chat2',
@@ -495,8 +484,7 @@ describe('search.ts', () => {
           timestamp: 2,
           folderId: null,
           isPinned: false,
-          tags: ['personal'],
-          localUpdatedAt: 1234567890
+          tags: ['personal']
         },
         {
           id: 'chat3',
@@ -506,8 +494,7 @@ describe('search.ts', () => {
           timestamp: 3,
           folderId: null,
           isPinned: false,
-          tags: ['work'],
-          localUpdatedAt: 1234567890
+          tags: ['work']
         }
       ]);
 
@@ -529,8 +516,7 @@ describe('search.ts', () => {
           timestamp: 1,
           folderId: 'project-folder',
           isPinned: false,
-          tags: [],
-          localUpdatedAt: 1234567890
+          tags: []
         },
         {
           id: 'chat2',
@@ -540,8 +526,7 @@ describe('search.ts', () => {
           timestamp: 2,
           folderId: 'work-folder',
           isPinned: false,
-          tags: [],
-          localUpdatedAt: 1234567890
+          tags: []
         },
         {
           id: 'chat3',
@@ -551,8 +536,7 @@ describe('search.ts', () => {
           timestamp: 3,
           folderId: 'project-folder',
           isPinned: false,
-          tags: [],
-          localUpdatedAt: 1234567890
+          tags: []
         }
       ]);
 
@@ -574,8 +558,7 @@ describe('search.ts', () => {
           timestamp: new Date('2024-01-10').getTime(),
           folderId: null,
           isPinned: false,
-          tags: [],
-          localUpdatedAt: 1234567890
+          tags: []
         },
         {
           id: 'chat2',
@@ -585,8 +568,7 @@ describe('search.ts', () => {
           timestamp: new Date('2024-01-20').getTime(),
           folderId: null,
           isPinned: false,
-          tags: [],
-          localUpdatedAt: 1234567890
+          tags: []
         },
         {
           id: 'chat3',
@@ -596,8 +578,7 @@ describe('search.ts', () => {
           timestamp: new Date('2024-02-01').getTime(),
           folderId: null,
           isPinned: false,
-          tags: [],
-          localUpdatedAt: 1234567890
+          tags: []
         }
       ]);
 
@@ -619,8 +600,7 @@ describe('search.ts', () => {
           timestamp: new Date('2024-01-10').getTime(),
           folderId: null,
           isPinned: false,
-          tags: [],
-          localUpdatedAt: 1234567890
+          tags: []
         },
         {
           id: 'chat2',
@@ -630,8 +610,7 @@ describe('search.ts', () => {
           timestamp: new Date('2024-01-20').getTime(),
           folderId: null,
           isPinned: false,
-          tags: [],
-          localUpdatedAt: 1234567890
+          tags: []
         },
         {
           id: 'chat3',
@@ -641,8 +620,7 @@ describe('search.ts', () => {
           timestamp: new Date('2024-02-01').getTime(),
           folderId: null,
           isPinned: false,
-          tags: [],
-          localUpdatedAt: 1234567890
+          tags: []
         }
       ]);
 
@@ -664,8 +642,7 @@ describe('search.ts', () => {
           timestamp: 1,
           folderId: null,
           isPinned: false,
-          tags: [],
-          localUpdatedAt: 1234567890
+          tags: []
         },
         {
           id: 'chat2',
@@ -675,8 +652,7 @@ describe('search.ts', () => {
           timestamp: 2,
           folderId: null,
           isPinned: false,
-          tags: [],
-          localUpdatedAt: 1234567890
+          tags: []
         }
       ]);
 
@@ -697,8 +673,7 @@ describe('search.ts', () => {
           timestamp: new Date('2024-01-10').getTime(),
           folderId: 'project-folder',
           isPinned: false,
-          tags: ['work'],
-          localUpdatedAt: 1234567890
+          tags: ['work']
         },
         {
           id: 'chat2',
@@ -708,8 +683,7 @@ describe('search.ts', () => {
           timestamp: new Date('2024-01-20').getTime(),
           folderId: 'work-folder',
           isPinned: false,
-          tags: ['personal'],
-          localUpdatedAt: 1234567890
+          tags: ['personal']
         },
         {
           id: 'chat3',
@@ -719,8 +693,7 @@ describe('search.ts', () => {
           timestamp: new Date('2024-01-15').getTime(),
           folderId: 'project-folder',
           isPinned: false,
-          tags: ['work'],
-          localUpdatedAt: 1234567890
+          tags: ['work']
         }
       ]);
 

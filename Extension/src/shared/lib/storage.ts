@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Chat, Folder, Tag, Platform, PersistedChat, STORAGE_KEYS, Settings, DEFAULT_SETTINGS, ViewMode, ViewState } from '../types';
+import { Chat, Folder, Tag, Platform, PersistedChat, STORAGE_KEYS, Settings, DEFAULT_SETTINGS, ViewMode, ViewState, SyncState } from '../types';
 import { persistedChatsToChats } from './utils';
 import { SearchIndexEntry, buildSearchIndex, searchChats } from './search';
 
@@ -11,6 +11,7 @@ interface Store {
   settings: Settings;
   viewState: ViewState;
   settingsOpen: boolean;
+  syncState: SyncState;
   isLoading: boolean;
   searchQuery: string;
   searchIndex: SearchIndexEntry[];
@@ -41,6 +42,7 @@ interface Store {
   setViewMode: (mode: ViewMode) => void;
   setSelectedFolder: (folderId: string | null) => void;
   setSettingsOpen: (open: boolean) => void;
+  setSyncState: (updates: Partial<SyncState>) => void;
   focusSearch: () => void;
 }
 
@@ -210,6 +212,12 @@ export const useStore = create<Store>((set, get) => {
     settings: DEFAULT_SETTINGS,
     viewState: { mode: 'all' },
     settingsOpen: false,
+    syncState: {
+      status: 'idle',
+      lastSyncedAt: null,
+      pendingChanges: 0,
+      error: null,
+    },
     isLoading: true,
     searchQuery: '',
     searchIndex: [],
@@ -447,6 +455,7 @@ export const useStore = create<Store>((set, get) => {
       viewState: { ...state.viewState, selectedFolderId: folderId || undefined }
     })),
     setSettingsOpen: (open) => set({ settingsOpen: open }),
+    setSyncState: (updates) => set(state => ({ syncState: { ...state.syncState, ...updates } })),
     focusSearch: () => set(state => ({ focusSearchTrigger: state.focusSearchTrigger + 1 })),
   };
 });

@@ -2283,7 +2283,7 @@ None
 
 ---
 
-- [ ] PRD-56: Sync Service - Upload
+- [x] PRD-56: Sync Service - Upload
 
 # PRD-56: Sync Service - Upload
 

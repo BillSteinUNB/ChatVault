@@ -2899,3 +2899,118 @@ To use this edge function, set these environment variables in Supabase:
 - messages field is JSONB to support complex message structures with role, content, metadata
 - folder_id is optional for future folder implementation
 - All SQL syntax verified and ready for Supabase deployment
+
+
+## 2026-01-19 - PRD-56: Sync Service - Upload
+
+### Completed
+- Created sync.ts file with upload functionality for PRD-56
+- Implemented uploadChat() function to upload single chat to Supabase
+- Implemented bulkUploadChats() function for bulk upload during initial sync
+- Implemented uploadUnsyncedChats() function to upload only unsynced or locally updated chats
+- Implemented trackChatSave() function to track pending changes
+- Implemented clearPendingChanges() function to reset pending changes count
+- Added proper error handling and tracking for all upload operations
+- Integrated sync state updates (syncing, idle, error) throughout upload process
+- Created comprehensive test suite with 29 tests covering all functionality
+- Fixed TypeScript compilation errors in test file by using proper Supabase User type mocks
+
+### Files Created
+- Extension/src/shared/lib/sync.ts - Complete sync upload service with all required functions
+- Extension/src/shared/lib/sync.test.ts - Comprehensive test suite with 29 tests passing
+
+### Files Modified
+- PRD.md - Marked PRD-56 as complete
+
+### Test Setup
+- Created comprehensive test suite with 29 tests passing
+- All tests verify PRD-56 requirements
+
+### Test Coverage (29 tests)
+#### uploadChat Tests (9 tests)
+- Exports uploadChat function
+- Returns UploadResult with success, error, and chatId properties
+- Uploads chat successfully when user is authenticated
+- Returns error when user is not authenticated
+- Handles Supabase upsert errors
+- Sets sync state to syncing during upload
+- Sets sync state to idle after successful upload
+- Sets sync state to error on upload failure
+- Handles auth errors
+- Converts chat to Supabase format correctly
+
+#### bulkUploadChats Tests (10 tests)
+- Exports bulkUploadChats function
+- Returns BulkUploadResult with total, successful, failed, and errors
+- Uploads multiple chats successfully
+- Handles partial failures in bulk upload
+- Sets sync state to syncing with pendingChanges at start
+- Updates pendingChanges count during upload
+- Sets sync state to idle when all uploads succeed
+- Sets sync state to error when all uploads fail
+- Sets partial error when some uploads fail
+- Handles empty chat array
+
+#### uploadUnsyncedChats Tests (3 tests)
+- Exports uploadUnsyncedChats function
+- Uploads chats without syncedAt
+- Uploads chats with local updates newer than syncedAt
+- Does not upload chats when syncedAt is newer than localUpdatedAt
+
+#### trackChatSave Tests (3 tests)
+- Exports trackChatSave function
+- Increments pendingChanges when chat is saved
+- Increments pendingChanges multiple times
+
+#### clearPendingChanges Tests (3 tests)
+- Exports clearPendingChanges function
+- Resets pendingChanges to zero
+
+### Implementation Details
+- uploadChat() function:
+  - Gets authenticated user ID from Supabase
+  - Returns "User not authenticated" error if user not logged in
+  - Converts Chat object to Supabase format with all required fields
+  - Uses supabase.from('chats').upsert() for upsert operation
+  - Sets sync state to 'syncing' during upload
+  - Sets sync state to 'idle' with lastSyncedAt on success
+  - Sets sync state to 'error' with error message on failure
+  - Returns UploadResult with success, error (optional), and chatId
+
+- bulkUploadChats() function:
+  - Uploads multiple chats in sequence
+  - Tracks successful and failed uploads separately
+  - Updates pendingChanges count during bulk operation
+  - Returns BulkUploadResult with total, successful, failed counts and error array
+  - Sets sync state based on final results (idle, error, or partial error)
+  - Handles empty array gracefully
+
+- uploadUnsyncedChats() function:
+  - Filters chats by syncedAt and localUpdatedAt comparison
+  - Uploads only chats that haven't been synced or have local updates
+  - Uses bulkUploadChats internally for actual upload
+
+- trackChatSave() function:
+  - Increments pendingChanges counter in sync state
+  - Called whenever a chat is saved/updated locally
+
+- clearPendingChanges() function:
+  - Resets pendingChanges to zero
+  - Called after successful sync
+
+- Error handling:
+  - Differentiates between auth errors and Supabase errors
+  - Logs errors to console for debugging
+  - Returns user-friendly error messages
+  - Updates sync state with error details
+
+### Acceptance Criteria Status
+- Single chat uploads ✓ (uploadChat function implemented)
+- Bulk upload works ✓ (bulkUploadChats function implemented)
+- Errors tracked ✓ (UploadResult and BulkUploadResult track all errors)
+
+### Notes
+- No lint script configured (skipped linting step)
+- TypeScript compilation verified with no errors
+- All 29 tests passing for PRD-56 sync upload functionality
+- Total test count: 353 passing (324 existing + 29 new)

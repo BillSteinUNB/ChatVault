@@ -368,7 +368,8 @@ describe('PRD-13: Settings Data Model & Storage', () => {
           platform: 'claude' as const,
           timestamp: Date.now(),
           isPinned: false,
-          tags: []
+          tags: [],
+          localUpdatedAt: Date.now()
         }
       ];
       setChats(newChats);

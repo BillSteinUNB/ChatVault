@@ -5,6 +5,15 @@ export interface ViewState {
   selectedFolderId?: string;
 }
 
+export type SyncStatus = 'idle' | 'syncing' | 'error' | 'offline';
+
+export interface SyncState {
+  status: SyncStatus;
+  lastSyncedAt: number | null;
+  pendingChanges: number;
+  error: string | null;
+}
+
 export type Platform = 'chatgpt' | 'claude' | 'perplexity';
 
 export interface Chat {
@@ -16,6 +25,8 @@ export interface Chat {
   folderId?: string;
   isPinned: boolean;
   tags: string[];
+  syncedAt?: number;
+  localUpdatedAt: number;
 }
 
 export interface Folder {
