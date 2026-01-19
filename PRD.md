@@ -1,46 +1,144 @@
 # ChatVault Product Requirements Documents (PRDs)
 
-This document contains granular PRDs optimized for AI development. Each sub-PRD is a focused, single-purpose task that can be completed without context switching.
+This document contains granular PRDs optimized for AI development. Each PRD is a focused, single-purpose task that can be completed without context switching.
 
 **How to use this document:**
-- Each PRD is split into sub-tasks (e.g., PRD-001A, PRD-001B)
-- Complete sub-tasks in order within each PRD
-- Each sub-task is self-contained with clear inputs/outputs
-- Mark sub-tasks complete before moving to the next
+- PRDs are numbered 01-78 in implementation order
+- Complete PRDs in order (dependencies listed)
+- Each PRD is self-contained with clear inputs/outputs
+- Mark PRDs complete before moving to the next
 
 ---
 
 # Table of Contents
 
-1. [PRD-001: Folder System](#prd-001-folder-system) (4 parts)
-2. [PRD-002: Tag System](#prd-002-tag-system) (4 parts)
-3. [PRD-003: Export Functionality](#prd-003-export-functionality) (4 parts)
-4. [PRD-004: Settings Page](#prd-004-settings-page) (5 parts)
-5. [PRD-005: Search Enhancement](#prd-005-search-enhancement) (4 parts)
-6. [PRD-006: Perplexity Scraper](#prd-006-perplexity-scraper) (2 parts)
-7. [PRD-007: Fix Non-Functional UI](#prd-007-fix-non-functional-ui) (4 parts)
-8. [PRD-008: Password Reset](#prd-008-password-reset) (3 parts)
-9. [PRD-009: Email Verification](#prd-009-email-verification) (2 parts)
-10. [PRD-010: Account Deletion](#prd-010-account-deletion) (3 parts)
-11. [PRD-011: Two-Factor Auth](#prd-011-two-factor-auth) (3 parts)
-12. [PRD-012: OAuth Social Login](#prd-012-oauth-social-login) (2 parts)
-13. [PRD-013: User Dashboard](#prd-013-user-dashboard) (3 parts)
-14. [PRD-014: Settings Page (Web)](#prd-014-settings-page-web) (4 parts)
-15. [PRD-015: Contact Form Backend](#prd-015-contact-form-backend) (2 parts)
-16. [PRD-016: Billing/Subscription](#prd-016-billingsubscription) (4 parts)
-17. [PRD-017: Cloud Sync](#prd-017-cloud-sync) (5 parts)
-18. [PRD-018: Tier Enforcement](#prd-018-tier-enforcement) (3 parts)
-19. [PRD-019: Error Handling](#prd-019-error-handling) (3 parts)
-20. [PRD-020: Onboarding Wizard](#prd-020-onboarding-wizard) (3 parts)
-21. [PRD-021: Accessibility](#prd-021-accessibility) (4 parts)
-22. [PRD-022: Unit Tests](#prd-022-unit-tests) (4 parts)
-23. [PRD-023: CI/CD Pipeline](#prd-023-cicd-pipeline) (3 parts)
+## Folder System (PRD-01 to PRD-04)
+1. [PRD-01: Folder Data Model & Storage](#prd-01-folder-data-model--storage)
+2. [PRD-02: Create Folder Modal Component](#prd-02-create-folder-modal-component)
+3. [PRD-03: Folder List Component](#prd-03-folder-list-component)
+4. [PRD-04: Move Chat to Folder](#prd-04-move-chat-to-folder)
+
+## Tag System (PRD-05 to PRD-08)
+5. [PRD-05: Tag Data Model & Storage](#prd-05-tag-data-model--storage)
+6. [PRD-06: Tag Input Component](#prd-06-tag-input-component)
+7. [PRD-07: Tag Filter Component](#prd-07-tag-filter-component)
+8. [PRD-08: Tag Display in Chat Item](#prd-08-tag-display-in-chat-item)
+
+## Export Functionality (PRD-09 to PRD-12)
+9. [PRD-09: Export Utility Functions](#prd-09-export-utility-functions)
+10. [PRD-10: Export Menu Component](#prd-10-export-menu-component)
+11. [PRD-11: Wire Up Export Button in SidePanel](#prd-11-wire-up-export-button-in-sidepanel)
+12. [PRD-12: Export Option in Chat Context Menu](#prd-12-export-option-in-chat-context-menu)
+
+## Settings Page (PRD-13 to PRD-17)
+13. [PRD-13: Settings Data Model & Storage](#prd-13-settings-data-model--storage)
+14. [PRD-14: Theme Provider Component](#prd-14-theme-provider-component)
+15. [PRD-15: Settings Page Layout](#prd-15-settings-page-layout)
+16. [PRD-16: Settings Controls Implementation](#prd-16-settings-controls-implementation)
+17. [PRD-17: Wire Up Settings Button](#prd-17-wire-up-settings-button)
+
+## Search Enhancement (PRD-18 to PRD-21)
+18. [PRD-18: Full-Text Search Index](#prd-18-full-text-search-index)
+19. [PRD-19: Search Operators Parser](#prd-19-search-operators-parser)
+20. [PRD-20: Search Filters UI](#prd-20-search-filters-ui)
+21. [PRD-21: Keyboard Shortcut for Search](#prd-21-keyboard-shortcut-for-search)
+
+## Perplexity Scraper (PRD-22 to PRD-23)
+22. [PRD-22: Perplexity DOM Analysis & Scraper](#prd-22-perplexity-dom-analysis--scraper)
+23. [PRD-23: Perplexity Manifest & Integration](#prd-23-perplexity-manifest--integration)
+
+## Fix Non-Functional UI (PRD-24 to PRD-27)
+24. [PRD-24: View State Management](#prd-24-view-state-management)
+25. [PRD-25: Nav Icons Functionality](#prd-25-nav-icons-functionality)
+26. [PRD-26: Analytics View Component](#prd-26-analytics-view-component)
+27. [PRD-27: Dashboard Button & Tooltips](#prd-27-dashboard-button--tooltips)
+
+## Password Reset (PRD-28 to PRD-30)
+28. [PRD-28: Forgot Password Page](#prd-28-forgot-password-page)
+29. [PRD-29: Reset Password Page](#prd-29-reset-password-page)
+30. [PRD-30: Auth Hook Updates](#prd-30-auth-hook-updates)
+
+## Email Verification (PRD-31 to PRD-32)
+31. [PRD-31: Verification Banner Component](#prd-31-verification-banner-component)
+32. [PRD-32: Extension Auth Banner Update](#prd-32-extension-auth-banner-update)
+
+## Account Deletion (PRD-33 to PRD-35)
+33. [PRD-33: Delete Account Edge Function](#prd-33-delete-account-edge-function)
+34. [PRD-34: Delete Account Modal](#prd-34-delete-account-modal)
+35. [PRD-35: Data Export Before Deletion](#prd-35-data-export-before-deletion)
+
+## Two-Factor Auth (PRD-36 to PRD-38)
+36. [PRD-36: 2FA Enrollment UI](#prd-36-2fa-enrollment-ui)
+37. [PRD-37: 2FA Login Challenge](#prd-37-2fa-login-challenge)
+38. [PRD-38: Backup Codes Component](#prd-38-backup-codes-component)
+
+## OAuth Social Login (PRD-39 to PRD-40)
+39. [PRD-39: Social Login Buttons](#prd-39-social-login-buttons)
+40. [PRD-40: OAuth Callback Handler](#prd-40-oauth-callback-handler)
+
+## User Dashboard (PRD-41 to PRD-43)
+41. [PRD-41: Dashboard Page Layout](#prd-41-dashboard-page-layout)
+42. [PRD-42: Stats Cards Component](#prd-42-stats-cards-component)
+43. [PRD-43: Recent Chats & Quick Actions](#prd-43-recent-chats--quick-actions)
+
+## Settings Page - Web (PRD-44 to PRD-47)
+44. [PRD-44: Web Settings Page Layout](#prd-44-web-settings-page-layout)
+45. [PRD-45: Profile Section](#prd-45-profile-section)
+46. [PRD-46: Security Section](#prd-46-security-section)
+47. [PRD-47: Data & Privacy Section](#prd-47-data--privacy-section)
+
+## Contact Form Backend (PRD-48 to PRD-49)
+48. [PRD-48: Contact Edge Function](#prd-48-contact-edge-function)
+49. [PRD-49: Connect Contact Form to Backend](#prd-49-connect-contact-form-to-backend)
+
+## Billing/Subscription (PRD-50 to PRD-53)
+50. [PRD-50: Subscription Database Schema](#prd-50-subscription-database-schema)
+51. [PRD-51: Stripe Checkout Function](#prd-51-stripe-checkout-function)
+52. [PRD-52: Stripe Webhook Handler](#prd-52-stripe-webhook-handler)
+53. [PRD-53: Billing Page UI](#prd-53-billing-page-ui)
+
+## Cloud Sync (PRD-54 to PRD-58)
+54. [PRD-54: Sync State Types](#prd-54-sync-state-types)
+55. [PRD-55: Supabase Chats Table](#prd-55-supabase-chats-table)
+56. [PRD-56: Sync Service - Upload](#prd-56-sync-service---upload)
+57. [PRD-57: Sync Service - Download](#prd-57-sync-service---download)
+58. [PRD-58: Sync Status UI & Triggers](#prd-58-sync-status-ui--triggers)
+
+## Tier Enforcement (PRD-59 to PRD-61)
+59. [PRD-59: Tier Configuration](#prd-59-tier-configuration)
+60. [PRD-60: Chat Limit Enforcement](#prd-60-chat-limit-enforcement)
+61. [PRD-61: Usage Meter Component](#prd-61-usage-meter-component)
+
+## Error Handling (PRD-62 to PRD-64)
+62. [PRD-62: Error Types & Utilities](#prd-62-error-types--utilities)
+63. [PRD-63: Error Boundary Components](#prd-63-error-boundary-components)
+64. [PRD-64: Error Toast Component](#prd-64-error-toast-component)
+
+## Onboarding Wizard (PRD-65 to PRD-67)
+65. [PRD-65: Onboarding State & Hook](#prd-65-onboarding-state--hook)
+66. [PRD-66: Onboarding Steps Components](#prd-66-onboarding-steps-components)
+67. [PRD-67: Onboarding Wizard Page](#prd-67-onboarding-wizard-page)
+
+## Accessibility (PRD-68 to PRD-71)
+68. [PRD-68: ARIA Labels Audit](#prd-68-aria-labels-audit)
+69. [PRD-69: Keyboard Navigation](#prd-69-keyboard-navigation)
+70. [PRD-70: Focus Visible Styles](#prd-70-focus-visible-styles)
+71. [PRD-71: Reduced Motion Support](#prd-71-reduced-motion-support)
+
+## Unit Tests (PRD-72 to PRD-75)
+72. [PRD-72: Test Framework Setup](#prd-72-test-framework-setup)
+73. [PRD-73: Storage Utility Tests](#prd-73-storage-utility-tests)
+74. [PRD-74: Export Utility Tests](#prd-74-export-utility-tests)
+75. [PRD-75: Component Tests](#prd-75-component-tests)
+
+## CI/CD Pipeline (PRD-76 to PRD-78)
+76. [PRD-76: CI Workflow](#prd-76-ci-workflow)
+77. [PRD-77: Web Deploy Workflow](#prd-77-web-deploy-workflow)
+78. [PRD-78: Extension Build Workflow](#prd-78-extension-build-workflow)
 
 ---
 
-# PRD-001: Folder System
-
-## PRD-001A: Folder Data Model & Storage
+# PRD-01: Folder Data Model & Storage
 
 ### Goal
 Add folder data types and storage actions to the extension.
@@ -84,7 +182,7 @@ None
 
 ---
 
-## PRD-001B: Create Folder Modal Component
+# PRD-02: Create Folder Modal Component
 
 ### Goal
 Create a modal for creating new folders.
@@ -121,11 +219,11 @@ interface CreateFolderModalProps {
 - [ ] Folder is created on submit
 
 ### Dependencies
-- PRD-001A (storage actions)
+- PRD-01 (storage actions)
 
 ---
 
-## PRD-001C: Folder List Component
+# PRD-03: Folder List Component
 
 ### Goal
 Create a sidebar component displaying all folders.
@@ -161,11 +259,11 @@ Create a sidebar component displaying all folders.
 - [ ] New Folder button opens modal
 
 ### Dependencies
-- PRD-001A, PRD-001B
+- PRD-01, PRD-02
 
 ---
 
-## PRD-001D: Move Chat to Folder
+# PRD-04: Move Chat to Folder
 
 ### Goal
 Allow users to move chats into folders.
@@ -197,13 +295,11 @@ Allow users to move chats into folders.
 - [ ] Folder filtering works correctly
 
 ### Dependencies
-- PRD-001A, PRD-001C
+- PRD-01, PRD-03
 
 ---
 
-# PRD-002: Tag System
-
-## PRD-002A: Tag Data Model & Storage
+# PRD-05: Tag Data Model & Storage
 
 ### Goal
 Add tag data types and storage actions.
@@ -243,7 +339,7 @@ None
 
 ---
 
-## PRD-002B: Tag Input Component
+# PRD-06: Tag Input Component
 
 ### Goal
 Create autocomplete input for adding tags to chats.
@@ -280,11 +376,11 @@ interface TagInputProps {
 - [ ] Can remove tags by clicking X
 
 ### Dependencies
-- PRD-002A
+- PRD-05
 
 ---
 
-## PRD-002C: Tag Filter Component
+# PRD-07: Tag Filter Component
 
 ### Goal
 Create filter UI for filtering chats by tags.
@@ -314,11 +410,11 @@ Create filter UI for filtering chats by tags.
 - [ ] Clear all resets filter
 
 ### Dependencies
-- PRD-002A, PRD-002B
+- PRD-05, PRD-06
 
 ---
 
-## PRD-002D: Tag Display in Chat Item
+# PRD-08: Tag Display in Chat Item
 
 ### Goal
 Show tags on chat items and add ability to edit.
@@ -343,13 +439,11 @@ Show tags on chat items and add ability to edit.
 - [ ] Overflow handled gracefully
 
 ### Dependencies
-- PRD-002A, PRD-002B
+- PRD-05, PRD-06
 
 ---
 
-# PRD-003: Export Functionality
-
-## PRD-003A: Export Utility Functions
+# PRD-09: Export Utility Functions
 
 ### Goal
 Create pure utility functions for exporting chats to different formats.
@@ -397,7 +491,7 @@ None
 
 ---
 
-## PRD-003B: Export Menu Component
+# PRD-10: Export Menu Component
 
 ### Goal
 Create dropdown menu for export options.
@@ -434,11 +528,11 @@ interface ExportMenuProps {
 - [ ] Files download with correct names
 
 ### Dependencies
-- PRD-003A
+- PRD-09
 
 ---
 
-## PRD-003C: Wire Up Export Button in SidePanel
+# PRD-11: Wire Up Export Button in SidePanel
 
 ### Goal
 Connect the existing Export button to functionality.
@@ -458,11 +552,11 @@ Connect the existing Export button to functionality.
 - [ ] Can export selected chat
 
 ### Dependencies
-- PRD-003B
+- PRD-10
 
 ---
 
-## PRD-003D: Export Option in Chat Context Menu
+# PRD-12: Export Option in Chat Context Menu
 
 ### Goal
 Add export option to individual chat item menu.
@@ -481,13 +575,11 @@ Add export option to individual chat item menu.
 - [ ] Both formats available
 
 ### Dependencies
-- PRD-003A, PRD-003B
+- PRD-09, PRD-10
 
 ---
 
-# PRD-004: Settings Page
-
-## PRD-004A: Settings Data Model & Storage
+# PRD-13: Settings Data Model & Storage
 
 ### Goal
 Add settings interface and storage.
@@ -538,7 +630,7 @@ None
 
 ---
 
-## PRD-004B: Theme Provider Component
+# PRD-14: Theme Provider Component
 
 ### Goal
 Create theme context and provider for dark/light mode.
@@ -572,11 +664,11 @@ Create theme context and provider for dark/light mode.
 - [ ] Theme persists
 
 ### Dependencies
-- PRD-004A
+- PRD-13
 
 ---
 
-## PRD-004C: Settings Page Layout
+# PRD-15: Settings Page Layout
 
 ### Goal
 Create the settings page component with sections.
@@ -621,11 +713,11 @@ Settings
 - [ ] Back navigation works
 
 ### Dependencies
-- PRD-004A, PRD-004B
+- PRD-13, PRD-14
 
 ---
 
-## PRD-004D: Settings Controls Implementation
+# PRD-16: Settings Controls Implementation
 
 ### Goal
 Make all settings controls functional.
@@ -656,11 +748,11 @@ Make all settings controls functional.
 - [ ] Clear data works with confirmation
 
 ### Dependencies
-- PRD-004C, PRD-003A (for export)
+- PRD-15, PRD-09 (for export)
 
 ---
 
-## PRD-004E: Wire Up Settings Button
+# PRD-17: Wire Up Settings Button
 
 ### Goal
 Connect settings button in Popup to settings page.
@@ -684,13 +776,11 @@ Connect settings button in Popup to settings page.
 - [ ] Works in both popup and sidepanel
 
 ### Dependencies
-- PRD-004C
+- PRD-15
 
 ---
 
-# PRD-005: Search Enhancement
-
-## PRD-005A: Full-Text Search Index
+# PRD-18: Full-Text Search Index
 
 ### Goal
 Create search index for fast full-text search.
@@ -736,7 +826,7 @@ None
 
 ---
 
-## PRD-005B: Search Operators Parser
+# PRD-19: Search Operators Parser
 
 ### Goal
 Parse search operators like `platform:claude` and `tag:work`.
@@ -777,11 +867,11 @@ function parseSearchQuery(query: string): ParsedQuery
 - [ ] Invalid operators ignored gracefully
 
 ### Dependencies
-- PRD-005A
+- PRD-18
 
 ---
 
-## PRD-005C: Search Filters UI
+# PRD-20: Search Filters UI
 
 ### Goal
 Add visual date range and platform filters.
@@ -811,11 +901,11 @@ Add visual date range and platform filters.
 - [ ] Filters combine with text search
 
 ### Dependencies
-- PRD-005A, PRD-005B
+- PRD-18, PRD-19
 
 ---
 
-## PRD-005D: Keyboard Shortcut for Search
+# PRD-21: Keyboard Shortcut for Search
 
 ### Goal
 Make Cmd+K / Ctrl+K focus search globally.
@@ -844,9 +934,7 @@ None
 
 ---
 
-# PRD-006: Perplexity Scraper
-
-## PRD-006A: Perplexity DOM Analysis & Scraper
+# PRD-22: Perplexity DOM Analysis & Scraper
 
 ### Goal
 Implement scraper for Perplexity AI conversations.
@@ -898,7 +986,7 @@ None
 
 ---
 
-## PRD-006B: Perplexity Manifest & Integration
+# PRD-23: Perplexity Manifest & Integration
 
 ### Goal
 Ensure manifest and config support Perplexity.
@@ -938,13 +1026,11 @@ export const PLATFORM_CONFIG = {
 - [ ] Perplexity chats show correct icon
 
 ### Dependencies
-- PRD-006A
+- PRD-22
 
 ---
 
-# PRD-007: Fix Non-Functional UI
-
-## PRD-007A: View State Management
+# PRD-24: View State Management
 
 ### Goal
 Add view state to switch between different views.
@@ -979,7 +1065,7 @@ None
 
 ---
 
-## PRD-007B: Nav Icons Functionality
+# PRD-25: Nav Icons Functionality
 
 ### Goal
 Wire up navigation icons in SidePanel.
@@ -1008,11 +1094,11 @@ Wire up navigation icons in SidePanel.
 - [ ] Tooltips show on hover
 
 ### Dependencies
-- PRD-007A
+- PRD-24
 
 ---
 
-## PRD-007C: Analytics View Component
+# PRD-26: Analytics View Component
 
 ### Goal
 Create simple analytics dashboard.
@@ -1038,11 +1124,11 @@ Create simple analytics dashboard.
 - [ ] Shows popular tags
 
 ### Dependencies
-- PRD-007A, PRD-007B
+- PRD-24, PRD-25
 
 ---
 
-## PRD-007D: Dashboard Button & Tooltips
+# PRD-27: Dashboard Button & Tooltips
 
 ### Goal
 Wire up View Dashboard button and add tooltips.
@@ -1068,9 +1154,7 @@ None
 
 ---
 
-# PRD-008: Password Reset
-
-## PRD-008A: Forgot Password Page
+# PRD-28: Forgot Password Page
 
 ### Goal
 Create forgot password request page.
@@ -1111,7 +1195,7 @@ None
 
 ---
 
-## PRD-008B: Reset Password Page
+# PRD-29: Reset Password Page
 
 ### Goal
 Create page to set new password after clicking email link.
@@ -1150,11 +1234,11 @@ await supabase.auth.updateUser({ password: newPassword });
 - [ ] Redirects to login after
 
 ### Dependencies
-- PRD-008A
+- PRD-28
 
 ---
 
-## PRD-008C: Auth Hook Updates
+# PRD-30: Auth Hook Updates
 
 ### Goal
 Add reset password methods to useAuth hook.
@@ -1190,9 +1274,7 @@ None
 
 ---
 
-# PRD-009: Email Verification
-
-## PRD-009A: Verification Banner Component
+# PRD-31: Verification Banner Component
 
 ### Goal
 Show banner prompting unverified users to verify email.
@@ -1233,7 +1315,7 @@ None
 
 ---
 
-## PRD-009B: Extension Auth Banner Update
+# PRD-32: Extension Auth Banner Update
 
 ### Goal
 Show verification status in extension.
@@ -1260,9 +1342,7 @@ None
 
 ---
 
-# PRD-010: Account Deletion
-
-## PRD-010A: Delete Account Edge Function
+# PRD-33: Delete Account Edge Function
 
 ### Goal
 Create secure backend function for account deletion.
@@ -1301,7 +1381,7 @@ None
 
 ---
 
-## PRD-010B: Delete Account Modal
+# PRD-34: Delete Account Modal
 
 ### Goal
 Create confirmation modal for account deletion.
@@ -1330,11 +1410,11 @@ Create confirmation modal for account deletion.
 - [ ] User logged out and redirected
 
 ### Dependencies
-- PRD-010A
+- PRD-33
 
 ---
 
-## PRD-010C: Data Export Before Deletion
+# PRD-35: Data Export Before Deletion
 
 ### Goal
 Allow users to export data before deleting account.
@@ -1356,13 +1436,11 @@ Allow users to export data before deleting account.
 - [ ] Works before deletion is confirmed
 
 ### Dependencies
-- PRD-010B
+- PRD-34
 
 ---
 
-# PRD-011: Two-Factor Authentication
-
-## PRD-011A: 2FA Enrollment UI
+# PRD-36: 2FA Enrollment UI
 
 ### Goal
 Create UI for enabling 2FA with QR code.
@@ -1400,7 +1478,7 @@ None
 
 ---
 
-## PRD-011B: 2FA Login Challenge
+# PRD-37: 2FA Login Challenge
 
 ### Goal
 Handle 2FA challenge during login.
@@ -1440,11 +1518,11 @@ if (data.nextLevel === 'aal2') {
 - [ ] Login completes after 2FA
 
 ### Dependencies
-- PRD-011A
+- PRD-36
 
 ---
 
-## PRD-011C: Backup Codes Component
+# PRD-38: Backup Codes Component
 
 ### Goal
 Display and manage backup codes.
@@ -1472,13 +1550,11 @@ Display and manage backup codes.
 - [ ] Can regenerate codes
 
 ### Dependencies
-- PRD-011A
+- PRD-36
 
 ---
 
-# PRD-012: OAuth Social Login
-
-## PRD-012A: Social Login Buttons
+# PRD-39: Social Login Buttons
 
 ### Goal
 Create Google and GitHub login buttons.
@@ -1526,7 +1602,7 @@ const signInWithGoogle = async () => {
 
 ---
 
-## PRD-012B: OAuth Callback Handler
+# PRD-40: OAuth Callback Handler
 
 ### Goal
 Handle OAuth redirect after authentication.
@@ -1567,13 +1643,11 @@ useEffect(() => {
 - [ ] Errors displayed
 
 ### Dependencies
-- PRD-012A
+- PRD-39
 
 ---
 
-# PRD-013: User Dashboard
-
-## PRD-013A: Dashboard Page Layout
+# PRD-41: Dashboard Page Layout
 
 ### Goal
 Create basic dashboard page structure.
@@ -1606,7 +1680,7 @@ None
 
 ---
 
-## PRD-013B: Stats Cards Component
+# PRD-42: Stats Cards Component
 
 ### Goal
 Create stat card components for dashboard.
@@ -1642,11 +1716,11 @@ interface StatsCardProps {
 - [ ] Consistent styling
 
 ### Dependencies
-- PRD-013A
+- PRD-41
 
 ---
 
-## PRD-013C: Recent Chats & Quick Actions
+# PRD-43: Recent Chats & Quick Actions
 
 ### Goal
 Add recent chats list and action buttons.
@@ -1676,13 +1750,11 @@ Add recent chats list and action buttons.
 - [ ] Upgrade links to pricing
 
 ### Dependencies
-- PRD-013A, PRD-013B
+- PRD-41, PRD-42
 
 ---
 
-# PRD-014: Settings Page (Web)
-
-## PRD-014A: Web Settings Page Layout
+# PRD-44: Web Settings Page Layout
 
 ### Goal
 Create settings page structure for web app.
@@ -1713,7 +1785,7 @@ None
 
 ---
 
-## PRD-014B: Profile Section
+# PRD-45: Profile Section
 
 ### Goal
 Create profile editing section.
@@ -1738,11 +1810,11 @@ Create profile editing section.
 - [ ] Changes save correctly
 
 ### Dependencies
-- PRD-014A
+- PRD-44
 
 ---
 
-## PRD-014C: Security Section
+# PRD-46: Security Section
 
 ### Goal
 Create security settings section.
@@ -1764,11 +1836,11 @@ Create security settings section.
 - [ ] Clear security overview
 
 ### Dependencies
-- PRD-014A, PRD-008 (password), PRD-011 (2FA)
+- PRD-44, PRD-28 (password), PRD-36 (2FA)
 
 ---
 
-## PRD-014D: Data & Privacy Section
+# PRD-47: Data & Privacy Section
 
 ### Goal
 Create data management section.
@@ -1790,13 +1862,11 @@ Create data management section.
 - [ ] Privacy policy linked
 
 ### Dependencies
-- PRD-014A, PRD-010 (deletion)
+- PRD-44, PRD-33 (deletion)
 
 ---
 
-# PRD-015: Contact Form Backend
-
-## PRD-015A: Contact Edge Function
+# PRD-48: Contact Edge Function
 
 ### Goal
 Create backend function to send contact form emails.
@@ -1831,7 +1901,7 @@ serve(async (req) => {
 
 ---
 
-## PRD-015B: Connect Contact Form to Backend
+# PRD-49: Connect Contact Form to Backend
 
 ### Goal
 Replace stub with real API call.
@@ -1862,13 +1932,11 @@ export async function submitContactForm(data: ContactForm) {
 - [ ] Errors handled
 
 ### Dependencies
-- PRD-015A
+- PRD-48
 
 ---
 
-# PRD-016: Billing/Subscription
-
-## PRD-016A: Subscription Database Schema
+# PRD-50: Subscription Database Schema
 
 ### Goal
 Add subscription tracking to database.
@@ -1904,7 +1972,7 @@ None
 
 ---
 
-## PRD-016B: Stripe Checkout Function
+# PRD-51: Stripe Checkout Function
 
 ### Goal
 Create function to start Stripe checkout.
@@ -1943,7 +2011,7 @@ serve(async (req) => {
 
 ---
 
-## PRD-016C: Stripe Webhook Handler
+# PRD-52: Stripe Webhook Handler
 
 ### Goal
 Handle Stripe webhook events.
@@ -1980,11 +2048,11 @@ serve(async (req) => {
 - [ ] Updates database correctly
 
 ### Dependencies
-- PRD-016A, PRD-016B
+- PRD-50, PRD-51
 
 ---
 
-## PRD-016D: Billing Page UI
+# PRD-53: Billing Page UI
 
 ### Goal
 Create billing management page.
@@ -2012,13 +2080,11 @@ Create billing management page.
 - [ ] Links to Stripe portal
 
 ### Dependencies
-- PRD-016A, PRD-016B, PRD-016C
+- PRD-50, PRD-51, PRD-52
 
 ---
 
-# PRD-017: Cloud Sync
-
-## PRD-017A: Sync State Types
+# PRD-54: Sync State Types
 
 ### Goal
 Add sync-related types and state.
@@ -2061,7 +2127,7 @@ None
 
 ---
 
-## PRD-017B: Supabase Chats Table
+# PRD-55: Supabase Chats Table
 
 ### Goal
 Create cloud storage schema for chats.
@@ -2103,7 +2169,7 @@ None
 
 ---
 
-## PRD-017C: Sync Service - Upload
+# PRD-56: Sync Service - Upload
 
 ### Goal
 Implement uploading local chats to cloud.
@@ -2137,11 +2203,11 @@ async function uploadChat(chat: Chat): Promise<void> {
 - [ ] Errors tracked
 
 ### Dependencies
-- PRD-017A, PRD-017B
+- PRD-54, PRD-55
 
 ---
 
-## PRD-017D: Sync Service - Download
+# PRD-57: Sync Service - Download
 
 ### Goal
 Implement downloading cloud chats to local.
@@ -2172,11 +2238,11 @@ async function downloadChats(): Promise<Chat[]> {
 - [ ] Handles conflicts
 
 ### Dependencies
-- PRD-017C
+- PRD-56
 
 ---
 
-## PRD-017E: Sync Status UI & Triggers
+# PRD-58: Sync Status UI & Triggers
 
 ### Goal
 Add sync status indicator and trigger sync.
@@ -2209,13 +2275,11 @@ Add sync status indicator and trigger sync.
 - [ ] Shows errors clearly
 
 ### Dependencies
-- PRD-017C, PRD-017D
+- PRD-56, PRD-57
 
 ---
 
-# PRD-018: Tier Enforcement
-
-## PRD-018A: Tier Configuration
+# PRD-59: Tier Configuration
 
 ### Goal
 Define tier limits and create utility functions.
@@ -2259,7 +2323,7 @@ None
 
 ---
 
-## PRD-018B: Chat Limit Enforcement
+# PRD-60: Chat Limit Enforcement
 
 ### Goal
 Enforce chat limits when saving.
@@ -2296,11 +2360,11 @@ const saveChat = (chat: Chat) => {
 - [ ] Can dismiss prompt
 
 ### Dependencies
-- PRD-018A
+- PRD-59
 
 ---
 
-## PRD-018C: Usage Meter Component
+# PRD-61: Usage Meter Component
 
 ### Goal
 Show usage progress in UI.
@@ -2325,13 +2389,11 @@ Show usage progress in UI.
 - [ ] Shows upgrade prompt when high
 
 ### Dependencies
-- PRD-018A
+- PRD-59
 
 ---
 
-# PRD-019: Error Handling
-
-## PRD-019A: Error Types & Utilities
+# PRD-62: Error Types & Utilities
 
 ### Goal
 Create error handling utilities.
@@ -2380,7 +2442,7 @@ None
 
 ---
 
-## PRD-019B: Error Boundary Components
+# PRD-63: Error Boundary Components
 
 ### Goal
 Create React error boundaries.
@@ -2423,11 +2485,11 @@ class ErrorBoundary extends React.Component {
 - [ ] Can recover with retry
 
 ### Dependencies
-- PRD-019A
+- PRD-62
 
 ---
 
-## PRD-019C: Error Toast Component
+# PRD-64: Error Toast Component
 
 ### Goal
 Create toast notifications for errors.
@@ -2459,13 +2521,11 @@ Create toast notifications for errors.
 - [ ] Shows user-friendly message
 
 ### Dependencies
-- PRD-019A
+- PRD-62
 
 ---
 
-# PRD-020: Onboarding Wizard
-
-## PRD-020A: Onboarding State & Hook
+# PRD-65: Onboarding State & Hook
 
 ### Goal
 Track onboarding progress.
@@ -2501,7 +2561,7 @@ None
 
 ---
 
-## PRD-020B: Onboarding Steps Components
+# PRD-66: Onboarding Steps Components
 
 ### Goal
 Create individual step components.
@@ -2535,11 +2595,11 @@ Create individual step components.
 - [ ] Install detection works (if possible)
 
 ### Dependencies
-- PRD-020A
+- PRD-65
 
 ---
 
-## PRD-020C: Onboarding Wizard Page
+# PRD-67: Onboarding Wizard Page
 
 ### Goal
 Combine steps into wizard page.
@@ -2569,13 +2629,11 @@ Combine steps into wizard page.
 - [ ] Redirects to dashboard on complete
 
 ### Dependencies
-- PRD-020A, PRD-020B
+- PRD-65, PRD-66
 
 ---
 
-# PRD-021: Accessibility
-
-## PRD-021A: ARIA Labels Audit
+# PRD-68: ARIA Labels Audit
 
 ### Goal
 Add ARIA labels to all interactive elements.
@@ -2608,7 +2666,7 @@ None
 
 ---
 
-## PRD-021B: Keyboard Navigation
+# PRD-69: Keyboard Navigation
 
 ### Goal
 Ensure full keyboard accessibility.
@@ -2642,7 +2700,7 @@ None
 
 ---
 
-## PRD-021C: Focus Visible Styles
+# PRD-70: Focus Visible Styles
 
 ### Goal
 Add clear focus indicators.
@@ -2679,7 +2737,7 @@ None
 
 ---
 
-## PRD-021D: Reduced Motion Support
+# PRD-71: Reduced Motion Support
 
 ### Goal
 Respect user's motion preferences.
@@ -2720,9 +2778,7 @@ None
 
 ---
 
-# PRD-022: Unit Tests
-
-## PRD-022A: Test Framework Setup
+# PRD-72: Test Framework Setup
 
 ### Goal
 Set up Vitest testing framework.
@@ -2774,7 +2830,7 @@ None
 
 ---
 
-## PRD-022B: Storage Utility Tests
+# PRD-73: Storage Utility Tests
 
 ### Goal
 Test storage/state management functions.
@@ -2801,11 +2857,11 @@ Test storage/state management functions.
 - [ ] 80%+ coverage
 
 ### Dependencies
-- PRD-022A
+- PRD-72
 
 ---
 
-## PRD-022C: Export Utility Tests
+# PRD-74: Export Utility Tests
 
 ### Goal
 Test export functions.
@@ -2834,11 +2890,11 @@ Test export functions.
 - [ ] Edge cases covered
 
 ### Dependencies
-- PRD-022A, PRD-003A
+- PRD-72, PRD-09
 
 ---
 
-## PRD-022D: Component Tests
+# PRD-75: Component Tests
 
 ### Goal
 Test key React components.
@@ -2867,13 +2923,11 @@ Test key React components.
 - [ ] Accessibility checked
 
 ### Dependencies
-- PRD-022A
+- PRD-72
 
 ---
 
-# PRD-023: CI/CD Pipeline
-
-## PRD-023A: CI Workflow
+# PRD-76: CI Workflow
 
 ### Goal
 Create GitHub Actions CI workflow.
@@ -2915,11 +2969,11 @@ jobs:
 - [ ] Build succeeds
 
 ### Dependencies
-- PRD-022A
+- PRD-72
 
 ---
 
-## PRD-023B: Web Deploy Workflow
+# PRD-77: Web Deploy Workflow
 
 ### Goal
 Auto-deploy web app on main branch.
@@ -2957,11 +3011,11 @@ jobs:
 - [ ] Deployment succeeds
 
 ### Dependencies
-- PRD-023A
+- PRD-76
 
 ---
 
-## PRD-023C: Extension Build Workflow
+# PRD-78: Extension Build Workflow
 
 ### Goal
 Build extension on version tags.
@@ -3000,80 +3054,80 @@ jobs:
 - [ ] Attaches to GitHub release
 
 ### Dependencies
-- PRD-023A
+- PRD-76
 
 ---
 
 # Implementation Order
 
 ## Phase 1: Foundation (Start Here)
-1. PRD-022A: Test Framework Setup
-2. PRD-023A: CI Workflow
-3. PRD-019A: Error Types & Utilities
-4. PRD-019B: Error Boundary Components
+1. PRD-72: Test Framework Setup
+2. PRD-76: CI Workflow
+3. PRD-62: Error Types & Utilities
+4. PRD-63: Error Boundary Components
 
 ## Phase 2: Core Extension
-5. PRD-001A → PRD-001D: Folder System
-6. PRD-002A → PRD-002D: Tag System
-7. PRD-003A → PRD-003D: Export
-8. PRD-004A → PRD-004E: Settings
-9. PRD-005A → PRD-005D: Search
-10. PRD-007A → PRD-007D: Fix UI
+5. PRD-01 to PRD-04: Folder System
+6. PRD-05 to PRD-08: Tag System
+7. PRD-09 to PRD-12: Export
+8. PRD-13 to PRD-17: Settings
+9. PRD-18 to PRD-21: Search
+10. PRD-24 to PRD-27: Fix UI
 
 ## Phase 3: Authentication
-11. PRD-008A → PRD-008C: Password Reset
-12. PRD-009A → PRD-009B: Email Verification
-13. PRD-012A → PRD-012B: OAuth
+11. PRD-28 to PRD-30: Password Reset
+12. PRD-31 to PRD-32: Email Verification
+13. PRD-39 to PRD-40: OAuth
 
 ## Phase 4: Web App
-14. PRD-013A → PRD-013C: Dashboard
-15. PRD-014A → PRD-014D: Settings Page
-16. PRD-015A → PRD-015B: Contact Form
+14. PRD-41 to PRD-43: Dashboard
+15. PRD-44 to PRD-47: Settings Page
+16. PRD-48 to PRD-49: Contact Form
 
 ## Phase 5: Premium Features
-17. PRD-016A → PRD-016D: Billing
-18. PRD-017A → PRD-017E: Cloud Sync
-19. PRD-018A → PRD-018C: Tier Enforcement
-20. PRD-006A → PRD-006B: Perplexity Scraper
+17. PRD-50 to PRD-53: Billing
+18. PRD-54 to PRD-58: Cloud Sync
+19. PRD-59 to PRD-61: Tier Enforcement
+20. PRD-22 to PRD-23: Perplexity Scraper
 
 ## Phase 6: Polish
-21. PRD-011A → PRD-011C: 2FA
-22. PRD-010A → PRD-010C: Account Deletion
-23. PRD-020A → PRD-020C: Onboarding
-24. PRD-021A → PRD-021D: Accessibility
-25. PRD-022B → PRD-022D: More Tests
-26. PRD-023B → PRD-023C: Deploy Workflows
+21. PRD-36 to PRD-38: 2FA
+22. PRD-33 to PRD-35: Account Deletion
+23. PRD-65 to PRD-67: Onboarding
+24. PRD-68 to PRD-71: Accessibility
+25. PRD-73 to PRD-75: More Tests
+26. PRD-77 to PRD-78: Deploy Workflows
 
 ---
 
 # Summary
 
-| PRD | Parts | Total Sub-tasks |
-|-----|-------|-----------------|
-| PRD-001 Folders | 4 | 4 |
-| PRD-002 Tags | 4 | 4 |
-| PRD-003 Export | 4 | 4 |
-| PRD-004 Settings | 5 | 5 |
-| PRD-005 Search | 4 | 4 |
-| PRD-006 Perplexity | 2 | 2 |
-| PRD-007 Fix UI | 4 | 4 |
-| PRD-008 Password Reset | 3 | 3 |
-| PRD-009 Email Verify | 2 | 2 |
-| PRD-010 Account Delete | 3 | 3 |
-| PRD-011 2FA | 3 | 3 |
-| PRD-012 OAuth | 2 | 2 |
-| PRD-013 Dashboard | 3 | 3 |
-| PRD-014 Web Settings | 4 | 4 |
-| PRD-015 Contact Form | 2 | 2 |
-| PRD-016 Billing | 4 | 4 |
-| PRD-017 Cloud Sync | 5 | 5 |
-| PRD-018 Tier Enforce | 3 | 3 |
-| PRD-019 Error Handle | 3 | 3 |
-| PRD-020 Onboarding | 3 | 3 |
-| PRD-021 Accessibility | 4 | 4 |
-| PRD-022 Unit Tests | 4 | 4 |
-| PRD-023 CI/CD | 3 | 3 |
-| **TOTAL** | **78** | **78 sub-tasks** |
+| Category | PRDs | Count |
+|----------|------|-------|
+| Folder System | PRD-01 to PRD-04 | 4 |
+| Tag System | PRD-05 to PRD-08 | 4 |
+| Export | PRD-09 to PRD-12 | 4 |
+| Settings | PRD-13 to PRD-17 | 5 |
+| Search | PRD-18 to PRD-21 | 4 |
+| Perplexity | PRD-22 to PRD-23 | 2 |
+| Fix UI | PRD-24 to PRD-27 | 4 |
+| Password Reset | PRD-28 to PRD-30 | 3 |
+| Email Verify | PRD-31 to PRD-32 | 2 |
+| Account Delete | PRD-33 to PRD-35 | 3 |
+| 2FA | PRD-36 to PRD-38 | 3 |
+| OAuth | PRD-39 to PRD-40 | 2 |
+| Dashboard | PRD-41 to PRD-43 | 3 |
+| Web Settings | PRD-44 to PRD-47 | 4 |
+| Contact Form | PRD-48 to PRD-49 | 2 |
+| Billing | PRD-50 to PRD-53 | 4 |
+| Cloud Sync | PRD-54 to PRD-58 | 5 |
+| Tier Enforce | PRD-59 to PRD-61 | 3 |
+| Error Handle | PRD-62 to PRD-64 | 3 |
+| Onboarding | PRD-65 to PRD-67 | 3 |
+| Accessibility | PRD-68 to PRD-71 | 4 |
+| Unit Tests | PRD-72 to PRD-75 | 4 |
+| CI/CD | PRD-76 to PRD-78 | 3 |
+| **TOTAL** | **PRD-01 to PRD-78** | **78** |
 
 ---
 
@@ -3083,3 +3137,4 @@ jobs:
 |---------|------|---------|
 | 1.0 | 2026-01-19 | Initial PRD document |
 | 2.0 | 2026-01-19 | Split into 78 granular sub-tasks |
+| 3.0 | 2026-01-19 | Renamed to sequential numbering (PRD-01 to PRD-78) |
