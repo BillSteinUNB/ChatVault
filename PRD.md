@@ -184,7 +184,7 @@ None
 
 ---
 
-- [ ] PRD-02: Create Folder Modal Component
+- [x] PRD-02: Create Folder Modal Component
 
 # PRD-02: Create Folder Modal Component
 
@@ -216,11 +216,11 @@ interface CreateFolderModalProps {
 ```
 
 ### Acceptance Criteria
-- [ ] Modal opens/closes properly
-- [ ] User can enter folder name
-- [ ] User can select color
-- [ ] Validation prevents empty names
-- [ ] Folder is created on submit
+- [x] Modal opens/closes properly
+- [x] User can enter folder name
+- [x] User can select color
+- [x] Validation prevents empty names
+- [x] Folder is created on submit
 
 ### Dependencies
 - PRD-01 (storage actions)

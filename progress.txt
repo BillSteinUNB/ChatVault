@@ -22,3 +22,29 @@ All acceptance criteria met:
 - Folders persist after browser restart via chrome.storage.local
 
 Note: Test framework not yet set up (PRD-72), so no tests were written.
+
+---
+
+2026-01-19: Completed PRD-02: Create Folder Modal Component
+
+Created Extension/src/shared/components/CreateFolderModal.tsx:
+- Modal component with text input for folder name
+- 7 preset colors for color selection (Red, Amber, Emerald, Blue, Violet, Pink, Gray)
+- Cancel and Create buttons
+- Form validation: name required, max 50 characters
+- UUID generation using crypto.randomUUID() with fallback for older browsers
+- Integration with Zustand store's addFolder action
+- Animated modal using Framer Motion (AnimatePresence, motion)
+- Modal overlay with backdrop blur
+- Character counter showing current/max characters
+- Visual feedback on color selection
+- Form resets on close/submit
+
+All acceptance criteria met:
+- Modal opens/closes properly with AnimatePresence
+- User can enter folder name with text input
+- User can select color from 7 preset colors
+- Validation prevents empty names and enforces 50 char max
+- Folder is created on submit with proper UUID and persisted via addFolder
+
+Note: Test framework not yet set up (PRD-72), so no tests were written.
