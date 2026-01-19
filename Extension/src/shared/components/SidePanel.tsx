@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useStore } from '../lib/storage';
 import { ChatItem } from './ChatItem';
 import { SearchBar } from './SearchBar';
@@ -6,28 +6,32 @@ import { AuthBanner } from './AuthBanner';
 import { Button } from './ui/Button';
 import { Folder, PieChart, Star, Clock, Plus, Loader2, MessageSquare } from 'lucide-react';
 import { PLATFORM_CONFIG } from '../constants';
+import { FolderList } from './FolderList';
+import { CreateFolderModal } from './CreateFolderModal';
 
 import { motion } from 'framer-motion';
 
 export const SidePanel: React.FC = () => {
-    const { chats, isLoading } = useStore();
+    const { chats, isLoading, activeFolder } = useStore();
+    const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
 
-    // Calculate Stats
+    const filteredChats = activeFolder
+        ? chats.filter(chat => chat.folderId === activeFolder)
+        : chats;
+
     const totalChats = chats.length;
-    
-    // Top Platform
+
     const platformCounts = chats.reduce((acc, chat) => {
         acc[chat.platform] = (acc[chat.platform] || 0) + 1;
         return acc;
     }, {} as Record<string, number>);
-    
+
     const topPlatformKey = Object.entries(platformCounts).sort((a, b) => b[1] - a[1])[0]?.[0];
     const topPlatform = topPlatformKey ? (PLATFORM_CONFIG[topPlatformKey as keyof typeof PLATFORM_CONFIG]?.name || topPlatformKey) : '-';
 
-    // Estimated time saved (assuming 5 mins per chat saved vs manual lookup)
     const minutesSaved = totalChats * 5;
-    const timeSaved = minutesSaved > 60 
-        ? `${(minutesSaved / 60).toFixed(1)}h` 
+    const timeSaved = minutesSaved > 60
+        ? `${(minutesSaved / 60).toFixed(1)}h`
         : `${minutesSaved}m`;
 
     const stats = {
@@ -66,7 +70,7 @@ export const SidePanel: React.FC = () => {
                     </div>
                     <div className="flex items-center gap-3">
                         <Button variant="secondary" size="sm">Export</Button>
-                        <Button size="sm" className="gap-2">
+                        <Button size="sm" className="gap-2" onClick={() => setIsCreateFolderModalOpen(true)}>
                             <Plus size={16} /> New Folder
                         </Button>
                     </div>
@@ -89,34 +93,48 @@ export const SidePanel: React.FC = () => {
                     <AuthBanner />
                 </div>
 
+                {/* Folder List */}
+                <div className="px-6 pb-4">
+                    <FolderList />
+                </div>
+
                 {/* Chat Grid */}
                 <div className="flex-1 overflow-y-auto px-6 pb-6">
-                    <h2 className="text-sm font-semibold text-gray-900 mb-4">All Chats</h2>
-                    
+                    <h2 className="text-sm font-semibold text-gray-900 mb-4">
+                        {activeFolder ? `Folder` : 'All Chats'}
+                    </h2>
+
                     {isLoading ? (
                         <div className="h-64 flex flex-col items-center justify-center text-gray-400">
                             <Loader2 className="w-10 h-10 animate-spin mb-3" />
                             <p className="text-sm">Loading your vault...</p>
                         </div>
-                    ) : chats.length === 0 ? (
+                    ) : filteredChats.length === 0 ? (
                         <div className="h-64 flex flex-col items-center justify-center text-center text-gray-500 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50/50">
                             <div className="bg-white p-4 rounded-full mb-4 shadow-sm">
                                 <MessageSquare className="w-8 h-8 text-primary-400" />
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-1">Your vault is empty</h3>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-1">{activeFolder ? 'No chats in this folder' : 'Your vault is empty'}</h3>
                             <p className="text-sm text-gray-500 max-w-xs leading-relaxed mb-4">
-                                Navigate to any chat on ChatGPT or Claude to automatically save it here.
+                                {activeFolder
+                                    ? 'Navigate to any chat on ChatGPT or Claude to save it here.'
+                                    : 'Navigate to any chat on ChatGPT or Claude to automatically save it here.'}
                             </p>
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {chats.map(chat => (
+                            {filteredChats.map(chat => (
                                 <ChatItem key={chat.id} chat={chat} />
                             ))}
                         </div>
                     )}
                 </div>
             </div>
+
+            <CreateFolderModal
+                isOpen={isCreateFolderModalOpen}
+                onClose={() => setIsCreateFolderModalOpen(false)}
+            />
         </div>
     );
 };

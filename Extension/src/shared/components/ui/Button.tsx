@@ -3,7 +3,7 @@ import { cn } from '../../lib/utils';
 import { motion } from 'framer-motion';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'icon';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'icon' | 'destructive';
   size?: 'sm' | 'md' | 'lg' | 'icon';
 }
 
@@ -21,6 +21,7 @@ export const Button: React.FC<ButtonProps> = ({
     secondary: "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50",
     ghost: "bg-transparent hover:bg-gray-100 text-gray-700",
     icon: "bg-transparent hover:bg-gray-100 text-gray-700 p-2",
+    destructive: "bg-red-600 text-white hover:bg-red-700 shadow-sm hover:shadow",
   };
 
   const sizes = {

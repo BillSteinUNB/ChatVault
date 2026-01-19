@@ -227,7 +227,7 @@ interface CreateFolderModalProps {
 
 ---
 
-- [ ] PRD-03: Folder List Component
+- [x] PRD-03: Folder List Component
 
 # PRD-03: Folder List Component
 
@@ -258,11 +258,11 @@ Create a sidebar component displaying all folders.
    - Wire up "New Folder" button to open CreateFolderModal
 
 ### Acceptance Criteria
-- [ ] All folders display in list
-- [ ] Clicking folder filters chat list
-- [ ] "All Chats" shows everything
-- [ ] Context menu works
-- [ ] New Folder button opens modal
+- [x] All folders display in list
+- [x] Clicking folder filters chat list
+- [x] "All Chats" shows everything
+- [x] Context menu works
+- [x] New Folder button opens modal
 
 ### Dependencies
 - PRD-01, PRD-02

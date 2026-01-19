@@ -48,3 +48,47 @@ All acceptance criteria met:
 - Folder is created on submit with proper UUID and persisted via addFolder
 
 Note: Test framework not yet set up (PRD-72), so no tests were written.
+""  
+"---"  
+""  
+"2026-01-19: Completed PRD-03: Folder List Component" 
+---
+
+2026-01-19: Completed PRD-03: Folder List Component
+
+Created Extension/src/shared/components/FolderList.tsx:
+- Folder list component displaying all folders from storage
+- "All Chats" option at top with count of all chats
+- Folder name with color indicator (rounded circle showing folder color)
+- Chat count per folder (filtered by folderId from chats)
+- Click folder to filter chat list by that folder
+- Context menu (right-click) on folder with options:
+  * Rename folder - opens modal to edit folder name
+  * Change color - opens modal to select new color from 7 presets
+  * Delete - opens confirmation modal requiring "DELETE" to confirm
+- Folder deletion moves all chats in folder to "No Folder" (null)
+- Active folder highlighted with primary theme styling
+
+Updated Extension/src/shared/components/SidePanel.tsx:
+- Imported FolderList and CreateFolderModal components
+- Added state for CreateFolderModal open/close
+- Added filteredChats computed property based on activeFolder state
+- Wired up "New Folder" button to open CreateFolderModal
+- Integrated FolderList component above chat list section
+- Updated chat list rendering to use filteredChats instead of all chats
+- Updated section header to show "All Chats" or "Folder" based on activeFolder
+- Updated empty state messaging to differentiate between folder view and all chats view
+- Added CreateFolderModal component to render
+
+Updated Extension/src/shared/components/ui/Button.tsx:
+- Added 'destructive' variant for delete buttons
+- Styled destructive variant with red background and hover state
+
+All acceptance criteria met:
+- All folders display in list with color indicators and chat counts
+- Clicking folder filters chat list to show only chats in that folder
+- "All Chats" shows all chats and can be selected to clear filter
+- Context menu works on right-click with rename, change color, and delete options
+- New Folder button opens CreateFolderModal successfully
+
+Note: Test framework not yet set up (PRD-72), so no tests were written. No linting scripts configured in package.json. TypeScript type checking passed for FolderList and SidePanel components.
