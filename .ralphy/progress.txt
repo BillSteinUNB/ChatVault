@@ -1143,3 +1143,53 @@
 - This PRD completes the password reset functionality by ensuring the hook exposes these methods properly
 - Ready for manual testing or integration with Web project test setup when available
 
+
+## 2026-01-19 - PRD-31: Verification Banner Component
+
+### Completed
+- Created VerificationBanner component with yellow/warning styling
+- Implemented verification status check using user?.email_confirmed_at != null
+- Added resend verification email functionality using supabase.auth.resend()
+- Implemented dismiss button that hides banner for current session
+- Added success/error message display for resend operation
+- Integrated banner into App.tsx to show globally
+- Banner only appears when user is logged in but not verified
+- Used AppContent component to access useAuth hook within Router context
+
+### Files Created
+- Web/components/VerificationBanner.tsx - Complete verification banner component with resend and dismiss functionality
+
+### Files Modified
+- Web/App.tsx - Added VerificationBanner integration with AppContent component pattern
+- PRD.md - Marked PRD-31 as complete
+
+### Implementation Details
+- VerificationBanner component uses useState for dismissed, resending, and message state
+- Checks user?.email_confirmed_at to determine verification status
+- Banner only shows when user exists, is not verified, and hasn't been dismissed
+- Resend button calls supabase.auth.resend({ type: 'signup', email: user.email })
+- Success message displays in green, error message displays in red
+- Success message auto-clears after 5 seconds
+- Dismiss button sets dismissed state to true (session-based)
+- Styled with yellow-500/10 background and yellow-500/30 border for warning appearance
+- AlertCircle icon for warning indicator
+- Mail icon on resend button
+- X icon on dismiss button
+- Responsive layout with flex-wrap for mobile support
+- AppContent component wraps the app content to access useAuth hook
+- VerificationBanner placed between ScrollToTop and Navbar
+
+### Acceptance Criteria Status
+- Banner shows for unverified users ✓ (shouldShow logic: user && !isVerified && !dismissed)
+- Can resend verification email ✓ (handleResend with supabase.auth.resend)
+- Can dismiss banner ✓ (handleDismiss sets dismissed state)
+- Verified users don't see banner ✓ (isVerified check hides banner when email_confirmed_at != null)
+
+### Notes
+- Web project has pre-existing TypeScript configuration issues (missing @types/react in node_modules)
+- Web project has pre-existing build issues (missing @tailwindcss/postcss dependency)
+- These issues existed before PRD-31 changes and are unrelated to the implementation
+- VerificationBanner component follows same patterns as existing Web components
+- Component code is syntactically correct and follows React best practices
+- Ready for manual testing or when Web project build issues are resolved
+

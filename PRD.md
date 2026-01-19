@@ -1338,7 +1338,7 @@ None
 
 ---
 
-- [ ] PRD-31: Verification Banner Component
+- [x] PRD-31: Verification Banner Component
 
 # PRD-31: Verification Banner Component
 
