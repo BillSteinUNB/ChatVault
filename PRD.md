@@ -1766,7 +1766,7 @@ None
 
 ---
 
-- [ ] PRD-42: Stats Cards Component
+- [x] PRD-42: Stats Cards Component
 
 # PRD-42: Stats Cards Component
 

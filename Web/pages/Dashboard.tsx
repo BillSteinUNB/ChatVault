@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { StatsCard } from '../components/dashboard/StatsCard';
+import { MessageSquare, Calendar, Database, Crown } from 'lucide-react';
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -17,6 +19,13 @@ export const Dashboard: React.FC = () => {
     return null; // Will redirect
   }
 
+  // TODO: These will be real stats from the backend in future PRDs
+  // For now, showing placeholder data as per PRD-42 requirements
+  const totalChats = 0;
+  const chatsThisWeek = 0;
+  const storageUsed = '0 MB';
+  const currentTier = 'Hobbyist';
+
   return (
     <div className="min-h-screen bg-neutral-950 py-12 px-6">
       <div className="max-w-7xl mx-auto">
@@ -26,28 +35,35 @@ export const Dashboard: React.FC = () => {
           <p className="text-neutral-400">Welcome back! Here's an overview of your ChatVault activity.</p>
         </div>
 
-        {/* Grid Layout for Cards */}
+        {/* Grid Layout for Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Placeholder cards - will be populated in PRD-42 and PRD-43 */}
-          <div className="bg-neutral-900 border border-white/10 rounded-xl p-6">
-            <h2 className="text-xl font-semibold text-white mb-2">Total Chats</h2>
-            <p className="text-neutral-400">Your stats will appear here once you sync your chats.</p>
-          </div>
+          <StatsCard
+            title="Total Chats"
+            value={totalChats}
+            icon={MessageSquare}
+            subtitle="All saved conversations"
+          />
 
-          <div className="bg-neutral-900 border border-white/10 rounded-xl p-6">
-            <h2 className="text-xl font-semibold text-white mb-2">Chats This Week</h2>
-            <p className="text-neutral-400">Your weekly activity will be displayed here.</p>
-          </div>
+          <StatsCard
+            title="Chats This Week"
+            value={chatsThisWeek}
+            icon={Calendar}
+            subtitle="New conversations in the last 7 days"
+          />
 
-          <div className="bg-neutral-900 border border-white/10 rounded-xl p-6">
-            <h2 className="text-xl font-semibold text-white mb-2">Storage Used</h2>
-            <p className="text-neutral-400">Storage usage information coming soon.</p>
-          </div>
+          <StatsCard
+            title="Storage Used"
+            value={storageUsed}
+            icon={Database}
+            subtitle="Of 10 MB free tier limit"
+          />
 
-          <div className="bg-neutral-900 border border-white/10 rounded-xl p-6">
-            <h2 className="text-xl font-semibold text-white mb-2">Current Tier</h2>
-            <p className="text-neutral-400">Tier information will be displayed here.</p>
-          </div>
+          <StatsCard
+            title="Current Tier"
+            value={currentTier}
+            icon={Crown}
+            subtitle="Upgrade for unlimited storage"
+          />
         </div>
       </div>
     </div>

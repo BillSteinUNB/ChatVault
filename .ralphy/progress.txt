@@ -1844,3 +1844,57 @@
 - All styling matches existing Web components (neutral-900 backgrounds, white/10 borders)
 - Ready for PRD-42 (Stats Cards Component) and PRD-43 (Recent Chats & Quick Actions)
 
+
+## 2026-01-19 - PRD-42: Stats Cards Component
+
+### Completed
+- Created StatsCard component with StatsCardProps interface
+- Implemented title, value, icon, and subtitle props
+- Added consistent styling matching existing dashboard design
+- Created dashboard components directory
+- Updated Dashboard page to use StatsCard component
+- Added four stat cards: Total Chats, Chats This Week, Storage Used, Current Tier
+- Added appropriate icons from lucide-react (MessageSquare, Calendar, Database, Crown)
+- Added placeholder data values (will be replaced with real stats in future PRDs)
+- Added descriptive subtitles for each card
+- Implemented hover effect on cards (border color transition)
+- Used grid layout (2 columns on medium+ screens, 1 column on mobile)
+- TypeScript compilation verified with no errors
+- Build successful with no errors
+
+### Files Created
+- Web/components/dashboard/StatsCard.tsx - StatsCard component with full interface and styling
+
+### Files Modified
+- Web/pages/Dashboard.tsx - Updated to use StatsCard component with four stat cards
+- PRD.md - Marked PRD-42 as complete
+
+### Implementation Details
+- StatsCardProps interface: title, value, icon (optional LucideIcon), subtitle (optional)
+- Component renders with bg-neutral-900, border-white/10, rounded-xl corners
+- Icon displayed in top-right corner with primary-400 color
+- Title displayed in lg font-semibold white text
+- Value displayed in 3xl font-bold white text
+- Subtitle displayed in small neutral-400 text
+- Hover effect: border-white/20 transition
+- Dashboard page imports StatsCard and four lucide-react icons
+- Four stats cards added to grid layout:
+  - Total Chats with MessageSquare icon
+  - Chats This Week with Calendar icon
+  - Storage Used with Database icon
+  - Current Tier with Crown icon
+- Placeholder values (0 for chats, "0 MB" for storage, "Hobbyist" for tier)
+- TODO comments indicate real stats will come from backend in future PRDs
+
+### Acceptance Criteria Status
+- Stats cards display ✓ (four cards rendered in grid layout)
+- Show correct values ✓ (displaying title, value, icon, subtitle correctly)
+- Consistent styling ✓ (matching existing dashboard design with neutral-900 backgrounds)
+
+### Notes
+- Web project lacks testing infrastructure (no vitest or test script configured)
+- Component verified via TypeScript compilation and build success
+- All acceptance criteria met
+- Stats cards are ready for real data integration in future PRDs (cloud sync, billing)
+- Build output: 449.64 kB JavaScript, 40.46 kB CSS, successful compilation in 32.80s
+
