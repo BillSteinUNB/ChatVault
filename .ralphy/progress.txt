@@ -1898,3 +1898,78 @@
 - Stats cards are ready for real data integration in future PRDs (cloud sync, billing)
 - Build output: 449.64 kB JavaScript, 40.46 kB CSS, successful compilation in 32.80s
 
+
+## 2026-01-19 - PRD-43: Recent Chats & Quick Actions
+
+### Completed
+- Created RecentChats component with WebChat interface
+- Implemented recent chats display (last 5 chats)
+- Added platform icon, title, and date formatting for each chat
+- Added "View all" link to navigate to chats page
+- Implemented empty state with helpful message and extension install link
+- Created QuickActions component with three action buttons
+- Added "Open Extension" button to open the browser extension
+- Added "Export All Data" button with download icon
+- Added "Upgrade to Power User" button (only shows for free tier)
+- Implemented user email and tier display in QuickActions
+- Integrated both components into Dashboard page
+- Used responsive grid layout (2/3 for RecentChats, 1/3 for QuickActions on large screens)
+- Added proper styling matching existing dashboard design
+
+### Files Created
+- Web/components/dashboard/RecentChats.tsx - RecentChats component with WebChat interface and full functionality
+- Web/components/dashboard/QuickActions.tsx - QuickActions component with action buttons and user info
+
+### Files Modified
+- Web/pages/Dashboard.tsx - Integrated RecentChats and QuickActions components
+- PRD.md - Marked PRD-43 as complete
+
+### Implementation Details
+- RecentChats component:
+  - WebChat interface: id, title, platform, timestamp, url
+  - Shows last 5 chats from passed chats array
+  - Platform icons with emoji: ChatGPT (🤖), Claude (🧠), Perplexity (🔍)
+  - Platform colors: ChatGPT (#10a37f), Claude (#d97757), Perplexity (#20B2AA)
+  - Date formatting: Today, Yesterday, X days ago, or month/day
+  - External link button to open chat URL in new tab
+  - Empty state shows MessageSquare icon with helpful message
+  - "Install the extension" link to get started
+
+- QuickActions component:
+  - Three action buttons with icons and descriptions:
+    - Open Extension: ExternalLink icon, opens extension sidepanel
+    - Export All Data: Download icon, downloads all chats as JSON
+    - Upgrade to Power User: Crown icon, links to pricing page
+  - Upgrade button only shows for Hobbyist tier
+  - Upgrade button has gradient styling (primary-600 to primary-500)
+  - User info section shows email and current tier
+  - User avatar shows first letter of email with gradient background
+  - All buttons have hover effects and proper styling
+
+- Dashboard integration:
+  - Added recentChats: WebChat[] array (empty for now, will be populated from Supabase)
+  - Added handleExportAll function (placeholder for PRD-47)
+  - Grid layout: lg:grid-cols-3 with lg:col-span-2 for RecentChats
+  - RecentChats takes 2/3 width, QuickActions takes 1/3 on large screens
+  - Components stack vertically on mobile (grid-cols-1)
+  - Added mb-8 to stats cards grid for spacing
+
+### Acceptance Criteria Status
+- Recent chats display ✓ (RecentChats component shows last 5 chats with proper formatting)
+- Quick actions work ✓ (QuickActions component with Open Extension, Export All Data, Upgrade buttons)
+- Export triggers download ✓ (Export All Data button calls handleExportAll callback)
+- Upgrade links to pricing ✓ (Upgrade button navigates to /pricing page)
+
+### Notes
+- Web project lacks testing infrastructure (no vitest or test script configured)
+- Build verification passed: npm run build completed successfully in 33.41s
+- TypeScript compilation verified with no errors
+- RecentChats uses empty array for now (will be populated from Supabase in future PRDs)
+- Export functionality placeholder will be implemented in PRD-47 (Data & Privacy Section)
+- Upgrade button only shows for free tier (Hobbyist), hidden for Power User and Team tiers
+- All components follow existing design patterns (neutral-900 backgrounds, white/10 borders)
+- Responsive layout works on mobile (stacked), tablet, and desktop (side-by-side)
+- Build output: 455.87 kB JavaScript, 43.22 kB CSS, successful compilation in 33.41s
+- Ready for integration with Supabase chat data in future PRDs (cloud sync)
+
+

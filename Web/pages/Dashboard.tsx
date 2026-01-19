@@ -2,6 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { StatsCard } from '../components/dashboard/StatsCard';
+import { RecentChats, WebChat } from '../components/dashboard/RecentChats';
+import { QuickActions } from '../components/dashboard/QuickActions';
 import { MessageSquare, Calendar, Database, Crown } from 'lucide-react';
 
 export const Dashboard: React.FC = () => {
@@ -26,6 +28,15 @@ export const Dashboard: React.FC = () => {
   const storageUsed = '0 MB';
   const currentTier = 'Hobbyist';
 
+  // TODO: These will be real chats from Supabase in future PRDs
+  // For now, showing empty state as per PRD-43 requirements
+  const recentChats: WebChat[] = [];
+
+  const handleExportAll = () => {
+    // TODO: Implement export functionality in PRD-47 (Data & Privacy Section)
+    console.log('Export all data');
+  };
+
   return (
     <div className="min-h-screen bg-neutral-950 py-12 px-6">
       <div className="max-w-7xl mx-auto">
@@ -36,7 +47,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Grid Layout for Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <StatsCard
             title="Total Chats"
             value={totalChats}
@@ -64,6 +75,16 @@ export const Dashboard: React.FC = () => {
             icon={Crown}
             subtitle="Upgrade for unlimited storage"
           />
+        </div>
+
+        {/* Recent Chats and Quick Actions */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <RecentChats chats={recentChats} />
+          </div>
+          <div>
+            <QuickActions onExportAll={handleExportAll} currentTier={currentTier} />
+          </div>
         </div>
       </div>
     </div>

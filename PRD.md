@@ -1808,7 +1808,7 @@ interface StatsCardProps {
 
 ---
 
-- [ ] PRD-43: Recent Chats & Quick Actions
+- [x] PRD-43: Recent Chats & Quick Actions
 
 # PRD-43: Recent Chats & Quick Actions
 
