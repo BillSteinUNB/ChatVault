@@ -660,7 +660,7 @@ None
 
 ---
 
-- [ ] PRD-14: Theme Provider Component
+- [x] PRD-14: Theme Provider Component
 
 # PRD-14: Theme Provider Component
 
@@ -690,10 +690,10 @@ Create theme context and provider for dark/light mode.
 4. Update CSS/Tailwind for dark mode support
 
 ### Acceptance Criteria
-- [ ] Theme context available throughout app
-- [ ] System preference detected
-- [ ] Theme applies to UI
-- [ ] Theme persists
+- [x] Theme context available throughout app
+- [x] System preference detected
+- [x] Theme applies to UI
+- [x] Theme persists
 
 ### Dependencies
 - PRD-13
