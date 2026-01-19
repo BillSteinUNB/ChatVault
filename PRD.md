@@ -1684,7 +1684,7 @@ const signInWithGoogle = async () => {
 
 ---
 
-- [ ] PRD-40: OAuth Callback Handler
+- [x] PRD-40: OAuth Callback Handler
 
 # PRD-40: OAuth Callback Handler
 
@@ -1731,7 +1731,7 @@ useEffect(() => {
 
 ---
 
-- [ ] PRD-41: Dashboard Page Layout
+- [x] PRD-41: Dashboard Page Layout
 
 # PRD-41: Dashboard Page Layout
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Button } from '../ui/Button';
-import { Layers, Shield, Menu, X, LogOut, User, Settings as SettingsIcon } from 'lucide-react';
+import { Layers, Shield, Menu, X, LogOut, User, Settings as SettingsIcon, LayoutDashboard } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -64,6 +64,10 @@ export const Navbar: React.FC = () => {
             <>
               {user ? (
                 <>
+                  <NavLink to="/dashboard" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors flex items-center gap-1">
+                    <LayoutDashboard size={16} />
+                    Dashboard
+                  </NavLink>
                   <NavLink to="/settings" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">
                     Settings
                   </NavLink>
@@ -128,6 +132,10 @@ export const Navbar: React.FC = () => {
                 <>
                   {user ? (
                     <>
+                      <NavLink to="/dashboard" onClick={() => setMobileOpen(false)} className="text-lg font-medium text-neutral-300 flex items-center gap-2">
+                        <LayoutDashboard size={18} />
+                        Dashboard
+                      </NavLink>
                       <NavLink to="/settings" onClick={() => setMobileOpen(false)} className="text-lg font-medium text-neutral-300">
                         Settings
                       </NavLink>

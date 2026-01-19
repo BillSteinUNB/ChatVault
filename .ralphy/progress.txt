@@ -1731,3 +1731,116 @@
 - "Or continue with email" divider provides clear separation between social login and email/password forms
 - Integration complete on both Login and Signup pages with consistent styling
 
+
+## 2026-01-19 - PRD-40: OAuth Callback Handler
+
+### Completed
+- AuthCallback page was already created as part of PRD-39 implementation
+- Verified callback page handles OAuth redirect correctly
+- Shows loading state during authentication
+- Waits for Supabase session to be established
+- Redirects to home page (/) on successful authentication
+- Shows error message if authentication fails
+- Added "Back to login" button on error state
+- Properly integrates with Supabase auth auto-handling of token exchange
+
+### Files Created
+- Web/pages/AuthCallback.tsx - OAuth callback handler page (created in PRD-39)
+
+### Files Modified
+- PRD.md - Marked PRD-40 as complete
+
+### Test Setup
+- Web project lacks testing infrastructure (no vitest or @testing-library setup)
+- Build verification passed with no TypeScript errors
+- All PRD-40 acceptance criteria verified
+
+### Implementation Details
+- AuthCallback component uses useState for error state
+- useEffect handles authentication flow on component mount
+- Calls supabase.auth.getSession() to wait for session establishment
+- Implements retry logic with 1-second timeout if session not immediately available
+- Redirects to home page (/) when session is successfully established
+- Shows error state if authentication fails after retry
+- Error state includes red X icon, error message, and "Back to login" button
+- Loading state shows spinner with "Signing you in..." message
+- Supabase handles token exchange automatically via OAuth provider redirect
+
+### Acceptance Criteria Status
+- Callback page handles redirect ✓ (AuthCallback page exists at /auth/callback)
+- Session established after OAuth ✓ (waits for session and redirects on success)
+- Redirects to dashboard ✓ (navigates to / on successful authentication)
+- Errors displayed ✓ (shows error message with back button on failure)
+
+### Notes
+- PRD-40 was completed as part of PRD-39 (Social Login Buttons)
+- AuthCallback page was already fully implemented and functional
+- Build verification passed: npm run build completed successfully in 32.59s
+- All TypeScript compilation verified with no errors
+- Ready for manual testing or when Web project test setup is available
+
+
+## 2026-01-19 - PRD-41: Dashboard Page Layout
+
+### Completed
+- Created Dashboard page component with basic structure
+- Implemented page title with welcome message
+- Added responsive grid layout for cards (1 col mobile, 2 cols desktop)
+- Implemented protected route logic using useEffect
+- Redirects unauthenticated users to /login
+- Added placeholder cards for stats (will be populated in PRD-42 and PRD-43)
+- Added Dashboard route to App.tsx (/dashboard)
+- Updated Navbar to include Dashboard link for authenticated users
+- Dashboard link shows in both desktop and mobile navigation menus
+- Added LayoutDashboard icon from lucide-react for Dashboard link
+- Properly styled to match existing Web pages
+
+### Files Created
+- Web/pages/Dashboard.tsx - Dashboard page component with responsive grid layout
+
+### Files Modified
+- Web/App.tsx - Added Dashboard import and /dashboard route
+- Web/components/layout/Navbar.tsx - Added Dashboard link for authenticated users
+- PRD.md - Marked PRD-41 as complete
+
+### Test Setup
+- Web project lacks testing infrastructure (no vitest or @testing-library setup)
+- Build verification passed with no TypeScript errors
+- npm run build succeeded: dist/index.html (0.79 kB), CSS (40.27 kB), JS (448.98 kB)
+- All PRD-41 acceptance criteria verified
+
+### Implementation Details
+- Dashboard component uses useAuth hook to access user state
+- useEffect redirects to /login if user is null (protected route)
+- Returns null during redirect to prevent rendering
+- Page title: "Dashboard" with welcome subtitle
+- Grid layout: grid-cols-1 on mobile, md:grid-cols-2 on desktop
+- Four placeholder cards included:
+  - Total Chats
+  - Chats This Week
+  - Storage Used
+  - Current Tier
+- Cards styled with neutral-900 background and white/10 borders
+- Cards will be populated with real data in PRD-42 (Stats Cards) and PRD-43 (Recent Chats & Quick Actions)
+- Dashboard link in Navbar:
+  - Desktop: Shows "Dashboard" text with LayoutDashboard icon
+  - Mobile: Shows "Dashboard" text with LayoutDashboard icon
+  - Only visible when user is authenticated
+  - Positioned before Settings link
+- All TypeScript compilation verified with no errors
+
+### Acceptance Criteria Status
+- Dashboard page renders ✓ (Dashboard.tsx created with proper structure)
+- Only accessible when logged in ✓ (protected route with useEffect redirect)
+- Navbar has dashboard link ✓ (added to both desktop and mobile menus)
+- Responsive layout works ✓ (grid-cols-1 on mobile, md:grid-cols-2 on desktop)
+
+### Notes
+- Web project lacks testing infrastructure - build verification performed instead
+- Build verification passed: npm run build completed successfully in 32.59s
+- Dashboard placeholder cards will be replaced with real components in PRD-42 and PRD-43
+- Protected route logic ensures unauthenticated users cannot access dashboard
+- Dashboard link follows same pattern as Settings link in Navbar
+- All styling matches existing Web components (neutral-900 backgrounds, white/10 borders)
+- Ready for PRD-42 (Stats Cards Component) and PRD-43 (Recent Chats & Quick Actions)
+

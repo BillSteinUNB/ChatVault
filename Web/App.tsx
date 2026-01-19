@@ -14,6 +14,7 @@ import { ForgotPassword } from './pages/ForgotPassword';
 import { ResetPassword } from './pages/ResetPassword';
 import { AuthCallback } from './pages/AuthCallback';
 import { Settings } from './pages/Settings';
+import { Dashboard } from './pages/Dashboard';
 import { useAuth } from './hooks/useAuth';
 
 // Scroll to top on route change
@@ -45,6 +46,7 @@ const AppContent: React.FC = () => {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </main>
