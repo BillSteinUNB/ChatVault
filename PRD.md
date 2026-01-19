@@ -2239,7 +2239,7 @@ None
 
 ---
 
-- [ ] PRD-55: Supabase Chats Table
+- [x] PRD-55: Supabase Chats Table
 
 # PRD-55: Supabase Chats Table
 

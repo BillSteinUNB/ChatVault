@@ -43,25 +43,26 @@ CREATE TRIGGER on_auth_user_created
   FOR EACH ROW
   EXECUTE FUNCTION public.handle_new_user();
 
--- Optional: Create a table for synced chats (future feature)
+-- Create a table for synced chats with cloud storage schema (PRD-55)
 CREATE TABLE IF NOT EXISTS public.chats (
-  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
   title TEXT NOT NULL,
   platform TEXT NOT NULL,
-  url TEXT NOT NULL,
-  message_count INTEGER DEFAULT 0,
-  is_pinned BOOLEAN DEFAULT FALSE,
+  url TEXT,
+  messages JSONB NOT NULL,
   tags TEXT[] DEFAULT '{}',
   folder_id UUID,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  pinned BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Enable RLS for chats
 ALTER TABLE public.chats ENABLE ROW LEVEL SECURITY;
 
--- Create policies for chats table
+-- Create policies for chats table (PRD-55 requirements)
+-- Users can only access their own chats
 CREATE POLICY "Users can view their own chats"
   ON public.chats
   FOR SELECT
@@ -82,9 +83,16 @@ CREATE POLICY "Users can delete their own chats"
   FOR DELETE
   USING (auth.uid() = user_id);
 
--- Create index for faster queries
-CREATE INDEX IF NOT EXISTS chats_user_id_idx ON public.chats(user_id);
-CREATE INDEX IF NOT EXISTS chats_created_at_idx ON public.chats(created_at DESC);
+-- Create index for faster queries (PRD-55 requirement)
+CREATE INDEX IF NOT EXISTS idx_chats_user_id ON public.chats(user_id);
+CREATE INDEX IF NOT EXISTS idx_chats_created_at ON public.chats(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_chats_updated_at ON public.chats(updated_at DESC);
+
+-- Create trigger to auto-update updated_at timestamp for chats
+CREATE TRIGGER update_chats_updated_at
+  BEFORE UPDATE ON public.chats
+  FOR EACH ROW
+  EXECUTE FUNCTION public.update_updated_at_column();
 
 -- Create waitlist table for pricing page
 CREATE TABLE IF NOT EXISTS public.waitlist (
