@@ -1255,7 +1255,7 @@ None
 
 ---
 
-- [ ] PRD-29: Reset Password Page
+- [x] PRD-29: Reset Password Page
 
 # PRD-29: Reset Password Page
 
