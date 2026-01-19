@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Mail, MessageSquare, User } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { submitContactForm } from '../services/contact';
 
 type SubmitStatus = 'idle' | 'success' | 'error';
 
@@ -32,15 +33,25 @@ export const Contact: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 450));
+      const response = await submitContactForm({
+        name: name.trim(),
+        email: email.trim(),
+        message: message.trim(),
+      });
 
-      setSubmitStatus('success');
-      setName('');
-      setEmail('');
-      setMessage('');
-    } catch {
+      if (response.success) {
+        setSubmitStatus('success');
+        setName('');
+        setEmail('');
+        setMessage('');
+      } else {
+        setSubmitStatus('error');
+        setError(response.error || 'Something went wrong. Please try again.');
+      }
+    } catch (err) {
       setSubmitStatus('error');
       setError('Something went wrong. Please try again.');
+      console.error('Error submitting contact form:', err);
     } finally {
       setIsSubmitting(false);
     }
@@ -71,7 +82,7 @@ export const Contact: React.FC = () => {
 
             {submitStatus === 'success' && (
               <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-emerald-300 text-sm">
-                Message queued (stub). We'll get back to you soon.
+                Thanks for reaching out! We'll get back to you soon.
               </div>
             )}
 

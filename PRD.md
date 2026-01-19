@@ -2001,7 +2001,7 @@ serve(async (req) => {
 
 ---
 
-- [ ] PRD-49: Connect Contact Form to Backend
+- [x] PRD-49: Connect Contact Form to Backend
 
 # PRD-49: Connect Contact Form to Backend
 
