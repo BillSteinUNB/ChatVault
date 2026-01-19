@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { Button } from '../components/ui/Button';
+import { SocialLoginButtons } from '../components/SocialLoginButtons';
 
 export const Signup: React.FC = () => {
   const navigate = useNavigate();
@@ -74,6 +75,17 @@ export const Signup: React.FC = () => {
               {error}
             </div>
           )}
+
+          <SocialLoginButtons onError={(err) => setError(err.message)} />
+
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-white/10"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-4 bg-neutral-900 text-neutral-400">Or continue with email</span>
+            </div>
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>

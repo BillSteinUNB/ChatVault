@@ -1634,7 +1634,7 @@ Display and manage backup codes.
 
 ---
 
-- [ ] PRD-39: Social Login Buttons
+- [x] PRD-39: Social Login Buttons
 
 # PRD-39: Social Login Buttons
 

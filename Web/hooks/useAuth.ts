@@ -83,6 +83,32 @@ export function useAuth() {
     return { error };
   };
 
+  const signInWithGoogle = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
+      },
+    });
+
+    return { data, error };
+  };
+
+  const signInWithGitHub = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    return { data, error };
+  };
+
   return {
     ...authState,
     signIn,
@@ -90,5 +116,7 @@ export function useAuth() {
     signOut,
     requestPasswordReset,
     updatePassword,
+    signInWithGoogle,
+    signInWithGitHub,
   };
 }

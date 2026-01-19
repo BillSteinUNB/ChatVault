@@ -12,6 +12,7 @@ import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { ResetPassword } from './pages/ResetPassword';
+import { AuthCallback } from './pages/AuthCallback';
 import { Settings } from './pages/Settings';
 import { useAuth } from './hooks/useAuth';
 
@@ -43,6 +44,7 @@ const AppContent: React.FC = () => {
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </main>
