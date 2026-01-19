@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { Chat } from '../types';
+import React, { useState, useRef } from 'react';
+import { Chat, Tag } from '../types';
 import { formatRelativeTime } from '../lib/utils';
-import { Pin, Trash2, ExternalLink, Folder } from 'lucide-react';
+import { Pin, Trash2, ExternalLink, Folder, X, Plus } from 'lucide-react';
 import { useStore } from '../lib/storage';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../lib/utils';
 import { MoveToFolderMenu } from './MoveToFolderMenu';
+import { TagInput } from './TagInput';
 
 interface ChatItemProps {
   chat: Chat;
@@ -13,8 +14,15 @@ interface ChatItemProps {
 }
 
 export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact }) => {
-  const { togglePin, deleteChat, folders } = useStore();
+  const { togglePin, deleteChat, folders, tags, removeTagFromChat, addTagToChat } = useStore();
   const [showFolderMenu, setShowFolderMenu] = useState(false);
+  const [showTagEditor, setShowTagEditor] = useState(false);
+  const [tagEditorPosition, setTagEditorPosition] = useState({ top: 0, left: 0 });
+  const tagButtonRef = useRef<HTMLButtonElement>(null);
+
+  const chatTags = tags.filter(tag => chat.tags.includes(tag.id));
+  const visibleTags = chatTags.slice(0, 3);
+  const remainingCount = chatTags.length - 3;
 
   const platformColors = {
     chatgpt: 'border-l-[#10A37F]',
@@ -23,6 +31,28 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact }) => {
   };
 
   const folder = chat.folderId ? folders.find(f => f.id === chat.folderId) : null;
+
+  const handleOpenTagEditor = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (tagButtonRef.current) {
+      const rect = tagButtonRef.current.getBoundingClientRect();
+      setTagEditorPosition({ top: rect.bottom + 4, left: rect.left });
+    }
+    setShowTagEditor(true);
+  };
+
+  const handleRemoveTag = (e: React.MouseEvent, tagId: string) => {
+    e.stopPropagation();
+    removeTagFromChat(chat.id, tagId);
+  };
+
+  const handleTagsChange = (newTagIds: string[]) => {
+    const addedTags = newTagIds.filter(id => !chat.tags.includes(id));
+    const removedTags = chat.tags.filter(id => !newTagIds.includes(id));
+
+    removedTags.forEach(tagId => removeTagFromChat(chat.id, tagId));
+    addedTags.forEach(tagId => addTagToChat(chat.id, tagId));
+  };
 
   return (
     <motion.div
@@ -46,7 +76,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact }) => {
               {chat.preview}
             </p>
           )}
-          <div className="flex items-center gap-2 text-[10px] text-gray-400">
+          <div className="flex items-center gap-2 text-[10px] text-gray-400 mb-1">
             <span className="capitalize font-medium">{chat.platform}</span>
             <span>•</span>
             <span>{formatRelativeTime(chat.timestamp)}</span>
@@ -61,6 +91,38 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact }) => {
                 </span>
               </>
             )}
+          </div>
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {visibleTags.map((tag) => (
+              <motion.span
+                key={tag.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[10px] font-medium text-white"
+                style={{ backgroundColor: tag.color }}
+              >
+                {tag.name}
+                <button
+                  onClick={(e) => handleRemoveTag(e, tag.id)}
+                  className="hover:opacity-80 focus:outline-none rounded-full p-0.5"
+                >
+                  <X size={8} />
+                </button>
+              </motion.span>
+            ))}
+            {remainingCount > 0 && (
+              <span className="text-[10px] text-gray-400">
+                +{remainingCount} more
+              </span>
+            )}
+            <button
+              ref={tagButtonRef}
+              onClick={handleOpenTagEditor}
+              className="inline-flex items-center justify-center p-0.5 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+              title="Add tags"
+            >
+              <Plus size={10} />
+            </button>
           </div>
         </div>
         
@@ -85,15 +147,41 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact }) => {
              <Trash2 size={14} />
            </button>
 
-           {/* Move to Folder Menu */}
-           {showFolderMenu && (
-             <MoveToFolderMenu
-               chatId={chat.id}
-               currentFolderId={chat.folderId || null}
-               onClose={() => setShowFolderMenu(false)}
-             />
-           )}
+            {/* Move to Folder Menu */}
+            {showFolderMenu && (
+              <MoveToFolderMenu
+                chatId={chat.id}
+                currentFolderId={chat.folderId || null}
+                onClose={() => setShowFolderMenu(false)}
+              />
+            )}
         </div>
+
+        {/* Tag Editor */}
+        <AnimatePresence>
+          {showTagEditor && (
+            <>
+              <div className="fixed inset-0 z-40" onClick={(e) => { e.stopPropagation(); setShowTagEditor(false); }} />
+              <motion.div
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                className="fixed z-50 w-72 bg-white rounded-lg shadow-xl border border-gray-200 p-3"
+                style={{
+                  top: tagEditorPosition.top,
+                  left: tagEditorPosition.left,
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <TagInput
+                  chatId={chat.id}
+                  selectedTags={chat.tags}
+                  onTagsChange={handleTagsChange}
+                />
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
 
         {/* Persistent Pin Indicator if Pinned */}
         {chat.isPinned && (

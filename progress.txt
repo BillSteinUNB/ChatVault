@@ -200,3 +200,32 @@ All acceptance criteria met:
 - Clear all button resets filter via setActiveTags([])
 
 Note: Test framework not yet set up (PRD-72), so no tests were written. No linting scripts configured in package.json. TypeScript type checking passed for all modified components.
+---
+
+2026-01-19: Completed PRD-08: Tag Display in Chat Item
+
+Updated Extension/src/shared/components/ChatItem.tsx:
+- Added imports: Tag type from types, X and Plus icons from lucide-react, AnimatePresence from framer-motion, TagInput component
+- Added state management for tag editor: showTagEditor, tagEditorPosition
+- Added ref for tag button positioning: tagButtonRef
+- Retrieved chatTags by filtering tags by chat.tags array
+- Implemented visible tags display (up to 3 tags) as small colored chips with rounded-full styling
+- Added "+N more" text when more than 3 tags exist
+- Added "+" button to open tag editor positioned at bottom of tags row
+- Added handleOpenTagEditor function to calculate and set tag editor position
+- Added handleRemoveTag function to remove tag from chat with stopPropagation
+- Added handleTagsChange function to sync tag changes with store
+- Tag chips show tag name in white text with tag color background
+- Tag chips include X button to remove tag with hover effect
+- Tag editor opens in fixed-position modal with AnimatePresence animations
+- Tag editor contains TagInput component for adding/removing tags
+- Click outside editor closes it
+- Styled tags consistently with folder colors (inline-flex, rounded-full, colored background)
+
+All acceptance criteria met:
+- Tags display on chat items as small colored chips below title (up to 3 visible)
+- Can add tags via "+" button opening TagInput popover
+- Can remove tags by clicking X button on each tag chip
+- Overflow handled gracefully with "+N more" text
+
+Note: Test framework not yet set up (PRD-72), so no tests were written. No linting scripts configured in package.json. TypeScript type checking passed for ChatItem component.

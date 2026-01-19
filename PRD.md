@@ -428,7 +428,7 @@ Create filter UI for filtering chats by tags.
 
 ---
 
-- [ ] PRD-08: Tag Display in Chat Item
+- [x] PRD-08: Tag Display in Chat Item
 
 # PRD-08: Tag Display in Chat Item
 
@@ -450,9 +450,9 @@ Show tags on chat items and add ability to edit.
 3. Style tags to match folder colors for consistency
 
 ### Acceptance Criteria
-- [ ] Tags display on chat items
-- [ ] Can add/remove tags from chat item
-- [ ] Overflow handled gracefully
+- [x] Tags display on chat items
+- [x] Can add/remove tags from chat item
+- [x] Overflow handled gracefully
 
 ### Dependencies
 - PRD-05, PRD-06
