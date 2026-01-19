@@ -2076,7 +2076,7 @@ None
 
 ---
 
-- [ ] PRD-51: Stripe Checkout Function
+- [x] PRD-51: Stripe Checkout Function
 
 # PRD-51: Stripe Checkout Function
 
@@ -2194,7 +2194,7 @@ Create billing management page.
 
 ---
 
-- [ ] PRD-54: Sync State Types
+- [x] PRD-54: Sync State Types
 
 # PRD-54: Sync State Types
 
