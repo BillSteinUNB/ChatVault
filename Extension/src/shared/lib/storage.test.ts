@@ -132,4 +132,49 @@ describe('PRD-13: Settings Data Model & Storage', () => {
       expect(typeof state.settings.enabledPlatforms.perplexity).toBe('boolean');
     });
   });
+
+  describe('View Mode State', () => {
+    it('should have viewMode state in store', () => {
+      const state = useStore.getState();
+      expect('viewMode' in state).toBe(true);
+    });
+
+    it('should default to "main" view mode', () => {
+      const state = useStore.getState();
+      expect(state.viewMode).toBe('main');
+    });
+
+    it('should have setViewMode action', () => {
+      const state = useStore.getState();
+      expect(typeof state.setViewMode).toBe('function');
+    });
+
+    it('should switch view mode to "settings" when setViewMode is called', () => {
+      const { setViewMode } = useStore.getState();
+      setViewMode('settings');
+      const state = useStore.getState();
+      expect(state.viewMode).toBe('settings');
+    });
+
+    it('should switch view mode to "main" when setViewMode is called', () => {
+      const { setViewMode } = useStore.getState();
+      setViewMode('settings');
+      setViewMode('main');
+      const state = useStore.getState();
+      expect(state.viewMode).toBe('main');
+    });
+
+    it('should support both "main" and "settings" view modes', () => {
+      const { setViewMode } = useStore.getState();
+
+      setViewMode('main');
+      expect(useStore.getState().viewMode).toBe('main');
+
+      setViewMode('settings');
+      expect(useStore.getState().viewMode).toBe('settings');
+
+      setViewMode('main');
+      expect(useStore.getState().viewMode).toBe('main');
+    });
+  });
 });

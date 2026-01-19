@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Chat, Folder, Tag, Platform, PersistedChat, STORAGE_KEYS, Settings, DEFAULT_SETTINGS } from '../types';
+import { Chat, Folder, Tag, Platform, PersistedChat, STORAGE_KEYS, Settings, DEFAULT_SETTINGS, ViewMode } from '../types';
 import { persistedChatsToChats } from './utils';
 
 
@@ -8,6 +8,7 @@ interface Store {
   folders: Folder[];
   tags: Tag[];
   settings: Settings;
+  viewMode: ViewMode;
   isLoading: boolean;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
@@ -32,6 +33,7 @@ interface Store {
   addTagToChat: (chatId: string, tagId: string) => void;
   removeTagFromChat: (chatId: string, tagId: string) => void;
   updateSettings: (updates: Partial<Settings>) => void;
+  setViewMode: (mode: ViewMode) => void;
 }
 
 /**
@@ -196,6 +198,7 @@ export const useStore = create<Store>((set, get) => {
     folders: [],
     tags: [],
     settings: DEFAULT_SETTINGS,
+    viewMode: 'main',
     isLoading: true,
     searchQuery: '',
     setSearchQuery: (query) => set({ searchQuery: query }),
@@ -416,5 +419,6 @@ export const useStore = create<Store>((set, get) => {
         chrome.storage.local.set({ [STORAGE_KEYS.SETTINGS]: newSettings });
       }
     },
+    setViewMode: (mode) => set({ viewMode: mode }),
   };
 });

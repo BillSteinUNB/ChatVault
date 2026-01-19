@@ -700,7 +700,7 @@ Create theme context and provider for dark/light mode.
 
 ---
 
-- [ ] PRD-15: Settings Page Layout
+- [x] PRD-15: Settings Page Layout
 
 # PRD-15: Settings Page Layout
 
@@ -742,9 +742,9 @@ Settings
 ```
 
 ### Acceptance Criteria
-- [ ] Settings page renders
-- [ ] All sections display
-- [ ] Back navigation works
+- [x] Settings page renders
+- [x] All sections display
+- [x] Back navigation works
 
 ### Dependencies
 - PRD-13, PRD-14

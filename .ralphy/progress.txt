@@ -106,3 +106,73 @@
 - Proper mocking of window.matchMedia for testing
 - All TypeScript compilation verified with no errors
 - All 18 tests (8 storage + 10 ThemeProvider) passing
+
+
+## 2026-01-19 - PRD-15: Settings Page Layout
+
+### Completed
+- Created SettingsPage component with collapsible sections
+- Added ViewMode type ('main' | 'settings') to types.ts
+- Added viewMode: ViewMode state to storage.ts Zustand store
+- Added setViewMode(mode: ViewMode) action to storage.ts
+- Created SettingsSection component for collapsible card sections
+- Implemented four sections: Appearance, Scraping, Storage, Account
+- Added back button navigation in header
+- Integrated SettingsPage into both SidePanel and Popup components
+- Wired up Settings icon in SidePanel nav to open settings view
+- Wired up Settings button in Popup header to open settings view
+- Added proper Tailwind styling and layout structure
+
+### Files Created
+- Extension/src/shared/components/SettingsPage.tsx - Settings page component with sections
+- Extension/src/shared/components/SettingsPage.test.tsx - Test suite for SettingsPage
+
+### Files Modified
+- Extension/src/shared/types.ts - Added ViewMode type
+- Extension/src/shared/lib/storage.ts - Added viewMode state and setViewMode action (6 new tests)
+- Extension/src/shared/components/SidePanel.tsx - Integrated SettingsPage and view mode logic
+- Extension/src/shared/components/Popup.tsx - Integrated SettingsPage and view mode logic
+
+### Test Setup
+- Created comprehensive test suite with 14 tests for SettingsPage
+- Added 6 new tests to storage.test.ts for view mode functionality
+- All 20 tests passing (10 ThemeProvider + 14 SettingsPage + 6 viewMode storage tests)*
+
+### Test Coverage
+#### SettingsPage Tests (14 tests)
+- Renders settings page with header
+- Renders header subtitle
+- Renders all four section headers
+- Renders in full height container
+- Uses correct background styling
+- Renders theme option button labels
+- Collapses and expands Appearance section
+- Calls onBack callback when back button is clicked
+- Can collapse and expand Scraping section
+- Can collapse and expand Storage section
+- Can collapse and expand Account section
+- Calls onBack callback correctly
+- Displays Settings in header
+- Has proper container classes
+
+#### View Mode Storage Tests (6 tests)
+- Has viewMode state in store
+- Defaults to "main" view mode
+- Has setViewMode action
+- Switches view mode to "settings" when setViewMode is called
+- Switches view mode to "main" when setViewMode is called
+- Supports both "main" and "settings" view modes
+
+### Implementation Details
+- SettingsPage includes header with back button and title/subtitle
+- Appearance section (default open): Theme selector (Light, Dark, System)
+- Scraping section: Auto-save toggle, Platform checkboxes (ChatGPT, Claude, Perplexity)
+- Storage section: Storage usage display, Export All Data button, Clear All Data button
+- Account section: Sign in message and button (shows when not logged in)
+- SettingsSection component handles collapse/expand with AnimatePresence animations
+- View mode state tracked in storage and used to conditionally render SettingsPage
+- Settings icon in SidePanel nav triggers setViewMode('settings')
+- Settings button in Popup header triggers setViewMode('settings')
+- Back button in SettingsPage calls onBack() which sets viewMode to 'main'
+- All TypeScript compilation verified with no errors
+- Total of 38 tests passing (8 storage settings + 10 ThemeProvider + 14 SettingsPage + 6 viewMode storage)

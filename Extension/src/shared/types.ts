@@ -1,3 +1,5 @@
+export type ViewMode = 'main' | 'settings';
+
 export type Platform = 'chatgpt' | 'claude' | 'perplexity';
 
 export interface Chat {

@@ -4,20 +4,26 @@ import { ChatItem } from './ChatItem';
 import { SearchBar } from './SearchBar';
 import { AuthBanner } from './AuthBanner';
 import { Button } from './ui/Button';
-import { Folder, PieChart, Star, Clock, Plus, Loader2, MessageSquare } from 'lucide-react';
+import { Folder, PieChart, Star, Clock, Plus, Loader2, MessageSquare, Settings } from 'lucide-react';
 import { PLATFORM_CONFIG } from '../constants';
 import { FolderList } from './FolderList';
 import { CreateFolderModal } from './CreateFolderModal';
 import { TagFilter } from './TagFilter';
 import { ExportMenu } from './ExportMenu';
+import { SettingsPage } from './SettingsPage';
 
 import { motion } from 'framer-motion';
 
 export const SidePanel: React.FC = () => {
-    const { chats, isLoading, activeFolder, activeTags } = useStore();
+    const { chats, isLoading, activeFolder, activeTags, viewMode, setViewMode } = useStore();
     const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
     const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
     const exportButtonRef = React.useRef<HTMLButtonElement>(null);
+
+    // Handle settings view
+    if (viewMode === 'settings') {
+        return <SettingsPage onBack={() => setViewMode('main')} />;
+    }
 
     const filteredChats = chats.filter(chat => {
         if (activeFolder && chat.folderId !== activeFolder) {
@@ -63,6 +69,7 @@ export const SidePanel: React.FC = () => {
                     <NavItem icon={<Folder size={20} />} />
                     <NavItem icon={<Star size={20} />} />
                     <NavItem icon={<PieChart size={20} />} />
+                    <NavItem icon={<Settings size={20} />} onClick={() => setViewMode('settings')} />
                 </nav>
 
                 <div className="mt-auto">
@@ -163,8 +170,11 @@ export const SidePanel: React.FC = () => {
     );
 };
 
-const NavItem = ({ icon, active }: { icon: React.ReactNode, active?: boolean }) => (
-    <button className={`w-full aspect-square flex items-center justify-center rounded-lg transition-colors ${active ? 'bg-primary-50 text-primary-600' : 'text-gray-400 hover:bg-gray-100 hover:text-gray-600'}`}>
+const NavItem = ({ icon, active, onClick }: { icon: React.ReactNode, active?: boolean, onClick?: () => void }) => (
+    <button 
+        className={`w-full aspect-square flex items-center justify-center rounded-lg transition-colors ${active ? 'bg-primary-50 text-primary-600' : 'text-gray-400 hover:bg-gray-100 hover:text-gray-600'}`}
+        onClick={onClick}
+    >
         {icon}
     </button>
 );

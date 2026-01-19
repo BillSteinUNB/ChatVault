@@ -6,9 +6,10 @@ import { FolderItem } from './FolderItem';
 import { useStore } from '../lib/storage';
 import { Settings, ExternalLink, Search, Loader2, MessageSquare } from 'lucide-react';
 import { Button } from './ui/Button';
+import { SettingsPage } from './SettingsPage';
 
 export const Popup: React.FC = () => {
-  const { chats, folders, searchQuery, activeFilter, isLoading } = useStore();
+  const { chats, folders, searchQuery, activeFilter, isLoading, viewMode, setViewMode } = useStore();
 
   // Filter Logic
   const filteredChats = chats.filter(chat => {
@@ -26,6 +27,11 @@ export const Popup: React.FC = () => {
 
   const hasChats = chats.length > 0;
 
+  // Handle settings view
+  if (viewMode === 'settings') {
+      return <SettingsPage onBack={() => setViewMode('main')} />;
+  }
+
   return (
     <div className="h-full flex flex-col bg-gray-50">
       {/* Header */}
@@ -34,7 +40,7 @@ export const Popup: React.FC = () => {
             <h1 className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-800">
                 ChatVault
             </h1>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setViewMode('settings')}>
                 <Settings size={18} />
             </Button>
         </div>
