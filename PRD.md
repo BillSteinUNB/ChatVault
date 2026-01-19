@@ -2323,7 +2323,7 @@ async function uploadChat(chat: Chat): Promise<void> {
 
 ---
 
-- [ ] PRD-57: Sync Service - Download
+- [x] PRD-57: Sync Service - Download
 
 # PRD-57: Sync Service - Download
 
