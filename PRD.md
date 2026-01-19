@@ -556,7 +556,7 @@ interface ExportMenuProps {
 
 ---
 
-- [ ] PRD-11: Wire Up Export Button in SidePanel
+- [x] PRD-11: Wire Up Export Button in SidePanel
 
 # PRD-11: Wire Up Export Button in SidePanel
 
@@ -573,16 +573,16 @@ Connect the existing Export button to functionality.
 4. When chat selected, show single chat options
 
 ### Acceptance Criteria
-- [ ] Export button in SidePanel works
-- [ ] Can export all chats
-- [ ] Can export selected chat
+- [x] Export button in SidePanel works
+- [x] Can export all chats
+- [x] Can export selected chat
 
 ### Dependencies
 - PRD-10
 
 ---
 
-- [ ] PRD-12: Export Option in Chat Context Menu
+- [x] PRD-12: Export Option in Chat Context Menu
 
 # PRD-12: Export Option in Chat Context Menu
 
@@ -598,9 +598,9 @@ Add export option to individual chat item menu.
 3. On click, trigger export for that chat
 
 ### Acceptance Criteria
-- [ ] Export option appears in chat menu
-- [ ] Can export individual chat from menu
-- [ ] Both formats available
+- [x] Export option appears in chat menu
+- [x] Can export individual chat from menu
+- [x] Both formats available
 
 ### Dependencies
 - PRD-09, PRD-10

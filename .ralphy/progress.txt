@@ -1,0 +1,23 @@
+# Ralphy Progress Log
+
+## 2026-01-19 - PRD-12: Export Option in Chat Context Menu
+
+### Completed
+- Added Export button to ChatItem hover actions menu in ChatItem.tsx
+- Added showExportMenu state to control export menu visibility
+- Added handleExportAsJSON handler to export chat as JSON format
+- Added handleExportAsMarkdown handler to export chat as Markdown format
+- Integrated with existing export utilities (exportToJSON, exportToMarkdown, downloadFile)
+- Export menu shows as sub-menu with two options: Export as JSON and Export as Markdown
+- TypeScript compilation verified with no errors
+
+### Files Modified
+- Extension/src/shared/components/ChatItem.tsx
+
+### Implementation Details
+- Added Download and FileText icons from lucide-react
+- Export menu appears below the Download button in hover actions
+- Menu uses AnimatePresence for smooth animations
+- Both export options generate proper filenames with date and sanitized title
+- Menu closes after successful export
+
