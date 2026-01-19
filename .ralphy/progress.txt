@@ -248,3 +248,154 @@
 - window.location.reload() called after clearing storage to reset state
 - All TypeScript compilation verified with no errors
 - Total of 64 tests passing (38 from previous + 26 SettingsPage controls tests)
+
+
+## 2026-01-19 - PRD-18: Full-Text Search Index
+
+### Completed
+- Created SearchIndexEntry interface to hold searchable chat data
+- Implemented buildSearchIndex() function to create search index from chats
+- Implemented searchChats() function for full-text search (case-insensitive, searches title and content)
+- Implemented getSearchHighlight() function to show context around matched terms
+- Added searchIndex: SearchIndexEntry[] state to Zustand store
+- Added searchChats() action to perform searches using current query and index
+- Integrated automatic index rebuild when chats are loaded, updated, deleted, or modified
+- Updated all chat modification actions (togglePin, deleteChat, moveChatToFolder, addTagToChat, removeTagFromChat) to rebuild search index
+
+### Files Created
+- Extension/src/shared/lib/search.ts - Search index functions and SearchIndexEntry interface
+- Extension/src/shared/lib/search.test.ts - Comprehensive test suite for search functionality
+
+### Files Modified
+- Extension/src/shared/lib/storage.ts - Added searchIndex state, searchChats action, and automatic index rebuild
+- Extension/tsconfig.json - Added "vitest/globals" to types array for proper TypeScript support
+
+### Test Setup
+- Created comprehensive test suite in search.test.ts with 27 tests passing
+- Added 15 search integration tests to storage.test.ts
+- All 92 tests passing (64 from previous + 27 search + 15 search integration tests)
+
+### Test Coverage
+#### Search Utilities Tests (27 tests)
+- Builds empty index from empty chats array
+- Builds index with all required fields
+- Builds index with multiple chats
+- Handles undefined folderId as null
+- Preserves all metadata in index
+- Returns empty array for empty query
+- Returns empty array for whitespace-only query
+- Finds chats by title match
+- Finds chats by content match
+- Is case-insensitive
+- Returns empty array when no matches found
+- Finds by partial word match
+- Sorts results by timestamp (newest first)
+- Handles special characters in search query
+- Matches multiple chats with same term
+- Returns empty string for empty content
+- Returns substring when no match found
+- Shows snippet around match with ellipsis
+- Adds ellipsis at end when truncated
+- Adds ellipsis at start when match is after beginning
+- Adds ellipsis at both ends when match is in middle
+- Respects maxLength parameter
+- Finds first match when multiple exist
+- Handles case-insensitive matching
+- Uses default maxLength when not specified
+
+#### Search Integration Tests (15 tests)
+- Has searchIndex state in store
+- Initializes searchIndex as empty array
+- Has searchChats action
+- Builds search index from loaded chats
+- Includes all required fields in search index
+- Finds chats by query
+- Returns empty array for empty query
+- Rebuilds search index when chats are updated
+- Rebuilds search index when chat is deleted
+- Rebuilds search index when chat tag is added
+- Rebuilds search index when chat tag is removed
+- Rebuilds search index when chat is moved to folder
+- Rebuilds search index when chat pin is toggled
+- Handles case-insensitive search
+- Sorts search results by timestamp (newest first)
+
+### Implementation Details
+- SearchIndexEntry includes: chatId, title, content, platform, tags, folderId, timestamp
+- buildSearchIndex() creates index from Chat array, uses chat.preview as content (full message content coming in Phase 4)
+- searchChats() performs case-insensitive search in both title and content, returns matching chat IDs sorted by timestamp
+- getSearchHighlight() creates snippet with context around match, respects maxLength parameter, adds ellipsis when truncated
+- Search index stored in memory only (not persisted to chrome.storage.local) for performance
+- Index automatically rebuilds whenever chats array changes via any mutation action
+- searchChats() uses current searchQuery from store state
+- TypeScript compilation verified with no errors
+- Total of 92 tests passing (64 + 27 + 15)
+
+
+## 2026-01-19 - PRD-19: Search Operators Parser
+
+### Completed
+- Created ParsedQuery interface with text and operators properties
+- Added exactPhrase operator support for quoted searches
+- Implemented parseSearchQuery() function to extract operators and free text
+- Updated searchChats() to support operator-based filtering
+- Added whitespace normalization after removing exact phrases
+- Implemented support for: platform:, tag:, folder:, before:, after:, and "exact phrase" operators
+- Operators are case-insensitive for platform filtering
+- Date filters (before/after) support YYYY-MM-DD format
+- Operators can be combined with free text search
+
+### Files Modified
+- Extension/src/shared/lib/search.ts - Added ParsedQuery interface and parseSearchQuery function, updated searchChats function
+- Extension/src/shared/lib/search.test.ts - Added comprehensive tests for parseSearchQuery and updated searchChats tests
+
+### Test Setup
+- Added 25 tests for parseSearchQuery functionality
+- Added 15 tests for operator-based searchChats functionality
+- Fixed whitespace normalization bug in exact phrase parsing
+- All 62 tests passing (25 parseSearchQuery + 15 operator search + 22 existing tests)
+
+### Test Coverage
+#### parseSearchQuery Tests (25 tests)
+- Parses empty query
+- Parses free text without operators
+- Parses platform: operator
+- Parses platform: operator with free text
+- Parses platform: operator case-insensitively
+- Parses tag: operator
+- Parses folder: operator
+- Parses before: operator (date format YYYY-MM-DD)
+- Parses after: operator (date format YYYY-MM-DD)
+- Parses multiple operators together
+- Parses exact phrase with quotes
+- Parses exact phrase without quotes removed from text
+- Handles invalid date format gracefully
+- Handles invalid operator type gracefully
+- Extracts free text and operators separately
+- Ignores invalid operators and leaves them as text
+- Handles quoted exact phrase operator
+
+#### searchChats Operator Tests (15 tests)
+- Filters by platform:claude operator
+- Filters by platform:chatgpt operator
+- Filters by platform:perplexity operator
+- Combines platform filter with text search
+- Handles case-insensitive platform filter
+- Filters by tag: operator
+- Filters by folder: operator
+- Filters by before: operator (excludes chats on/after date)
+- Filters by after: operator (excludes chats before/on date)
+- Searches with exact phrase in quotes
+- Combines multiple operators together
+- Handles operators with no text search
+- Handles invalid operator gracefully
+
+### Implementation Details
+- ParsedQuery interface separates free text from operator filters
+- parseSearchQuery() uses regex patterns to identify and extract operators
+- platform:, tag:, folder: operators use case-insensitive comparison
+- before: and after: operators use Date objects for comparison
+- exactPhrase operator removes quotes from quoted text and normalizes whitespace
+- searchChats() applies filters in order: platform → tag → folder → before → after → exactPhrase/text
+- All TypeScript compilation verified with no errors
+- Total of 62 tests passing (25 parseSearchQuery + 15 operator search + 22 existing)

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { Chat, Folder, Tag, Platform, PersistedChat, STORAGE_KEYS, Settings, DEFAULT_SETTINGS, ViewMode } from '../types';
 import { persistedChatsToChats } from './utils';
+import { SearchIndexEntry, buildSearchIndex, searchChats } from './search';
 
 
 interface Store {
@@ -11,7 +12,9 @@ interface Store {
   viewMode: ViewMode;
   isLoading: boolean;
   searchQuery: string;
+  searchIndex: SearchIndexEntry[];
   setSearchQuery: (query: string) => void;
+  searchChats: () => string[];
   activeFolder: string | null;
   setActiveFolder: (id: string | null) => void;
   activeFilter: Platform | 'all';
@@ -174,11 +177,13 @@ function setupStorageListener(
 
 export const useStore = create<Store>((set, get) => {
   // Setup storage listener on store creation
-  setupStorageListener((chats) => set({ chats }), (folders) => set({ folders }), (tags) => set({ tags }), (settings) => set({ settings }));
+  setupStorageListener((chats) => {
+    set({ chats, searchIndex: buildSearchIndex(chats) });
+  }, (folders) => set({ folders }), (tags) => set({ tags }), (settings) => set({ settings }));
 
   // Trigger initial load (async, will update state when ready)
   loadPersistedChats().then(chats => {
-    set({ chats, isLoading: false });
+    set({ chats, isLoading: false, searchIndex: buildSearchIndex(chats) });
   });
 
   loadPersistedFolders().then(folders => {
@@ -201,7 +206,12 @@ export const useStore = create<Store>((set, get) => {
     viewMode: 'main',
     isLoading: true,
     searchQuery: '',
+    searchIndex: [],
     setSearchQuery: (query) => set({ searchQuery: query }),
+    searchChats: () => {
+      const { searchQuery, searchIndex } = get();
+      return searchChats(searchQuery, searchIndex);
+    },
     activeFolder: null,
     setActiveFolder: (id) => set({ activeFolder: id }),
     activeFilter: 'all',
@@ -214,12 +224,13 @@ export const useStore = create<Store>((set, get) => {
         : [...state.activeTags, tagId]
     })),
     togglePin: (id) => {
-      set((state) => ({
-        chats: state.chats.map(chat =>
+      set((state) => {
+        const updatedChats = state.chats.map(chat =>
           chat.id === id ? { ...chat, isPinned: !chat.isPinned } : chat
-        )
-      }));
-      
+        );
+        return { chats: updatedChats, searchIndex: buildSearchIndex(updatedChats) };
+      });
+
       if (typeof chrome !== 'undefined' && chrome.storage?.local) {
         chrome.storage.local.get(STORAGE_KEYS.CHATS).then(result => {
           const persisted = (result[STORAGE_KEYS.CHATS] as PersistedChat[] | undefined) ?? [];
@@ -231,10 +242,11 @@ export const useStore = create<Store>((set, get) => {
       }
     },
     deleteChat: (id) => {
-      set((state) => ({
-        chats: state.chats.filter(chat => chat.id !== id)
-      }));
-      
+      set((state) => {
+        const updatedChats = state.chats.filter(chat => chat.id !== id);
+        return { chats: updatedChats, searchIndex: buildSearchIndex(updatedChats) };
+      });
+
       if (typeof chrome !== 'undefined' && chrome.storage?.local) {
         chrome.storage.local.get(STORAGE_KEYS.CHATS).then(result => {
           const persisted = (result[STORAGE_KEYS.CHATS] as PersistedChat[] | undefined) ?? [];
@@ -246,9 +258,9 @@ export const useStore = create<Store>((set, get) => {
     loadChatsFromStorage: async () => {
       set({ isLoading: true });
       const chats = await loadPersistedChats();
-      set({ chats, isLoading: false });
+      set({ chats, isLoading: false, searchIndex: buildSearchIndex(chats) });
     },
-    setChats: (chats) => set({ chats }),
+    setChats: (chats) => set({ chats, searchIndex: buildSearchIndex(chats) }),
     addFolder: (folder) => {
       set((state) => ({
         folders: [...state.folders, folder]
@@ -293,12 +305,13 @@ export const useStore = create<Store>((set, get) => {
       }
     },
     moveChatToFolder: (chatId, folderId) => {
-      set((state) => ({
-        chats: state.chats.map(chat =>
+      set((state) => {
+        const updatedChats = state.chats.map(chat =>
           chat.id === chatId ? { ...chat, folderId } : chat
-        )
-      }));
-      
+        );
+        return { chats: updatedChats, searchIndex: buildSearchIndex(updatedChats) };
+      });
+
       if (typeof chrome !== 'undefined' && chrome.storage?.local) {
         chrome.storage.local.get(STORAGE_KEYS.CHATS).then(result => {
           const persisted = (result[STORAGE_KEYS.CHATS] as PersistedChat[] | undefined) ?? [];
@@ -348,7 +361,8 @@ export const useStore = create<Store>((set, get) => {
         }));
         return {
           tags: updatedTags,
-          chats: updatedChats
+          chats: updatedChats,
+          searchIndex: buildSearchIndex(updatedChats)
         };
       });
       
@@ -370,13 +384,14 @@ export const useStore = create<Store>((set, get) => {
       }
     },
     addTagToChat: (chatId, tagId) => {
-      set((state) => ({
-        chats: state.chats.map(chat =>
+      set((state) => {
+        const updatedChats = state.chats.map(chat =>
           chat.id === chatId && !chat.tags.includes(tagId)
             ? { ...chat, tags: [...chat.tags, tagId] }
             : chat
-        )
-      }));
+        );
+        return { chats: updatedChats, searchIndex: buildSearchIndex(updatedChats) };
+      });
       
       if (typeof chrome !== 'undefined' && chrome.storage?.local) {
         chrome.storage.local.get(STORAGE_KEYS.CHATS).then(result => {
@@ -391,13 +406,14 @@ export const useStore = create<Store>((set, get) => {
       }
     },
     removeTagFromChat: (chatId, tagId) => {
-      set((state) => ({
-        chats: state.chats.map(chat =>
+      set((state) => {
+        const updatedChats = state.chats.map(chat =>
           chat.id === chatId
             ? { ...chat, tags: chat.tags.filter(id => id !== tagId) }
             : chat
-        )
-      }));
+        );
+        return { chats: updatedChats, searchIndex: buildSearchIndex(updatedChats) };
+      });
 
       if (typeof chrome !== 'undefined' && chrome.storage?.local) {
         chrome.storage.local.get(STORAGE_KEYS.CHATS).then(result => {

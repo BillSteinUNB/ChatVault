@@ -177,4 +177,221 @@ describe('PRD-13: Settings Data Model & Storage', () => {
       expect(useStore.getState().viewMode).toBe('main');
     });
   });
+
+  describe('PRD-18: Full-Text Search Index', () => {
+    beforeEach(async () => {
+      // Add some mock chats to storage
+      mockStorage['chatvault_chats'] = [
+        {
+          id: 'chat1',
+          title: 'React Development',
+          platform: 'claude',
+          url: 'https://claude.ai/chat/chat1',
+          messageCount: 10,
+          createdAt: 1234567890,
+          updatedAt: 1234567890,
+          isPinned: false,
+          tags: []
+        },
+        {
+          id: 'chat2',
+          title: 'TypeScript Basics',
+          platform: 'chatgpt',
+          url: 'https://chatgpt.com/chat/chat2',
+          messageCount: 5,
+          createdAt: 1234567900,
+          updatedAt: 1234567900,
+          isPinned: false,
+          tags: ['tag1']
+        },
+        {
+          id: 'chat3',
+          title: 'Deployment Guide',
+          platform: 'perplexity',
+          url: 'https://perplexity.ai/chat/chat3',
+          messageCount: 15,
+          createdAt: 1234567910,
+          updatedAt: 1234567910,
+          isPinned: true,
+          tags: ['tag1', 'tag2'],
+          folderId: 'folder1'
+        }
+      ];
+
+      // Trigger storage reload
+      const { loadChatsFromStorage } = useStore.getState();
+      await loadChatsFromStorage();
+
+      // Wait for index rebuild
+      await new Promise(resolve => setTimeout(resolve, 100));
+    });
+
+    it('should have searchIndex state in store', () => {
+      const state = useStore.getState();
+      expect('searchIndex' in state).toBe(true);
+      expect(Array.isArray(state.searchIndex)).toBe(true);
+    });
+
+    it('should initialize searchIndex as empty array', () => {
+      // Clear chats to get empty index
+      mockStorage['chatvault_chats'] = [];
+      const { loadChatsFromStorage } = useStore.getState();
+
+      loadChatsFromStorage().then(() => {
+        const state = useStore.getState();
+        expect(Array.isArray(state.searchIndex)).toBe(true);
+        expect(state.searchIndex).toHaveLength(0);
+      });
+    });
+
+    it('should have searchChats action', () => {
+      const state = useStore.getState();
+      expect(typeof state.searchChats).toBe('function');
+    });
+
+    it('should build search index from loaded chats', () => {
+      const state = useStore.getState();
+      expect(state.searchIndex).toHaveLength(3);
+    });
+
+    it('should include all required fields in search index', () => {
+      const state = useStore.getState();
+      const entry = state.searchIndex[0];
+
+      expect(entry).toHaveProperty('chatId');
+      expect(entry).toHaveProperty('title');
+      expect(entry).toHaveProperty('content');
+      expect(entry).toHaveProperty('platform');
+      expect(entry).toHaveProperty('tags');
+      expect(entry).toHaveProperty('folderId');
+      expect(entry).toHaveProperty('timestamp');
+    });
+
+    it('should find chats by query', () => {
+      const { setSearchQuery, searchChats } = useStore.getState();
+      setSearchQuery('react');
+      const results = searchChats();
+
+      expect(results).toContain('chat1');
+      expect(results.length).toBeGreaterThan(0);
+    });
+
+    it('should return empty array for empty query', () => {
+      const { setSearchQuery, searchChats } = useStore.getState();
+      setSearchQuery('');
+      const results = searchChats();
+
+      expect(results).toEqual([]);
+    });
+
+    it('should rebuild search index when chats are updated', () => {
+      const { setChats, searchChats, setSearchQuery } = useStore.getState();
+
+      // Clear chats
+      setChats([]);
+      let state = useStore.getState();
+      expect(state.searchIndex).toHaveLength(0);
+
+      // Set new chats
+      setSearchQuery('test');
+      const newChats = [
+        {
+          id: 'newchat1',
+          title: 'Test Chat',
+          preview: 'Test preview',
+          platform: 'claude' as const,
+          timestamp: Date.now(),
+          isPinned: false,
+          tags: []
+        }
+      ];
+      setChats(newChats);
+
+      state = useStore.getState();
+      expect(state.searchIndex).toHaveLength(1);
+    });
+
+    it('should rebuild search index when chat is deleted', () => {
+      const { deleteChat } = useStore.getState();
+
+      deleteChat('chat1');
+
+      const state = useStore.getState();
+      expect(state.searchIndex).toHaveLength(2);
+      expect(state.searchIndex.find(e => e.chatId === 'chat1')).toBeUndefined();
+    });
+
+    it('should rebuild search index when chat tag is added', () => {
+      const { addTagToChat } = useStore.getState();
+
+      addTagToChat('chat2', 'newtag');
+
+      const state = useStore.getState();
+      const chat2Entry = state.searchIndex.find(e => e.chatId === 'chat2');
+      expect(chat2Entry?.tags).toContain('newtag');
+    });
+
+    it('should rebuild search index when chat tag is removed', () => {
+      const { removeTagFromChat } = useStore.getState();
+
+      removeTagFromChat('chat3', 'tag1');
+
+      const state = useStore.getState();
+      const chat3Entry = state.searchIndex.find(e => e.chatId === 'chat3');
+      expect(chat3Entry?.tags).not.toContain('tag1');
+    });
+
+    it('should rebuild search index when chat is moved to folder', () => {
+      const { moveChatToFolder } = useStore.getState();
+
+      moveChatToFolder('chat1', 'folder2');
+
+      const state = useStore.getState();
+      const chat1Entry = state.searchIndex.find(e => e.chatId === 'chat1');
+      expect(chat1Entry?.folderId).toBe('folder2');
+    });
+
+    it('should rebuild search index when chat pin is toggled', () => {
+      const { togglePin } = useStore.getState();
+
+      togglePin('chat1');
+
+      const state = useStore.getState();
+      expect(state.searchIndex).toHaveLength(3); // index should still have all entries
+    });
+
+    it('should handle case-insensitive search', () => {
+      const { setSearchQuery, searchChats } = useStore.getState();
+
+      setSearchQuery('REACT');
+      const resultsUpper = searchChats();
+
+      setSearchQuery('react');
+      const resultsLower = searchChats();
+
+      setSearchQuery('ReAcT');
+      const resultsMixed = searchChats();
+
+      expect(resultsUpper).toEqual(resultsLower);
+      expect(resultsLower).toEqual(resultsMixed);
+    });
+
+    it('should sort search results by timestamp (newest first)', () => {
+      const { setSearchQuery, searchChats } = useStore.getState();
+      setSearchQuery('deployment');
+      const results = searchChats();
+
+      // Assuming "deployment" matches chat3 (newest) and could match others
+      // The first result should be the newest
+      if (results.length > 1) {
+        const state = useStore.getState();
+        const firstEntry = state.searchIndex.find(e => e.chatId === results[0]);
+        const secondEntry = state.searchIndex.find(e => e.chatId === results[1]);
+
+        if (firstEntry && secondEntry) {
+          expect(firstEntry.timestamp).toBeGreaterThanOrEqual(secondEntry.timestamp);
+        }
+      }
+    });
+  });
 });

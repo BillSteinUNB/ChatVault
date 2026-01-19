@@ -788,7 +788,7 @@ Make all settings controls functional.
 
 ---
 
-- [ ] PRD-17: Wire Up Settings Button
+- [x] PRD-17: Wire Up Settings Button
 
 # PRD-17: Wire Up Settings Button
 
@@ -809,16 +809,16 @@ Connect settings button in Popup to settings page.
 3. Add back button to return from settings
 
 ### Acceptance Criteria
-- [ ] Settings button opens settings
-- [ ] Can navigate back to main view
-- [ ] Works in both popup and sidepanel
+- [x] Settings button opens settings
+- [x] Can navigate back to main view
+- [x] Works in both popup and sidepanel
 
 ### Dependencies
 - PRD-15
 
 ---
 
-- [ ] PRD-18: Full-Text Search Index
+- [x] PRD-18: Full-Text Search Index
 
 # PRD-18: Full-Text Search Index
 
@@ -857,16 +857,16 @@ interface SearchIndexEntry {
    - Store index in memory (not persisted)
 
 ### Acceptance Criteria
-- [ ] Search index builds from chats
-- [ ] Full-text search finds matches in content
-- [ ] Search is case-insensitive
+- [x] Search index builds from chats
+- [x] Full-text search finds matches in content
+- [x] Search is case-insensitive
 
 ### Dependencies
 None
 
 ---
 
-- [ ] PRD-19: Search Operators Parser
+- [x] PRD-19: Search Operators Parser
 
 # PRD-19: Search Operators Parser
 
@@ -904,9 +904,9 @@ function parseSearchQuery(query: string): ParsedQuery
 3. Update search function to use parsed operators
 
 ### Acceptance Criteria
-- [ ] Operators are parsed correctly
-- [ ] Free text extracted separately
-- [ ] Invalid operators ignored gracefully
+- [x] Operators are parsed correctly
+- [x] Free text extracted separately
+- [x] Invalid operators ignored gracefully
 
 ### Dependencies
 - PRD-18
