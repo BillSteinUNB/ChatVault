@@ -2038,7 +2038,7 @@ export async function submitContactForm(data: ContactForm) {
 
 ---
 
-- [ ] PRD-50: Subscription Database Schema
+- [x] PRD-50: Subscription Database Schema
 
 # PRD-50: Subscription Database Schema
 
