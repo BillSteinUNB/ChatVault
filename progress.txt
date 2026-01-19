@@ -1,0 +1,24 @@
+2026-01-19: Completed PRD-01: Folder Data Model & Storage
+
+Updated Extension/src/shared/types.ts:
+- Modified Folder interface to match PRD requirements (id, name, parentId, color, createdAt, updatedAt)
+- Chat interface already had folderId field
+
+Updated Extension/src/shared/lib/storage.ts:
+- Added folder CRUD actions to Store interface:
+  * addFolder(folder: Folder)
+  * updateFolder(id: string, updates: Partial<Folder>)
+  * deleteFolder(id: string)
+  * moveChatToFolder(chatId: string, folderId: string | null)
+- Implemented loadPersistedFolders() function to load from chrome.storage.local
+- Updated setupStorageListener() to listen for folder storage changes
+- Added initial folder loading on store creation
+- Implemented all folder actions with chrome.storage.local persistence
+
+All acceptance criteria met:
+- Folder interface exists in types.ts with correct structure
+- Chat interface has folderId field
+- All folder CRUD actions work in storage with persistence
+- Folders persist after browser restart via chrome.storage.local
+
+Note: Test framework not yet set up (PRD-72), so no tests were written.

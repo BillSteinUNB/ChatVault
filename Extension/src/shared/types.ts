@@ -14,8 +14,10 @@ export interface Chat {
 export interface Folder {
   id: string;
   name: string;
-  icon?: string;
-  chats: string[]; // Chat IDs
+  parentId: string | null;
+  color?: string;
+  createdAt: number;
+  updatedAt: number;
 }
 
 export interface UserSettings {

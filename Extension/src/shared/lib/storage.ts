@@ -17,6 +17,10 @@ interface Store {
   deleteChat: (id: string) => void;
   loadChatsFromStorage: () => Promise<void>;
   setChats: (chats: Chat[]) => void;
+  addFolder: (folder: Folder) => void;
+  updateFolder: (id: string, updates: Partial<Folder>) => void;
+  deleteFolder: (id: string) => void;
+  moveChatToFolder: (chatId: string, folderId: string | null) => void;
 }
 
 /**
@@ -25,7 +29,6 @@ interface Store {
  */
 async function loadPersistedChats(): Promise<Chat[]> {
   try {
-    // Check if chrome.storage is available (not in all contexts)
     if (typeof chrome === 'undefined' || !chrome.storage?.local) {
       console.log('[ChatVault] chrome.storage not available, using empty state');
       return [];
@@ -43,9 +46,31 @@ async function loadPersistedChats(): Promise<Chat[]> {
 }
 
 /**
+ * Load persisted folders from chrome.storage.local
+ * Falls back to empty array if storage is empty or unavailable
+ */
+async function loadPersistedFolders(): Promise<Folder[]> {
+  try {
+    if (typeof chrome === 'undefined' || !chrome.storage?.local) {
+      console.log('[ChatVault] chrome.storage not available, using empty state');
+      return [];
+    }
+    
+    const result = await chrome.storage.local.get(STORAGE_KEYS.FOLDERS);
+    const persisted = (result[STORAGE_KEYS.FOLDERS] as Folder[] | undefined) ?? [];
+    
+    console.log('[ChatVault] Loaded', persisted.length, 'folders from storage');
+    return persisted;
+  } catch (error) {
+    console.error('[ChatVault] Failed to load folders from storage:', error);
+    return [];
+  }
+}
+
+/**
  * Setup listener for storage changes to update store reactively
  */
-function setupStorageListener(setChats: (chats: Chat[]) => void): void {
+function setupStorageListener(setChats: (chats: Chat[]) => void, setFolders: (folders: Folder[]) => void): void {
   if (typeof chrome === 'undefined' || !chrome.storage?.onChanged) {
     return;
   }
@@ -58,21 +83,33 @@ function setupStorageListener(setChats: (chats: Chat[]) => void): void {
         setChats(persistedChatsToChats(newValue));
       }
     }
+    
+    if (areaName === 'local' && changes[STORAGE_KEYS.FOLDERS]) {
+      const newValue = changes[STORAGE_KEYS.FOLDERS].newValue as Folder[] | undefined;
+      if (newValue !== undefined) {
+        console.log('[ChatVault] Folders storage changed, updating store with', newValue.length, 'folders');
+        setFolders(newValue);
+      }
+    }
   });
 }
 
 export const useStore = create<Store>((set, get) => {
   // Setup storage listener on store creation
-  setupStorageListener((chats) => set({ chats }));
+  setupStorageListener((chats) => set({ chats }), (folders) => set({ folders }));
   
   // Trigger initial load (async, will update state when ready)
   loadPersistedChats().then(chats => {
     set({ chats, isLoading: false });
   });
+  
+  loadPersistedFolders().then(folders => {
+    set({ folders });
+  });
 
   return {
-    chats: [], // Start empty, will be populated from storage
-    folders: [], // TODO: Load from storage in future phase
+    chats: [],
+    folders: [],
     isLoading: true,
     searchQuery: '',
     setSearchQuery: (query) => set({ searchQuery: query }),
@@ -81,14 +118,12 @@ export const useStore = create<Store>((set, get) => {
     activeFilter: 'all',
     setFilter: (filter) => set({ activeFilter: filter }),
     togglePin: (id) => {
-      // Update local state
       set((state) => ({
         chats: state.chats.map(chat =>
           chat.id === id ? { ...chat, isPinned: !chat.isPinned } : chat
         )
       }));
       
-      // Persist to storage
       if (typeof chrome !== 'undefined' && chrome.storage?.local) {
         chrome.storage.local.get(STORAGE_KEYS.CHATS).then(result => {
           const persisted = (result[STORAGE_KEYS.CHATS] as PersistedChat[] | undefined) ?? [];
@@ -100,12 +135,10 @@ export const useStore = create<Store>((set, get) => {
       }
     },
     deleteChat: (id) => {
-      // Update local state
       set((state) => ({
         chats: state.chats.filter(chat => chat.id !== id)
       }));
       
-      // Persist to storage
       if (typeof chrome !== 'undefined' && chrome.storage?.local) {
         chrome.storage.local.get(STORAGE_KEYS.CHATS).then(result => {
           const persisted = (result[STORAGE_KEYS.CHATS] as PersistedChat[] | undefined) ?? [];
@@ -120,5 +153,65 @@ export const useStore = create<Store>((set, get) => {
       set({ chats, isLoading: false });
     },
     setChats: (chats) => set({ chats }),
+    addFolder: (folder) => {
+      set((state) => ({
+        folders: [...state.folders, folder]
+      }));
+      
+      if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+        chrome.storage.local.get(STORAGE_KEYS.FOLDERS).then(result => {
+          const persisted = (result[STORAGE_KEYS.FOLDERS] as Folder[] | undefined) ?? [];
+          const updated = [...persisted, folder];
+          chrome.storage.local.set({ [STORAGE_KEYS.FOLDERS]: updated });
+        });
+      }
+    },
+    updateFolder: (id, updates) => {
+      set((state) => ({
+        folders: state.folders.map(folder =>
+          folder.id === id ? { ...folder, ...updates, updatedAt: Date.now() } : folder
+        )
+      }));
+      
+      if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+        chrome.storage.local.get(STORAGE_KEYS.FOLDERS).then(result => {
+          const persisted = (result[STORAGE_KEYS.FOLDERS] as Folder[] | undefined) ?? [];
+          const updated = persisted.map(folder =>
+            folder.id === id ? { ...folder, ...updates, updatedAt: Date.now() } : folder
+          );
+          chrome.storage.local.set({ [STORAGE_KEYS.FOLDERS]: updated });
+        });
+      }
+    },
+    deleteFolder: (id) => {
+      set((state) => ({
+        folders: state.folders.filter(folder => folder.id !== id)
+      }));
+      
+      if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+        chrome.storage.local.get(STORAGE_KEYS.FOLDERS).then(result => {
+          const persisted = (result[STORAGE_KEYS.FOLDERS] as Folder[] | undefined) ?? [];
+          const updated = persisted.filter(folder => folder.id !== id);
+          chrome.storage.local.set({ [STORAGE_KEYS.FOLDERS]: updated });
+        });
+      }
+    },
+    moveChatToFolder: (chatId, folderId) => {
+      set((state) => ({
+        chats: state.chats.map(chat =>
+          chat.id === chatId ? { ...chat, folderId } : chat
+        )
+      }));
+      
+      if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+        chrome.storage.local.get(STORAGE_KEYS.CHATS).then(result => {
+          const persisted = (result[STORAGE_KEYS.CHATS] as PersistedChat[] | undefined) ?? [];
+          const updated = persisted.map(chat =>
+            chat.id === chatId ? { ...chat, folderId: folderId || undefined } : chat
+          );
+          chrome.storage.local.set({ [STORAGE_KEYS.CHATS]: updated });
+        });
+      }
+    },
   };
 });
