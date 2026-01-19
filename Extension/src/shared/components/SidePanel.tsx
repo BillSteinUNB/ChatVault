@@ -5,7 +5,7 @@ import { SearchBar } from './SearchBar';
 import { SearchFilters } from './SearchFilters';
 import { AuthBanner } from './AuthBanner';
 import { Button } from './ui/Button';
-import { Folder, PieChart, Star, Clock, Plus, Loader2, MessageSquare, Settings } from 'lucide-react';
+import { Folder, PieChart, Star, Clock, Plus, Loader2, MessageSquare, Settings, Home } from 'lucide-react';
 import { PLATFORM_CONFIG } from '../constants';
 import { FolderList } from './FolderList';
 import { CreateFolderModal } from './CreateFolderModal';
@@ -13,10 +13,10 @@ import { TagFilter } from './TagFilter';
 import { ExportMenu } from './ExportMenu';
 import { SettingsPage } from './SettingsPage';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const SidePanel: React.FC = () => {
-    const { chats, isLoading, activeFolder, activeTags, settingsOpen, setSettingsOpen } = useStore();
+    const { chats, isLoading, activeFolder, activeTags, settingsOpen, setSettingsOpen, viewState, setViewMode } = useStore();
     const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
     const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
     const exportButtonRef = React.useRef<HTMLButtonElement>(null);
@@ -27,12 +27,21 @@ export const SidePanel: React.FC = () => {
     }
 
     const filteredChats = chats.filter(chat => {
+        // Filter by view mode
+        if (viewState.mode === 'starred' && !chat.isPinned) {
+            return false;
+        }
+
+        // Filter by active folder
         if (activeFolder && chat.folderId !== activeFolder) {
             return false;
         }
+
+        // Filter by active tags
         if (activeTags.length > 0) {
             return activeTags.every(tagId => chat.tags.includes(tagId));
         }
+
         return true;
     });
 
@@ -66,11 +75,30 @@ export const SidePanel: React.FC = () => {
                 </div>
                 
                 <nav className="flex flex-col gap-4 w-full px-2">
-                    <NavItem icon={<Clock size={20} />} active />
-                    <NavItem icon={<Folder size={20} />} />
-                    <NavItem icon={<Star size={20} />} />
-                    <NavItem icon={<PieChart size={20} />} />
-                    <NavItem icon={<Settings size={20} />} onClick={() => setSettingsOpen(true)} />
+                    <NavItem
+                        icon={<Home size={20} />}
+                        label="All Chats"
+                        active={viewState.mode === 'all'}
+                        onClick={() => setViewMode('all')}
+                    />
+                    <NavItem
+                        icon={<Star size={20} />}
+                        label="Starred"
+                        active={viewState.mode === 'starred'}
+                        onClick={() => setViewMode('starred')}
+                    />
+                    <NavItem
+                        icon={<PieChart size={20} />}
+                        label="Analytics"
+                        active={viewState.mode === 'analytics'}
+                        onClick={() => setViewMode('analytics')}
+                    />
+                    <NavItem
+                        icon={<Settings size={20} />}
+                        label="Settings"
+                        active={false}
+                        onClick={() => setSettingsOpen(true)}
+                    />
                 </nav>
 
                 <div className="mt-auto">
@@ -83,8 +111,16 @@ export const SidePanel: React.FC = () => {
                 {/* Header */}
                 <header className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
                     <div>
-                        <h1 className="text-xl font-bold text-gray-900">Conversations</h1>
-                        <p className="text-sm text-gray-500">Manage and organize your AI chats</p>
+                        <h1 className="text-xl font-bold text-gray-900">
+                            {viewState.mode === 'starred' ? 'Starred' : viewState.mode === 'analytics' ? 'Analytics' : 'Conversations'}
+                        </h1>
+                        <p className="text-sm text-gray-500">
+                            {viewState.mode === 'starred'
+                                ? 'Your pinned and important chats'
+                                : viewState.mode === 'analytics'
+                                ? 'View your chat statistics'
+                                : 'Manage and organize your AI chats'}
+                        </p>
                     </div>
                     <div className="flex items-center gap-3">
                         <div className="relative">
@@ -136,7 +172,13 @@ export const SidePanel: React.FC = () => {
                 {/* Chat Grid */}
                 <div className="flex-1 overflow-y-auto px-6 pb-6">
                     <h2 className="text-sm font-semibold text-gray-900 mb-4">
-                        {activeFolder ? `Folder` : 'All Chats'}
+                        {viewState.mode === 'starred'
+                            ? 'Starred Chats'
+                            : viewState.mode === 'analytics'
+                            ? 'Analytics Overview'
+                            : activeFolder
+                            ? 'Folder'
+                            : 'All Chats'}
                     </h2>
 
                     {isLoading ? (
@@ -174,14 +216,48 @@ export const SidePanel: React.FC = () => {
     );
 };
 
-const NavItem = ({ icon, active, onClick }: { icon: React.ReactNode, active?: boolean, onClick?: () => void }) => (
-    <button 
-        className={`w-full aspect-square flex items-center justify-center rounded-lg transition-colors ${active ? 'bg-primary-50 text-primary-600' : 'text-gray-400 hover:bg-gray-100 hover:text-gray-600'}`}
-        onClick={onClick}
-    >
-        {icon}
-    </button>
-);
+const NavItem = ({
+    icon,
+    label,
+    active = false,
+    onClick
+}: {
+    icon: React.ReactNode;
+    label: string;
+    active?: boolean;
+    onClick?: () => void;
+}) => {
+    const [showTooltip, setShowTooltip] = React.useState(false);
+
+    return (
+        <div className="relative">
+            <button
+                className={`w-full aspect-square flex items-center justify-center rounded-lg transition-colors ${
+                    active ? 'bg-primary-50 text-primary-600' : 'text-gray-400 hover:bg-gray-100 hover:text-gray-600'
+                }`}
+                onClick={onClick}
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+            >
+                {icon}
+            </button>
+            <AnimatePresence>
+                {showTooltip && (
+                    <motion.div
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -10 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap z-50 pointer-events-none"
+                    >
+                        {label}
+                        <div className="absolute right-full top-1/2 -translate-y-1/2 -mr-1 w-2 h-2 bg-gray-900 rotate-45" />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+};
 
 const StatCard = ({ label, value }: { label: string, value: string | number }) => (
     <motion.div 

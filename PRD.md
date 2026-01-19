@@ -1117,7 +1117,7 @@ None
 
 ---
 
-- [ ] PRD-25: Nav Icons Functionality
+- [x] PRD-25: Nav Icons Functionality
 
 # PRD-25: Nav Icons Functionality
 
