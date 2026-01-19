@@ -12,6 +12,7 @@ import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { ResetPassword } from './pages/ResetPassword';
+import { Settings } from './pages/Settings';
 import { useAuth } from './hooks/useAuth';
 
 // Scroll to top on route change
@@ -42,6 +43,7 @@ const AppContent: React.FC = () => {
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </main>
       <Footer />

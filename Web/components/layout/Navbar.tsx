@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Button } from '../ui/Button';
-import { Layers, Shield, Menu, X, LogOut, User } from 'lucide-react';
+import { Layers, Shield, Menu, X, LogOut, User, Settings as SettingsIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -64,12 +64,15 @@ export const Navbar: React.FC = () => {
             <>
               {user ? (
                 <>
+                  <NavLink to="/settings" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">
+                    Settings
+                  </NavLink>
                   <div className="flex items-center gap-2 text-sm text-neutral-400">
                     <User size={16} />
                     <span>{user.email}</span>
                   </div>
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     variant="secondary"
                     onClick={async () => {
                       await signOut();
@@ -125,12 +128,15 @@ export const Navbar: React.FC = () => {
                 <>
                   {user ? (
                     <>
+                      <NavLink to="/settings" onClick={() => setMobileOpen(false)} className="text-lg font-medium text-neutral-300">
+                        Settings
+                      </NavLink>
                       <div className="flex items-center gap-2 text-neutral-400">
                         <User size={18} />
                         <span>{user.email}</span>
                       </div>
-                      <Button 
-                        className="w-full" 
+                      <Button
+                        className="w-full"
                         variant="secondary"
                         onClick={async () => {
                           await signOut();

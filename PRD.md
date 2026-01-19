@@ -1451,7 +1451,7 @@ None
 
 ---
 
-- [ ] PRD-34: Delete Account Modal
+- [x] PRD-34: Delete Account Modal
 
 # PRD-34: Delete Account Modal
 
