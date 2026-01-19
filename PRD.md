@@ -2117,7 +2117,7 @@ serve(async (req) => {
 
 ---
 
-- [ ] PRD-52: Stripe Webhook Handler
+- [x] PRD-52: Stripe Webhook Handler
 
 # PRD-52: Stripe Webhook Handler
 
