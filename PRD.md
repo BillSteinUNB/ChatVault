@@ -949,7 +949,7 @@ Add visual date range and platform filters.
 
 ---
 
-- [ ] PRD-21: Keyboard Shortcut for Search
+- [x] PRD-21: Keyboard Shortcut for Search
 
 # PRD-21: Keyboard Shortcut for Search
 

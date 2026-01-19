@@ -474,3 +474,69 @@
 ### Files Modified
 - Extension/src/shared/components/SearchFilters.tsx - Fixed useEffect to properly initialize all platform checkboxes when no platform operator exists
 - Extension/src/shared/components/SearchFilters.test.tsx - Updated test name and expectation to match component behavior (combining filters)
+
+
+## 2026-01-19 - PRD-21: Keyboard Shortcut for Search
+
+### Completed
+- Verified keyboard shortcut functionality was already implemented via useSearchKeyboard hook
+- Added comprehensive test suite for useSearchKeyboard hook with 14 tests
+- All tests passing: 14/14 useSearchKeyboard tests
+- Updated useSearchKeyboard hook to use case-insensitive comparison for 'k' key (supports both lowercase and uppercase)
+- Test coverage includes:
+  - Cmd+K keyboard shortcut (Mac)
+  - Ctrl+K keyboard shortcut (Windows/Linux)
+  - Escape key to blur search
+  - Preventing default browser behavior
+  - Case-insensitive key handling
+  - Ref management
+  - Event listener cleanup on unmount
+  - Works from anywhere in extension (document-level event listener)
+
+### Files Created
+- Extension/src/shared/hooks/useSearchKeyboard.test.ts - Comprehensive test suite with 14 tests
+
+### Files Modified
+- Extension/src/shared/hooks/useSearchKeyboard.ts - Updated to use case-insensitive comparison (e.key.toLowerCase() === 'k')
+
+### Test Setup
+- Created comprehensive test suite using vitest and @testing-library/react
+- All 14 tests passing
+- Full test suite: 168 total tests, 160 passing (8 pre-existing failures in SettingsPage tests)
+
+### Test Coverage (14 tests)
+#### Cmd+K / Ctrl+K keyboard shortcut (6 tests)
+- Focuses input when Cmd+K is pressed on Mac
+- Focuses input when Ctrl+K is pressed on Windows/Linux
+- Focuses input when both Cmd and Ctrl are pressed with K
+- Does not focus when K is pressed without modifier keys
+- Handles lowercase "k"
+- Handles uppercase "K"
+
+#### Escape key to blur (4 tests)
+- Blurs input when Escape is pressed while input is focused
+- Does not blur when Escape is pressed while input is not focused
+- Calls onEscape callback when Escape is pressed
+- Handles ESC key (alternative Escape code)
+
+#### Ref management (2 tests)
+- Returns a ref object
+- Allows the ref to be attached to an element
+
+#### Event listener cleanup (2 tests)
+- Removes event listener on unmount
+- Adds event listener on mount
+
+### Implementation Details
+- Keyboard shortcut listener was already implemented in useSearchKeyboard hook
+- Hook uses document-level event listener for global access
+- Cmd+K / Ctrl+K focuses search input with preventDefault()
+- Escape key blurs input when it has focus
+- Updated to use case-insensitive comparison (e.key.toLowerCase() === 'k')
+- Visual hint already displayed in SearchBar.tsx (shows "K" in keyboard badge on hover)
+- All acceptance criteria met:
+  - Cmd/Ctrl+K focuses search ✓
+  - Works from anywhere in extension ✓
+  - Escape unfocuses ✓
+- No lint script configured (skipped linting step)
+- All TypeScript compilation verified with no errors
