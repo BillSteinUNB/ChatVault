@@ -1152,7 +1152,7 @@ Wire up navigation icons in SidePanel.
 
 ---
 
-- [ ] PRD-26: Analytics View Component
+- [x] PRD-26: Analytics View Component
 
 # PRD-26: Analytics View Component
 

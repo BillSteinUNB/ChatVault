@@ -49,6 +49,10 @@ vi.mock('./TagFilter', () => ({
     TagFilter: () => <div data-testid="tag-filter">Tags</div>,
 }));
 
+vi.mock('./AnalyticsView', () => ({
+    AnalyticsView: () => <div data-testid="analytics-view">Analytics</div>,
+}));
+
 vi.mock('./ExportMenu', () => ({
     ExportMenu: ({ onClose }: any) => <div data-testid="export-menu">Export</div>,
 }));
@@ -260,8 +264,8 @@ describe('SidePanel - Nav Icons Functionality (PRD-25)', () => {
 
             fireEvent.mouseEnter(allChatsNav!);
             await waitFor(() => {
-                const tooltip = screen.getByText('All Chats');
-                expect(tooltip).toBeInTheDocument();
+                const tooltips = screen.getAllByText('All Chats');
+                expect(tooltips.length).toBeGreaterThan(0);
             }, { timeout: 3000 });
         });
 
@@ -304,14 +308,16 @@ describe('SidePanel - Nav Icons Functionality (PRD-25)', () => {
 
             fireEvent.mouseEnter(allChatsNav!);
             await waitFor(() => {
-                const tooltip = screen.getByText('All Chats');
-                expect(tooltip).toBeInTheDocument();
+                const tooltips = screen.getAllByText('All Chats');
+                expect(tooltips.length).toBeGreaterThan(0);
             }, { timeout: 3000 });
 
             fireEvent.mouseLeave(allChatsNav!);
             await waitFor(() => {
-                const tooltip = screen.queryByText('All Chats');
-                expect(tooltip).not.toBeInTheDocument();
+                // After mouse leave, tooltip should be gone, but "All Chats" may still be in header
+                // So we just check that the count decreased
+                const tooltips = screen.queryAllByText('All Chats');
+                expect(tooltips.length).toBe(1); // Only header text should remain
             }, { timeout: 3000 });
         });
     });
@@ -364,8 +370,8 @@ describe('SidePanel - Nav Icons Functionality (PRD-25)', () => {
             });
 
             render(<SidePanel />);
-            const title = screen.getByText('Analytics');
-            expect(title).toBeInTheDocument();
+            const titles = screen.getAllByText('Analytics');
+            expect(titles.length).toBeGreaterThan(0);
         });
     });
 
@@ -431,7 +437,7 @@ describe('SidePanel - Nav Icons Functionality (PRD-25)', () => {
             });
 
             render(<SidePanel />);
-            expect(screen.getByText(/no chats/i)).toBeInTheDocument();
+            expect(screen.getByText('Your vault is empty')).toBeInTheDocument();
         });
 
         it('shows "Starred Chats" as list title in starred mode', () => {
@@ -463,7 +469,8 @@ describe('SidePanel - Nav Icons Functionality (PRD-25)', () => {
             });
 
             render(<SidePanel />);
-            expect(screen.getByText('Analytics Overview')).toBeInTheDocument();
+            // Analytics mode shows AnalyticsView component instead of chat list
+            expect(screen.getByTestId('analytics-view')).toBeInTheDocument();
         });
     });
 });

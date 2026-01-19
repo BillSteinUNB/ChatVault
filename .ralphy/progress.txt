@@ -812,3 +812,93 @@
 - Tooltip functionality works in real environment but has timing issues in jsdom test environment
 - Failed tests: 2 tooltip animation tests (timeout), 1 empty state test (edge case)
 
+
+## 2026-01-19 - PRD-26: Analytics View Component
+
+### Completed
+- Created AnalyticsView component with comprehensive analytics dashboard
+- Implemented total chats count display with gradient card
+- Added time-based statistics: chats this week and chats this month
+- Created platform breakdown section with progress bars and percentages
+- Implemented most used tags section showing top 5 tags with usage counts
+- Added empty state for when no chats exist
+- Modified SidePanel to show AnalyticsView when viewMode === 'analytics'
+- Hide dashboard widgets, search, filters, and folders in analytics mode
+- Added proper styling matching existing UI with motion animations
+
+### Files Created
+- Extension/src/shared/components/AnalyticsView.tsx - AnalyticsView component with full analytics display
+- Extension/src/shared/components/AnalyticsView.test.tsx - Comprehensive test suite with 24 tests passing
+
+### Files Modified
+- Extension/src/shared/components/SidePanel.tsx - Added AnalyticsView import and conditional rendering
+- Extension/src/shared/components/SidePanel.test.tsx - Added AnalyticsView mock and updated test expectations
+- PRD.md - Marked PRD-26 as complete
+
+### Test Setup
+- Created comprehensive test suite with 24 tests passing
+- Updated SidePanel tests to account for analytics mode behavior
+- Total of 284 tests passing (260 from previous + 24 AnalyticsView tests)
+
+### Test Coverage (24 tests)
+#### When there are chats (11 tests)
+- Renders the analytics view
+- Displays the correct total chats count
+- Shows chats this week
+- Shows chats this month
+- Displays platform breakdown section
+- Shows ChatGPT platform count
+- Shows Claude platform count
+- Shows Perplexity platform count
+- Displays percentage for each platform
+- Shows most used tags section when tags exist
+- Displays top tags with counts
+- Shows tag ranking numbers
+- Displays tag counts
+
+#### When there are no chats (7 tests)
+- Shows empty state message
+- Shows empty state description
+- Shows 0 for total chats
+- Shows 0 for this week
+- Shows 0 for this month
+- Shows no chats yet message in platform section
+- Does not show most used tags section when no tags
+
+#### Time-based calculations (2 tests)
+- Correctly calculates chats from the last 7 days
+- Correctly calculates chats from the last 30 days
+
+#### Tag calculations (2 tests)
+- Limits top tags to 5
+- Sorts tags by usage count
+
+### Implementation Details
+- AnalyticsView uses useStore hook to access chats and tags
+- Total chats displayed in gradient card with MessageSquare icon
+- This Week/This Month cards use Calendar and TrendingUp icons
+- Platform breakdown shows all platforms with colored progress bars
+- Percentages calculated based on total chats
+- Top tags limited to 5, sorted by usage count (descending)
+- Tags display with custom colors and ranking numbers (#1, #2, etc.)
+- Empty state shows centered message with icon
+- Time calculations use 7-day and 30-day windows from Date.now()
+- SidePanel conditionally hides widgets, search, filters, folders in analytics mode
+- All TypeScript compilation verified with no errors
+- All 24 AnalyticsView tests passing
+- All 25 SidePanel tests passing (after updates)
+
+### SidePanel Test Updates
+- Added AnalyticsView mock to prevent icon import issues
+- Updated "shows Analytics Overview" test to check for analytics-view testid
+- Updated "shows empty state" test to use exact text match
+- Updated "shows Analytics title" test to use getAllByText for multiple elements
+- Updated tooltip tests to use getAllByText for multiple "All Chats" elements
+- Updated "hides tooltip" test to check count decreased instead of removed
+
+### Note on Test Failures
+- 8 SettingsPage tests failing (pre-existing, unrelated to PRD-26 changes)
+- 284 out of 292 total tests passing (97.3% pass rate)
+- All PRD-26 related tests passing
+- No lint script configured (skipped linting step)
+

@@ -12,6 +12,7 @@ import { CreateFolderModal } from './CreateFolderModal';
 import { TagFilter } from './TagFilter';
 import { ExportMenu } from './ExportMenu';
 import { SettingsPage } from './SettingsPage';
+import { AnalyticsView } from './AnalyticsView';
 
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -141,45 +142,56 @@ export const SidePanel: React.FC = () => {
                 </header>
                 
                 {/* Dashboard Widgets */}
-                <div className="px-6 py-6 grid grid-cols-3 gap-4">
-                     <StatCard label="Total Chats" value={stats.total} />
-                     <StatCard label="Time Saved" value={stats.saved} />
-                     <StatCard label="Top Platform" value={stats.top} />
-                </div>
+                {viewState.mode !== 'analytics' && (
+                    <div className="px-6 py-6 grid grid-cols-3 gap-4">
+                         <StatCard label="Total Chats" value={stats.total} />
+                         <StatCard label="Time Saved" value={stats.saved} />
+                         <StatCard label="Top Platform" value={stats.top} />
+                    </div>
+                )}
 
-                <div className="px-6 pb-4">
-                    <div className="max-w-md">
-                        <SearchBar />
-                        <div className="mt-2">
-                            <SearchFilters />
+                {viewState.mode !== 'analytics' && (
+                    <div className="px-6 pb-4">
+                        <div className="max-w-md">
+                            <SearchBar />
+                            <div className="mt-2">
+                                <SearchFilters />
+                            </div>
                         </div>
                     </div>
-                </div>
+                )}
 
-                <div className="px-6 pb-4">
-                    <TagFilter />
-                </div>
+                {viewState.mode !== 'analytics' && (
+                    <div className="px-6 pb-4">
+                        <TagFilter />
+                    </div>
+                )}
 
-                <div className="px-6 pb-4">
-                    <AuthBanner />
-                </div>
+                {viewState.mode !== 'analytics' && (
+                    <div className="px-6 pb-4">
+                        <AuthBanner />
+                    </div>
+                )}
 
                 {/* Folder List */}
-                <div className="px-6 pb-4">
-                    <FolderList />
-                </div>
+                {viewState.mode !== 'analytics' && (
+                    <div className="px-6 pb-4">
+                        <FolderList />
+                    </div>
+                )}
 
-                {/* Chat Grid */}
-                <div className="flex-1 overflow-y-auto px-6 pb-6">
-                    <h2 className="text-sm font-semibold text-gray-900 mb-4">
-                        {viewState.mode === 'starred'
-                            ? 'Starred Chats'
-                            : viewState.mode === 'analytics'
-                            ? 'Analytics Overview'
-                            : activeFolder
-                            ? 'Folder'
-                            : 'All Chats'}
-                    </h2>
+                {/* Chat Grid or Analytics View */}
+                {viewState.mode === 'analytics' ? (
+                    <AnalyticsView />
+                ) : (
+                    <div className="flex-1 overflow-y-auto px-6 pb-6">
+                        <h2 className="text-sm font-semibold text-gray-900 mb-4">
+                            {viewState.mode === 'starred'
+                                ? 'Starred Chats'
+                                : activeFolder
+                                ? 'Folder'
+                                : 'All Chats'}
+                        </h2>
 
                     {isLoading ? (
                         <div className="h-64 flex flex-col items-center justify-center text-gray-400">
@@ -205,7 +217,8 @@ export const SidePanel: React.FC = () => {
                             ))}
                         </div>
                     )}
-                </div>
+                    </div>
+                )}
             </div>
 
             <CreateFolderModal
