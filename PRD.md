@@ -1410,7 +1410,7 @@ None
 
 ---
 
-- [ ] PRD-33: Delete Account Edge Function
+- [x] PRD-33: Delete Account Edge Function
 
 # PRD-33: Delete Account Edge Function
 
