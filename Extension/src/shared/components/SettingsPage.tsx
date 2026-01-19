@@ -65,7 +65,7 @@ export const SettingsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const storageUsageMB = (storageUsage / (1024 * 1024)).toFixed(2);
 
   return (
-    <div className="h-full flex flex-col bg-gray-50">
+    <div className="h-full flex flex-col bg-gray-50" data-testid="settings-page">
       {/* Header */}
       <header className="bg-white border-b border-gray-100 px-6 py-4">
         <div className="flex items-center gap-4">

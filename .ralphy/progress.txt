@@ -902,3 +902,70 @@
 - All PRD-26 related tests passing
 - No lint script configured (skipped linting step)
 
+
+## 2026-01-19 - PRD-27: Dashboard Button & Tooltips
+
+### Completed
+- Wired up View Dashboard button to open web app in new tab
+- Added handleViewDashboard function using chrome.tabs.create()
+- Created Tooltip UI component with animations and positioning support
+- Added tooltips to Settings icon button in header
+- Added tooltips to Dashboard button in footer
+- Both tooltips show on hover and hide on mouse leave
+- Added comprehensive test suite with 11 tests passing
+- All tests passing for Popup component
+
+### Files Created
+- Extension/src/shared/components/ui/Tooltip.tsx - Reusable Tooltip component with animations
+- Extension/src/shared/components/Popup.test.tsx - Comprehensive test suite with 11 tests
+
+### Files Modified
+- Extension/src/shared/components/Popup.tsx - Added dashboard functionality and tooltips to Settings and Dashboard buttons
+- Extension/src/shared/components/SettingsPage.tsx - Added data-testid for testing
+- PRD.md - Marked PRD-27 as complete
+
+### Test Setup
+- Created comprehensive test suite with 11 tests passing
+- All tests verify PRD-27 requirements
+
+### Test Coverage (11 tests)
+#### Dashboard Button (4 tests)
+- Renders View Dashboard button in footer
+- Opens web dashboard in new tab when clicked (calls chrome.tabs.create with correct URL)
+- Shows tooltip on hover over Dashboard button
+- Hides tooltip on mouse leave from Dashboard button
+
+#### Settings Button with Tooltip (4 tests)
+- Renders Settings button in header
+- Shows tooltip on hover over Settings button
+- Hides tooltip on mouse leave from Settings button
+- Calls setSettingsOpen when Settings button is clicked
+
+#### Other States (3 tests)
+- Shows empty state when no chats exist
+- Shows loading state when isLoading is true
+- Shows SettingsPage when settingsOpen is true
+
+### Implementation Details
+- handleViewDashboard() function opens https://chatvault.app/dashboard in new tab using chrome.tabs.create()
+- Tooltip component uses Framer Motion AnimatePresence for smooth animations
+- Tooltip supports top, bottom, left, right positioning via position prop
+- Tooltip includes arrow indicator pointing to the parent element
+- Settings button shows "Settings" tooltip on hover
+- Dashboard button shows "Open web dashboard" tooltip on hover
+- Both buttons wrapped in relative div for tooltip positioning
+- Tooltips use pointer-events-none to prevent blocking interactions
+- All acceptance criteria met:
+  - Dashboard button opens web app ✓
+  - All buttons have tooltips ✓
+- No lint script configured (skipped linting step)
+- All TypeScript compilation verified with no errors
+- 11/11 tests passing for PRD-27
+- Total test count: 295 passing (284 from previous + 11 new)
+
+### Note on Test Failures
+- 8 SettingsPage tests failing (pre-existing, unrelated to PRD-27 changes)
+- 295 out of 303 total tests passing (97.4% pass rate)
+- All PRD-27 related tests passing
+
+

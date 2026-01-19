@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SearchBar } from './SearchBar';
 import { FilterChips } from './FilterChips';
 import { ChatItem } from './ChatItem';
@@ -7,9 +7,12 @@ import { useStore } from '../lib/storage';
 import { Settings, ExternalLink, Search, Loader2, MessageSquare } from 'lucide-react';
 import { Button } from './ui/Button';
 import { SettingsPage } from './SettingsPage';
+import { Tooltip } from './ui/Tooltip';
 
 export const Popup: React.FC = () => {
   const { chats, folders, searchQuery, activeFilter, isLoading, settingsOpen, setSettingsOpen } = useStore();
+  const [settingsTooltip, setSettingsTooltip] = useState(false);
+  const [dashboardTooltip, setDashboardTooltip] = useState(false);
 
   // Filter Logic
   const filteredChats = chats.filter(chat => {
@@ -21,9 +24,13 @@ export const Popup: React.FC = () => {
 
   const pinnedChats = filteredChats.filter(c => c.isPinned);
   const unpinnedChats = filteredChats.filter(c => !c.isPinned && !c.folderId);
-  
+
   // Folders logic: Show folder if it has chats that match the current filter
-  const relevantFolders = folders; 
+  const relevantFolders = folders;
+
+  const handleViewDashboard = () => {
+    chrome.tabs.create({ url: 'https://chatvault.app/dashboard' });
+  }; 
 
   const hasChats = chats.length > 0;
 
@@ -40,9 +47,21 @@ export const Popup: React.FC = () => {
             <h1 className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-800">
                 ChatVault
             </h1>
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSettingsOpen(true)}>
-                <Settings size={18} />
-            </Button>
+            <div className="relative">
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => setSettingsOpen(true)}
+                    onMouseEnter={() => setSettingsTooltip(true)}
+                    onMouseLeave={() => setSettingsTooltip(false)}
+                >
+                    <Settings size={18} />
+                </Button>
+                {settingsTooltip && (
+                    <Tooltip text="Settings" />
+                )}
+            </div>
         </div>
         <SearchBar />
         <FilterChips />
@@ -111,12 +130,24 @@ export const Popup: React.FC = () => {
             </>
         )}
       </div>
-      
+
       {/* Footer */}
       <div className="p-3 bg-white border-t border-gray-100 flex items-center justify-center">
-         <Button variant="ghost" size="sm" className="text-primary-600 text-xs gap-1">
-            View Dashboard <ExternalLink size={12} />
-         </Button>
+         <div className="relative">
+            <Button
+                variant="ghost"
+                size="sm"
+                className="text-primary-600 text-xs gap-1"
+                onClick={handleViewDashboard}
+                onMouseEnter={() => setDashboardTooltip(true)}
+                onMouseLeave={() => setDashboardTooltip(false)}
+            >
+               View Dashboard <ExternalLink size={12} />
+            </Button>
+            {dashboardTooltip && (
+                <Tooltip text="Open web dashboard" />
+            )}
+         </div>
       </div>
     </div>
   );

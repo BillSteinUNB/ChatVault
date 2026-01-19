@@ -1184,7 +1184,7 @@ Create simple analytics dashboard.
 
 ---
 
-- [ ] PRD-27: Dashboard Button & Tooltips
+- [x] PRD-27: Dashboard Button & Tooltips
 
 # PRD-27: Dashboard Button & Tooltips
 
