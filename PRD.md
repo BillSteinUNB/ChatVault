@@ -1600,7 +1600,7 @@ if (data.nextLevel === 'aal2') {
 
 ---
 
-- [ ] PRD-38: Backup Codes Component
+- [x] PRD-38: Backup Codes Component
 
 # PRD-38: Backup Codes Component
 

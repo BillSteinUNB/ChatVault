@@ -1585,3 +1585,81 @@
 - Web project lacks testing infrastructure - consistent with previous Web PRDs
 - TwoFactorChallenge follows same patterns as Enable2FAModal from PRD-36
 - Ready for manual testing or integration with Web project test setup when available
+
+## 2026-01-19 - PRD-38: Backup Codes Component
+
+### Completed
+- Created BackupCodes component with comprehensive backup code display and management
+- Implemented grid display for backup codes (responsive: 2 cols mobile, 3 tablet, 4 desktop)
+- Added Copy All button that copies all codes to clipboard with success feedback
+- Added Download button that saves codes as .txt file with timestamp
+- Added Regenerate button (when onRegenerate prop provided) with loading state
+- Added warning message about one-time use and secure storage of codes
+- Added empty state display with Generate button when no codes available
+- All codes are selectable (select-all class) for easy manual copying
+- Proper error handling and loading states for regenerate operation
+- Consistent styling with existing Web components (neutral-800 backgrounds, white/10 borders)
+
+### Files Created
+- Web/components/BackupCodes.tsx - Complete BackupCodes component with display, copy, download, and regenerate functionality
+
+### Files Modified
+- PRD.md - Marked PRD-38 as complete
+
+### Test Setup
+- Web project lacks testing infrastructure (no vitest or test setup configured)
+- Component verified with build verification instead of tests
+- Build verification passed with no TypeScript compilation errors
+- npm run build succeeded: dist/index.html (0.79 kB), CSS (39.99 kB), JS (439.69 kB)
+
+### Implementation Details
+- BackupCodes component accepts:
+  - codes: string[] - Array of backup codes to display
+  - onRegenerate?: () => void - Optional callback for regenerating codes
+  - className?: string - Optional CSS class for styling
+
+- Display features:
+  - Header with title, description, and optional regenerate button
+  - Warning box with AlertTriangle icon about secure storage
+  - Grid layout with responsive columns (2/3/4 based on screen size)
+  - Each code displayed in monospace font with neutral-900 background
+  - Codes have select-all class for easy manual copying
+
+- Action buttons:
+  - Copy All: Copies all codes to clipboard, shows "Copied!" feedback for 2 seconds
+  - Download: Downloads codes as .txt file with filename format: chatvault-backup-codes-YYYY-MM-DD.txt
+  - Regenerate: Calls onRegenerate callback with loading state (optional feature)
+
+- Empty state:
+  - Shows Shield icon and "No backup codes available" message
+  - Shows "Generate Codes" button if onRegenerate callback provided
+  - Regenerate button has loading state with spinning RefreshCw icon
+
+- Download file format:
+  - Header: "ChatVault Backup Codes"
+  - Timestamp: "Generated: ISO-8601 date"
+  - Codes: One per line
+
+- Icons used:
+  - Shield for empty state
+  - Copy for copy button
+  - Download for download button
+  - RefreshCw for regenerate button (with spinning animation when loading)
+  - AlertTriangle for warning message
+
+### Acceptance Criteria Status
+- Backup codes display clearly ✓ (grid layout with responsive columns)
+- Can copy all codes ✓ (Copy All button with clipboard API)
+- Can download as file ✓ (Download button with .txt file generation)
+- Can regenerate codes ✓ (Regenerate button with onRegenerate callback)
+
+### Notes
+- Web project lacks testing infrastructure - build verification performed instead
+- Build verification passed: npm run build completed successfully in 32.95s
+- Component designed to work with Enable2FAModal from PRD-36 (can extract codes array)
+- Component can be used in settings security section (per PRD requirements)
+- Follows same patterns as existing Web components (uses Button from ui folder)
+- Responsive grid works on mobile (2 cols), tablet (3 cols), and desktop (4 cols)
+- Empty state handling allows component to be used before codes are generated
+- Regenerate feature is optional (only shown when onRegenerate callback provided)
+- Ready for integration into Enable2FAModal and Settings security section
