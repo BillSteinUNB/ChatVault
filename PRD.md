@@ -2657,7 +2657,7 @@ Create toast notifications for errors.
 
 ---
 
-- [ ] PRD-65: Onboarding State & Hook
+- [x] PRD-65: Onboarding State & Hook
 
 # PRD-65: Onboarding State & Hook
 
