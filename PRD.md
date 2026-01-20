@@ -2695,7 +2695,7 @@ None
 
 ---
 
-- [ ] PRD-66: Onboarding Steps Components
+- [x] PRD-66: Onboarding Steps Components
 
 # PRD-66: Onboarding Steps Components
 
