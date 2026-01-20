@@ -3575,3 +3575,148 @@ To use this edge function, set these environment variables in Supabase:
 - 21/21 tests passing for PRD-61
 - Total test count: 417 passing (396 from previous + 21 new)
 
+
+## 2026-01-19 - PRD-62: Error Types & Utilities
+
+### Completed
+- Created comprehensive error types and utilities system
+- Defined ErrorCode type union with 7 error types: NETWORK_ERROR, AUTH_ERROR, STORAGE_FULL, SYNC_CONFLICT, SCRAPE_FAILED, QUOTA_EXCEEDED, UNKNOWN
+- Created AppError interface with properties: code, message, userMessage, recoverable, retryAction, originalError
+- Implemented ERROR_MESSAGES mapping with user-friendly messages and detailed descriptions for each error code
+- Created createAppError() helper function to generate AppError objects from error codes
+- Implemented isRecoverable() function to determine if an error can be retried
+- Created withErrorHandling() higher-order function to wrap async functions with automatic error handling
+- Implemented isAppError() type guard to check if unknown values are AppError objects
+- Created getUserMessage() function to extract user-friendly messages from any error type
+- Implemented getErrorCode() function to automatically classify errors by type or message content
+- Created createRetryAction() function with exponential backoff for retrying failed operations
+- Implemented logError() function for structured error logging with context
+- Added intelligent error classification based on Error types, DOMException, and error message patterns
+- All 51 tests passing with comprehensive coverage of all error utilities
+
+### Files Created
+- Extension/src/shared/lib/errors.ts - Complete error handling utilities with 280+ lines
+- Extension/src/shared/lib/errors.test.ts - Comprehensive test suite with 51 tests
+
+### Files Modified
+- PRD.md - Marked PRD-62 as complete
+
+### Test Setup
+- Created comprehensive test suite with 51 tests passing
+- All tests verify PRD-62 requirements
+
+### Test Coverage (51 tests)
+#### ERROR_MESSAGES (1 test)
+- Should have user-friendly messages for all error codes
+
+#### createAppError (11 tests)
+- Creates an AppError with required properties
+- Uses default user message when no custom message provided
+- Uses custom message when provided
+- Includes original error when provided
+- Marks network errors as recoverable
+- Marks sync conflicts as recoverable
+- Marks scrape failures as recoverable
+- Marks auth errors as not recoverable
+- Marks storage full as not recoverable
+- Marks quota exceeded as not recoverable
+- Marks unknown errors as not recoverable
+
+#### isRecoverable (7 tests)
+- Returns true for network errors
+- Returns true for sync conflicts
+- Returns true for scrape failures
+- Returns false for auth errors
+- Returns false for storage full
+- Returns false for quota exceeded
+- Returns false for unknown errors
+
+#### withErrorHandling (3 tests)
+- Returns result when function succeeds
+- Throws AppError when function fails
+- Preserves function arguments
+
+#### isAppError (6 tests)
+- Returns true for valid AppError objects
+- Returns false for null
+- Returns false for undefined
+- Returns false for plain objects
+- Returns false for objects without required properties
+- Returns false for Error instances
+
+#### getUserMessage (3 tests)
+- Returns userMessage from AppError
+- Returns message from Error instance
+- Returns default message for unknown errors
+
+#### getErrorCode (12 tests)
+- Returns code from AppError
+- Detects network errors from TypeError
+- Detects network errors from fetch-related TypeErrors
+- Detects storage quota errors from DOMException
+- Detects auth errors from error message
+- Detects unauthorized errors from error message
+- Detects quota exceeded from error message
+- Detects sync conflicts from error message
+- Detects scrape failures from error message
+- Returns UNKNOWN for unrecognized errors
+- Returns UNKNOWN for non-Error objects
+
+#### createRetryAction (6 tests)
+- Succeeds on first attempt
+- Retries recoverable errors
+- Uses exponential backoff (1s, 2s, 4s delays)
+- Throws after max retries
+- Does not retry non-recoverable errors
+- Uses default max retries of 3
+
+#### logError (3 tests)
+- Logs error with code and user message
+- Logs error with context when provided
+- Logs non-AppError objects
+
+### Implementation Details
+- ErrorCode type union includes 7 error types covering all common failure scenarios
+- AppError interface provides structured error data with user-facing messages
+- ERROR_MESSAGES mapping provides both user-friendly short messages and detailed technical descriptions
+- createAppError() generates AppError objects with automatic recoverable flag based on error code
+- isRecoverable() checks if error code is in recoverable list (NETWORK_ERROR, SYNC_CONFLICT, SCRAPE_FAILED)
+- withErrorHandling() HOF wraps async functions to automatically create AppError on failure
+- isAppError() type guard uses structural typing to check for required properties
+- getUserMessage() handles AppError, Error instances, and unknown values with appropriate fallbacks
+- getErrorCode() intelligently classifies errors by:
+  - Checking if error is already an AppError
+  - Checking Error type (TypeError with network/fetch keywords)
+  - Checking DOMException (QuotaExceededError)
+  - Analyzing error message content for keywords
+- createRetryAction() implements retry logic with:
+  - Configurable max retries (default: 3)
+  - Exponential backoff delays (2^attempt * 1000ms)
+  - Recoverability check (only retries recoverable errors)
+  - Proper error propagation after max retries
+- logError() provides structured logging with code, userMessage, context, and original error
+- All TypeScript compilation verified with no errors
+- Error classification handles both extension-specific and browser-native errors
+- Ready for integration with Error Boundary components (PRD-63)
+
+### Acceptance Criteria Status
+- Error types defined ✓ (ErrorCode type union with 7 error types)
+- User-friendly messages mapped ✓ (ERROR_MESSAGES with userMessage and details for each code)
+- Helper function works ✓ (createAppError with all required functionality)
+- No lint script configured (skipped linting step)
+- All TypeScript compilation verified with no errors
+- 51/51 tests passing for PRD-62
+- Total test count: 468 passing (417 from previous + 51 new)
+
+### Notes
+- Error utilities provide foundation for comprehensive error handling across the extension
+- Automatic error classification reduces boilerplate in error handling code
+- Retry logic with exponential backoff improves reliability of transient failures
+- User-friendly messages improve UX compared to raw error messages
+- Structured error logging aids debugging and monitoring
+- Type guards improve TypeScript safety when working with unknown errors
+- All error messages are actionable and guide users toward resolution
+- Recoverability flag allows UI to show retry buttons for appropriate errors
+- Original error preservation enables detailed debugging while maintaining clean UX
+- Ready for integration with error boundaries and toast notifications
+

@@ -2519,7 +2519,7 @@ Show usage progress in UI.
 
 ---
 
-- [ ] PRD-62: Error Types & Utilities
+- [x] PRD-62: Error Types & Utilities
 
 # PRD-62: Error Types & Utilities
 
