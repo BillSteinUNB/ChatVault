@@ -2399,7 +2399,7 @@ Add sync status indicator and trigger sync.
 
 ---
 
-- [ ] PRD-59: Tier Configuration
+- [x] PRD-59: Tier Configuration
 
 # PRD-59: Tier Configuration
 
