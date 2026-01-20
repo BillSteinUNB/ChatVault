@@ -4,6 +4,7 @@ import { useStore } from '../lib/storage';
 import { Tag } from '../types';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useEscapeKey } from '../hooks/useKeyboardNavigation';
 
 const PRESET_COLORS = [
   '#EF4444',
@@ -29,8 +30,10 @@ export const TagInput: React.FC<TagInputProps> = ({
   const [inputValue, setInputValue] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   
   const tags = useStore((state) => state.tags);
   const addTag = useStore((state) => state.addTag);
@@ -44,9 +47,22 @@ export const TagInput: React.FC<TagInputProps> = ({
     tag.name.toLowerCase().includes(inputValue.toLowerCase())
   );
 
+  const canCreateNew = inputValue.trim() && !availableTags.some(
+    tag => tag.name.toLowerCase() === inputValue.trim().toLowerCase()
+  );
+  const totalOptions = filteredTags.length + (canCreateNew ? 1 : 0);
+
+  // Close dropdown on Escape
+  useEscapeKey(() => {
+    setShowDropdown(false);
+    setHighlightedIndex(-1);
+    inputRef.current?.focus();
+  }, showDropdown);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
     setShowDropdown(true);
+    setHighlightedIndex(-1);
   };
 
   const handleInputFocus = () => {
@@ -101,9 +117,28 @@ export const TagInput: React.FC<TagInputProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && inputValue.trim()) {
+    if (e.key === 'Enter') {
       e.preventDefault();
-      addNewTag(inputValue);
+      if (showDropdown && highlightedIndex >= 0) {
+        // Select highlighted option
+        if (highlightedIndex < filteredTags.length) {
+          selectTag(filteredTags[highlightedIndex].id);
+        } else if (canCreateNew) {
+          addNewTag(inputValue);
+        }
+      } else if (inputValue.trim()) {
+        addNewTag(inputValue);
+      }
+    } else if (e.key === 'ArrowDown' && showDropdown) {
+      e.preventDefault();
+      setHighlightedIndex(prev => (prev + 1) % totalOptions);
+    } else if (e.key === 'ArrowUp' && showDropdown) {
+      e.preventDefault();
+      setHighlightedIndex(prev => (prev - 1 + totalOptions) % totalOptions);
+    } else if (e.key === 'Escape' && showDropdown) {
+      e.preventDefault();
+      setShowDropdown(false);
+      setHighlightedIndex(-1);
     } else if (e.key === 'Backspace' && !inputValue && selectedTags.length > 0) {
       const lastTagId = selectedTags[selectedTags.length - 1];
       removeTagFromChat(chatId, lastTagId);
@@ -179,6 +214,7 @@ export const TagInput: React.FC<TagInputProps> = ({
           <>
             <div className="fixed inset-0 z-40" onClick={() => setShowDropdown(false)} aria-hidden="true" />
             <motion.div
+              ref={dropdownRef}
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
@@ -196,9 +232,13 @@ export const TagInput: React.FC<TagInputProps> = ({
                   key={tag.id}
                   type="button"
                   onClick={() => selectTag(tag.id)}
-                  className="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2 text-gray-700"
+                  onMouseEnter={() => setHighlightedIndex(index)}
+                  className={cn(
+                    "w-full px-3 py-2 text-left text-sm flex items-center gap-2 text-gray-700",
+                    highlightedIndex === index ? "bg-gray-100" : "hover:bg-gray-50"
+                  )}
                   role="option"
-                  aria-selected={false}
+                  aria-selected={highlightedIndex === index}
                 >
                   <div
                     className="w-3 h-3 rounded-full flex-shrink-0"
@@ -214,8 +254,13 @@ export const TagInput: React.FC<TagInputProps> = ({
                   <button
                     type="button"
                     onClick={() => addNewTag(inputValue)}
-                    className="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2 text-blue-600 font-medium"
+                    onMouseEnter={() => setHighlightedIndex(filteredTags.length)}
+                    className={cn(
+                      "w-full px-3 py-2 text-left text-sm flex items-center gap-2 text-blue-600 font-medium",
+                      highlightedIndex === filteredTags.length ? "bg-gray-100" : "hover:bg-gray-50"
+                    )}
                     role="option"
+                    aria-selected={highlightedIndex === filteredTags.length}
                   >
                     <Plus size={14} aria-hidden="true" />
                     Create "{inputValue}"

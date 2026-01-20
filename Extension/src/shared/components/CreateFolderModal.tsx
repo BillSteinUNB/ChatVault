@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { X, Palette } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from './ui/Input';
@@ -6,6 +6,9 @@ import { Button } from './ui/Button';
 import { useStore } from '../lib/storage';
 import { cn } from '../lib/utils';
 import { Folder } from '../types';
+import { useFocusTrap } from '../hooks/useFocusTrap';
+import { useEscapeKey } from '../hooks/useKeyboardNavigation';
+import { useFocusReturn } from '../hooks/useFocusReturn';
 
 interface CreateFolderModalProps {
   isOpen: boolean;
@@ -43,6 +46,12 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
   const [name, setName] = useState('');
   const [selectedColor, setSelectedColor] = useState(PRESET_COLORS[3]);
   const [error, setError] = useState('');
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // Focus management
+  useFocusReturn(isOpen);
+  useFocusTrap(isOpen, modalRef);
+  useEscapeKey(onClose, isOpen, modalRef);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,6 +110,7 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
             className="fixed inset-0 flex items-center justify-center z-50 p-4 pointer-events-none"
           >
             <div
+              ref={modalRef}
               onClick={(e) => e.stopPropagation()}
               className="bg-white rounded-xl shadow-xl w-full max-w-md pointer-events-auto"
               role="dialog"

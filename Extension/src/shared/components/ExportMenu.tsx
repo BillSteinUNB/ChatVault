@@ -4,6 +4,7 @@ import { useStore } from '../lib/storage';
 import { Chat } from '../types';
 import { exportToJSON, exportToMarkdown, downloadFile } from '../lib/export';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useEscapeKey } from '../hooks/useKeyboardNavigation';
 
 interface ExportMenuProps {
   chat?: Chat;
@@ -13,6 +14,9 @@ interface ExportMenuProps {
 export const ExportMenu: React.FC<ExportMenuProps> = ({ chat, onClose }) => {
   const { chats } = useStore();
   const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close menu on Escape key
+  useEscapeKey(onClose, true, menuRef);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

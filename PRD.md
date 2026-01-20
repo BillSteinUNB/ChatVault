@@ -2806,7 +2806,7 @@ None
 
 ---
 
-- [ ] PRD-69: Keyboard Navigation
+- [x] PRD-69: Keyboard Navigation
 
 # PRD-69: Keyboard Navigation
 
