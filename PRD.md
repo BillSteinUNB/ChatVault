@@ -2881,7 +2881,7 @@ None
 
 ---
 
-- [ ] PRD-71: Reduced Motion Support
+- [x] PRD-71: Reduced Motion Support
 
 # PRD-71: Reduced Motion Support
 

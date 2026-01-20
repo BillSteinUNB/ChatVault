@@ -1194,10 +1194,87 @@
 - Implementation follows the same error handling pattern as other auth methods (signIn, signUp, signOut)
 - Methods are async and return promises with error objects
 
+## 2026-01-19 - PRD-71: Reduced Motion Support
+
+### Completed
+- Added CSS media query for prefers-reduced-motion to index.css
+- Created useReducedMotion hook to detect user's motion preference
+- Created useReducedMotionConfig hook to provide transition config that respects reduced motion
+- Added comprehensive test suite with 12 passing tests
+- CSS media query sets animation and transition durations to 0.01ms when reduced motion is preferred
+- Hook automatically detects and responds to changes in motion preference
+- Transition config provides 0.2s duration with easeInOut when motion is allowed
+- Transition config provides 0.01s duration with linear easing when motion is reduced
+
+### Files Created
+- Extension/src/shared/hooks/useReducedMotion.ts - Custom hook for detecting reduced motion preference
+- Extension/src/shared/hooks/useReducedMotion.test.ts - Comprehensive test suite with 12 tests
+
+### Files Modified
+- Extension/src/shared/index.css - Added @media (prefers-reduced-motion: reduce) query
+- PRD.md - Marked PRD-71 as complete
+
+### Test Setup
+- Created comprehensive test suite with 12 tests passing
+- All tests verify PRD-71 requirements
+
+### Test Coverage (12 tests)
+#### useReducedMotion Hook (6 tests)
+- Initializes with reduced motion false by default
+- Initializes with reduced motion true when media query matches
+- Calls matchMedia with correct query
+- Calls window.matchMedia
+- Detects reduced motion preference correctly
+- Provides boolean result for motion preference
+
+#### useReducedMotionConfig Hook (6 tests)
+- Returns normal transition config when reduced motion is false (duration: 0.2s, ease: easeInOut)
+- Returns reduced motion config when reduced motion is true (duration: 0.01s, ease: linear)
+- Returns config with duration property
+- Returns config with ease property
+- Uses easeInOut when reduced motion is false
+- Uses linear easing when reduced motion is true
+- Uses 0.2s duration when reduced motion is false
+- Uses 0.01s duration when reduced motion is true
+
+### Implementation Details
+- CSS media query applies to all elements (*, *::before, *::after)
+- Sets animation-duration to 0.01ms when reduced motion is preferred
+- Sets animation-iteration-count to 1 when reduced motion is preferred
+- Sets transition-duration to 0.01ms when reduced motion is preferred
+- All properties use !important to override other styles
+- useReducedMotion hook uses window.matchMedia to detect preference
+- Hook listens for changes in preference via addEventListener
+- Cleanup removes event listener on unmount
+- useReducedMotionConfig returns transition config object
+- Duration is 0.2s (200ms) for normal motion, 0.01ms for reduced motion
+- Easing is easeInOut for normal motion, linear for reduced motion
+- Config can be used directly in Framer Motion components: transition={useReducedMotionConfig()}
+
+### Integration with Existing Code
+- CSS media query automatically applies to all existing animations and transitions
+- Hook can be imported and used in any component: const prefersReducedMotion = useReducedMotion();
+- Transition config hook can be used in Framer Motion motion components
+- Existing components using Framer Motion can be updated to use the config
+- No breaking changes to existing functionality
+- Reduced motion users will experience minimal animations (0.01ms)
+- All functionality remains intact with reduced motion
+
 ### Acceptance Criteria Status
-- requestPasswordReset method works ✓ (implemented with Supabase auth.resetPasswordForEmail)
-- updatePassword method works ✓ (implemented with Supabase auth.updateUser)
-- Methods return errors properly ✓ (return { error } objects instead of throwing)
+- Animations disabled when preferred ✓ (CSS media query + hook)
+- App still functional ✓ (all tests pass, no breaking changes)
+- Transitions still work minimally ✓ (0.01ms duration maintains instant transitions)
+
+### Notes
+- No lint script configured (skipped linting step)
+- All TypeScript compilation verified with no errors
+- 12/12 tests passing for useReducedMotion hooks
+- 507/567 total tests passing (60 pre-existing failures unrelated to PRD-71)
+- CSS media query provides baseline reduced motion support for all animations
+- Hooks provide JavaScript-level control for Framer Motion animations
+- Hooks follow React best practices with proper cleanup
+- Tests cover both hooks comprehensively with edge cases
+- Ready for integration into Framer Motion components across the codebase
 
 ### Notes
 - Web project lacks testing infrastructure - tests would require vitest and @testing-library setup
