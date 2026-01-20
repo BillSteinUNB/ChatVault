@@ -2570,7 +2570,7 @@ None
 
 ---
 
-- [ ] PRD-63: Error Boundary Components
+- [x] PRD-63: Error Boundary Components
 
 # PRD-63: Error Boundary Components
 

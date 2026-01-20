@@ -3720,3 +3720,132 @@ To use this edge function, set these environment variables in Supabase:
 - Original error preservation enables detailed debugging while maintaining clean UX
 - Ready for integration with error boundaries and toast notifications
 
+
+## 2026-01-19 - PRD-63: Error Boundary Components
+
+### Completed
+- Created ErrorBoundary class component for Extension with full error catching functionality
+- Created ErrorBoundary class component for Web app with web-specific styling and actions
+- Implemented ErrorFallback UI component with friendly error messages and recovery options
+- Added error logging to sessionStorage (keeps last 10 errors)
+- Implemented "Try Again" functionality to reset error state and retry rendering
+- Implemented "Reload Page" functionality for Extension
+- Implemented "Go to Homepage" functionality for Web app
+- Implemented "Report Issue" functionality (mailto for Extension, contact redirect for Web)
+- Added expandable/collapsible technical details section
+- Integrated ErrorBoundary into Extension sidepanel and popup main.tsx files
+- Integrated ErrorBoundary into Web App.tsx
+- Created comprehensive test suite for Extension ErrorBoundary (18 tests, all passing)
+- Created comprehensive test suite for Web ErrorBoundary (20 tests, all passing)
+
+### Files Created
+- Extension/src/shared/components/ErrorBoundary.tsx - ErrorBoundary class component with ErrorFallback UI
+- Extension/src/shared/components/ErrorBoundary.test.tsx - Comprehensive test suite with 18 tests
+- Web/components/ErrorBoundary.tsx - ErrorBoundary class component with Web-specific styling
+- Web/components/ErrorBoundary.test.tsx - Comprehensive test suite with 20 tests
+
+### Files Modified
+- Extension/src/sidepanel/main.tsx - Added ErrorBoundary wrapper
+- Extension/src/popup/main.tsx - Added ErrorBoundary wrapper
+- Web/App.tsx - Added ErrorBoundary wrapper
+- PRD.md - Marked PRD-63 as complete
+
+### Test Setup
+- Created comprehensive test suites for both Extension and Web ErrorBoundary components
+- All 38 tests passing (18 Extension + 20 Web)
+
+### Test Coverage (Extension - 18 tests)
+#### Basic Functionality (5 tests)
+- Renders children when there is no error
+- Catches errors and renders fallback UI
+- Calls componentDidCatch when an error occurs
+- Uses custom fallback when provided
+- Resets error state and retries when "Try Again" is clicked
+
+#### Error Logging (2 tests)
+- Logs errors to sessionStorage
+- Limits error history to 10 errors
+
+#### UI Interactions (5 tests)
+- Shows and hides technical details
+- Displays error message in technical details
+- Reloads page when "Reload Page" is clicked
+- Opens email client when "Report Issue" is clicked
+- Handles async errors in useEffect
+
+#### Error Messages (4 tests)
+- Handles errors without error message
+- Displays friendly error message for network errors
+- Displays friendly error message for storage errors
+- Displays friendly error message for chunk loading errors
+
+#### Error Recovery (2 tests)
+- Recovers from error after retry
+- Handles multiple consecutive errors
+
+### Test Coverage (Web - 20 tests)
+#### Basic Functionality (5 tests)
+- Renders children when there is no error
+- Catches errors and renders fallback UI
+- Calls componentDidCatch when an error occurs
+- Uses custom fallback when provided
+- Resets error state and retries when "Try Again" is clicked
+
+#### Error Logging (2 tests)
+- Logs errors to sessionStorage (includes URL and userAgent)
+- Limits error history to 10 errors
+
+#### UI Interactions (7 tests)
+- Shows and hides technical details
+- Displays error message in technical details
+- Goes to homepage when "Go to Homepage" is clicked
+- Redirects to contact page when "Report Issue" is clicked
+- Catches async errors in useEffect
+- Handles errors without error message
+- Displays friendly error message for auth errors
+
+#### Error Messages (3 tests)
+- Displays friendly error message for network errors
+- Displays friendly error message for chunk loading errors
+- Has Web-specific styling
+
+#### Error Recovery (2 tests)
+- Recovers from error after retry
+- Handles multiple consecutive errors
+
+### Implementation Details
+- ErrorBoundary uses React class component with componentDidCatch lifecycle method
+- getDerivedStateFromError static method sets hasError state when error occurs
+- componentDidCatch logs error to console and sessionStorage, calls custom onError handler
+- Error state includes: hasError flag, error object, and errorInfo object
+- ErrorFallback component displays:
+  - Error icon (AlertCircle) in red circle
+  - Friendly error message based on error type classification
+  - Expandable technical details section (shows/hides error name, message, and stack trace)
+  - "Try Again" button to reset error state and retry rendering
+  - "Reload Page" button (Extension) or "Go to Homepage" button (Web)
+  - "Report Issue" button (mailto for Extension, contact redirect for Web)
+- Error message classification:
+  - Network/fetch errors → "Unable to connect. Please check your internet connection."
+  - Storage/quota errors → "Storage issue detected. Please try clearing some data."
+  - Chunk/loading errors → "Failed to load resources. Please refresh the page."
+  - Auth errors → "Authentication issue. Please sign in again." (Web only)
+  - Default → Error message or "An unexpected error occurred"
+- Error logging to sessionStorage includes: message, stack, componentStack, timestamp, URL (Web), userAgent (Web)
+- Error history limited to last 10 errors to prevent storage overflow
+- Extension styling uses white/gray color scheme with red accents
+- Web styling uses neutral-950 background with neutral-200 text and red accents
+- All action buttons have proper focus states and keyboard navigation support
+- Technical details use monospace font with proper whitespace handling
+- All acceptance criteria met:
+  - Catches render errors ✓
+  - Shows fallback UI ✓
+  - Can recover with retry ✓
+- No lint script configured (skipped linting step)
+- All 38 tests passing (18 Extension + 20 Web)
+- Total test count: 506 passing (468 from previous + 38 new)
+
+### Acceptance Criteria Status
+- Catches render errors ✓ (class component with componentDidCatch)
+- Shows fallback UI ✓ (ErrorFallback component with friendly UI)
+- Can recover with retry ✓ ("Try Again" button resets error state)
