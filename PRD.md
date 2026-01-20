@@ -2842,7 +2842,7 @@ None
 
 ---
 
-- [ ] PRD-70: Focus Visible Styles
+- [x] PRD-70: Focus Visible Styles
 
 # PRD-70: Focus Visible Styles
 

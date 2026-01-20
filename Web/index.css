@@ -15,3 +15,35 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Focus visible styles for keyboard accessibility (PRD-70) */
+*:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Remove default outline for mouse users */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Ensure focus indicators are visible on all backgrounds */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* High contrast focus for dark backgrounds (Web app uses dark theme) */
+@media (prefers-color-scheme: dark) {
+  *:focus-visible {
+    outline: 2px solid #60a5fa;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
