@@ -3011,7 +3011,7 @@ Test storage/state management functions.
 
 ---
 
-- [ ] PRD-74: Export Utility Tests
+- [x] PRD-74: Export Utility Tests
 
 # PRD-74: Export Utility Tests
 
