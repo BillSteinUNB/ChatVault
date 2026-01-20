@@ -56,6 +56,7 @@ export const Popup: React.FC = () => {
                     onClick={() => setSettingsOpen(true)}
                     onMouseEnter={() => setSettingsTooltip(true)}
                     onMouseLeave={() => setSettingsTooltip(false)}
+                    aria-label="Settings"
                 >
                     <Settings size={18} />
                 </Button>
@@ -70,14 +71,14 @@ export const Popup: React.FC = () => {
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        
+
         {isLoading ? (
-            <div className="h-full flex flex-col items-center justify-center text-gray-400 mt-8">
+            <div className="h-full flex flex-col items-center justify-center text-gray-400 mt-8" role="status" aria-live="polite">
                 <Loader2 className="w-8 h-8 animate-spin mb-2" />
                 <p className="text-sm">Loading chats...</p>
             </div>
         ) : !hasChats ? (
-            <div className="h-full flex flex-col items-center justify-center text-center text-gray-500 mt-8 px-4">
+            <div className="h-full flex flex-col items-center justify-center text-center text-gray-500 mt-8 px-4" role="status" aria-live="polite">
                 <div className="bg-primary-50 p-3 rounded-full mb-3 text-primary-500">
                     <MessageSquare className="w-6 h-6" />
                 </div>
@@ -87,7 +88,7 @@ export const Popup: React.FC = () => {
                 </p>
             </div>
         ) : filteredChats.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center text-gray-500 mt-12">
+            <div className="h-full flex flex-col items-center justify-center text-center text-gray-500 mt-12" role="status" aria-live="polite">
                 <div className="bg-gray-100 p-3 rounded-full mb-3">
                     <Search className="w-6 h-6 text-gray-400" />
                 </div>
@@ -97,9 +98,9 @@ export const Popup: React.FC = () => {
             <>
                 {/* Pinned Section */}
                 {pinnedChats.length > 0 && (
-                    <section>
-                        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Pinned</h2>
-                        <div className="flex flex-col gap-2">
+                    <section aria-labelledby="pinned-heading">
+                        <h2 id="pinned-heading" className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Pinned</h2>
+                        <div className="flex flex-col gap-2" role="list">
                             {pinnedChats.map(chat => (
                                 <ChatItem key={chat.id} chat={chat} />
                             ))}
@@ -109,8 +110,8 @@ export const Popup: React.FC = () => {
 
                 {/* Folders Section */}
                 {relevantFolders.length > 0 && activeFilter === 'all' && !searchQuery && (
-                     <section>
-                        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Folders</h2>
+                     <section aria-labelledby="folders-heading">
+                        <h2 id="folders-heading" className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Folders</h2>
                          {relevantFolders.map(folder => (
                              <FolderItem key={folder.id} folder={folder} chats={chats} />
                          ))}
@@ -119,9 +120,9 @@ export const Popup: React.FC = () => {
 
                 {/* Recent/Uncategorized Section */}
                 {unpinnedChats.length > 0 && (
-                     <section>
-                        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Recent</h2>
-                        <div className="flex flex-col gap-2">
+                     <section aria-labelledby="recent-heading">
+                        <h2 id="recent-heading" className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-1">Recent</h2>
+                        <div className="flex flex-col gap-2" role="list">
                             {unpinnedChats.map(chat => (
                                 <ChatItem key={chat.id} chat={chat} />
                             ))}
@@ -142,6 +143,7 @@ export const Popup: React.FC = () => {
                 onClick={handleViewDashboard}
                 onMouseEnter={() => setDashboardTooltip(true)}
                 onMouseLeave={() => setDashboardTooltip(false)}
+                aria-label="View Dashboard in new tab"
             >
                View Dashboard <ExternalLink size={12} />
             </Button>

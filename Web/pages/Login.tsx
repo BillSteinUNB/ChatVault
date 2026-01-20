@@ -88,14 +88,14 @@ export const Login: React.FC = () => {
               </div>
 
               {error && (
-                <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
+                <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm" role="alert" aria-live="assertive">
                   {error}
                 </div>
               )}
 
               <SocialLoginButtons onError={(err) => setError(err.message)} />
 
-              <div className="relative my-6">
+              <div className="relative my-6" role="separator" aria-orientation="horizontal">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-white/10"></div>
                 </div>
@@ -104,7 +104,7 @@ export const Login: React.FC = () => {
                 </div>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-neutral-400 mb-2">
                     Email
@@ -112,11 +112,14 @@ export const Login: React.FC = () => {
                   <input
                     id="email"
                     type="email"
+                    autoComplete="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-neutral-600 focus:outline-none focus:border-primary-500 transition-colors"
                     placeholder="you@example.com"
+                    aria-invalid={!!error}
+                    aria-describedby={error ? 'login-error' : undefined}
                   />
                 </div>
 
@@ -135,15 +138,19 @@ export const Login: React.FC = () => {
                   <input
                     id="password"
                     type="password"
+                    autoComplete="current-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-neutral-600 focus:outline-none focus:border-primary-500 transition-colors"
                     placeholder="••••••••"
+                    aria-invalid={!!error}
+                    aria-describedby={error ? 'login-error' : undefined}
                   />
                 </div>
 
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" className="w-full" disabled={loading} aria-describedby={loading ? 'login-loading' : undefined}>
+                  <span id="login-loading" className="sr-only">{loading ? 'Signing in, please wait' : ''}</span>
                   {loading ? 'Signing in...' : 'Sign in'}
                 </Button>
               </form>

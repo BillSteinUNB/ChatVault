@@ -73,7 +73,7 @@ export const AuthBanner: React.FC = () => {
 
   if (!user) {
     return (
-      <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 mb-4">
+      <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 mb-4" role="status" aria-live="polite">
         <p className="text-sm text-blue-400 mb-2">
           Sign in to sync your chats across devices
         </p>
@@ -91,14 +91,14 @@ export const AuthBanner: React.FC = () => {
       isVerified
         ? 'bg-emerald-500/10 border-emerald-500/30'
         : 'bg-yellow-500/10 border-yellow-500/30'
-    }`}>
+    }`} role="status" aria-live="polite">
       <div className="flex items-start justify-between gap-2">
         <div className="text-sm flex-1">
           <div className="flex items-center gap-2 mb-1">
             {isVerified ? (
-              <CheckCircle className="w-4 h-4 text-emerald-400" />
+              <CheckCircle className="w-4 h-4 text-emerald-400" aria-hidden="true" />
             ) : (
-              <AlertCircle className="w-4 h-4 text-yellow-400" />
+              <AlertCircle className="w-4 h-4 text-yellow-400" aria-hidden="true" />
             )}
             <p className={`font-medium ${isVerified ? 'text-emerald-400' : 'text-yellow-400'}`}>
               {user.email}
@@ -110,7 +110,7 @@ export const AuthBanner: React.FC = () => {
           {message && (
             <p className={`text-xs mt-2 ${
               message.type === 'success' ? 'text-emerald-400' : 'text-red-400'
-            }`}>
+            }`} role="alert">
               {message.text}
             </p>
           )}
@@ -125,6 +125,7 @@ export const AuthBanner: React.FC = () => {
               variant="secondary"
               disabled={resending}
               className="text-xs"
+              aria-label="Resend verification email"
             >
               {resending ? 'Sending...' : 'Resend'}
             </Button>

@@ -2771,7 +2771,7 @@ Combine steps into wizard page.
 
 ---
 
-- [ ] PRD-68: ARIA Labels Audit
+- [x] PRD-68: ARIA Labels Audit
 
 # PRD-68: ARIA Labels Audit
 

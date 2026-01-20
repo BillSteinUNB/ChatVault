@@ -24,17 +24,19 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
       <button
         onClick={onToggle}
         className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors"
+        aria-expanded={isOpen}
+        aria-controls={`${title.toLowerCase()}-content`}
       >
         <div className="flex items-center gap-3">
-          <div className="text-gray-600">
+          <div className="text-gray-600" aria-hidden="true">
             {icon}
           </div>
           <span className="font-semibold text-gray-900">{title}</span>
         </div>
         {isOpen ? (
-          <ChevronUp className="w-5 h-5 text-gray-500" />
+          <ChevronUp className="w-5 h-5 text-gray-500" aria-hidden="true" />
         ) : (
-          <ChevronDown className="w-5 h-5 text-gray-500" />
+          <ChevronDown className="w-5 h-5 text-gray-500" aria-hidden="true" />
         )}
       </button>
       <AnimatePresence>
@@ -45,6 +47,8 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
+            id={`${title.toLowerCase()}-content`}
+            role="region"
           >
             <div className="px-4 py-4">
               {children}

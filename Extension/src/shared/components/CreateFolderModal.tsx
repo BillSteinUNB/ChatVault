@@ -92,6 +92,7 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
             exit={{ opacity: 0 }}
             onClick={handleClose}
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+            aria-hidden="true"
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -102,17 +103,21 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
             <div
               onClick={(e) => e.stopPropagation()}
               className="bg-white rounded-xl shadow-xl w-full max-w-md pointer-events-auto"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="create-folder-title"
             >
               <div className="flex items-center justify-between p-6 border-b border-gray-100">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center" aria-hidden="true">
                     <Palette size={18} className="text-primary-600" />
                   </div>
-                  <h2 className="text-lg font-semibold text-gray-900">New Folder</h2>
+                  <h2 id="create-folder-title" className="text-lg font-semibold text-gray-900">New Folder</h2>
                 </div>
                 <button
                   onClick={handleClose}
                   className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
+                  aria-label="Close dialog"
                 >
                   <X size={20} />
                 </button>
@@ -121,10 +126,11 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
               <form onSubmit={handleSubmit} className="p-6">
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="folder-name" className="block text-sm font-medium text-gray-700 mb-2">
                       Folder Name
                     </label>
                     <Input
+                      id="folder-name"
                       type="text"
                       value={name}
                       onChange={(e) => {
@@ -135,33 +141,45 @@ export const CreateFolderModal: React.FC<CreateFolderModalProps> = ({
                       maxLength={50}
                       className={cn(error && 'border-red-500 focus:border-red-500 focus:ring-red-100')}
                       autoFocus
+                      aria-describedby={error ? 'folder-name-error' : 'folder-name-hint'}
+                      aria-invalid={!!error}
                     />
                     <div className="flex justify-between items-center mt-1">
-                      {error && <p className="text-xs text-red-600">{error}</p>}
-                      <span className="text-xs text-gray-400 ml-auto">{name.length}/50</span>
+                      {error && (
+                        <p id="folder-name-error" className="text-xs text-red-600" role="alert">
+                          {error}
+                        </p>
+                      )}
+                      <span id="folder-name-hint" className="text-xs text-gray-400 ml-auto">
+                        {name.length}/50
+                      </span>
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Color
-                    </label>
-                    <div className="flex gap-2">
-                      {PRESET_COLORS.map((color) => (
-                        <button
-                          key={color}
-                          type="button"
-                          onClick={() => setSelectedColor(color)}
-                          className={cn(
-                            'w-10 h-10 rounded-full border-2 transition-all hover:scale-110',
-                            selectedColor === color
-                              ? 'border-gray-900 ring-2 ring-gray-900 ring-offset-2'
-                              : 'border-transparent hover:border-gray-300'
-                          )}
-                          style={{ backgroundColor: color }}
-                        />
-                      ))}
-                    </div>
+                    <fieldset>
+                      <legend className="block text-sm font-medium text-gray-700 mb-2">
+                        Color
+                      </legend>
+                      <div className="flex gap-2" role="radiogroup" aria-label="Select folder color">
+                        {PRESET_COLORS.map((color) => (
+                          <button
+                            key={color}
+                            type="button"
+                            onClick={() => setSelectedColor(color)}
+                            className={cn(
+                              'w-10 h-10 rounded-full border-2 transition-all hover:scale-110',
+                              selectedColor === color
+                                ? 'border-gray-900 ring-2 ring-gray-900 ring-offset-2'
+                                : 'border-transparent hover:border-gray-300'
+                            )}
+                            style={{ backgroundColor: color }}
+                            aria-label={`Color ${color}`}
+                            aria-pressed={selectedColor === color}
+                          />
+                        ))}
+                      </div>
+                    </fieldset>
                   </div>
                 </div>
 

@@ -126,7 +126,7 @@ export const TagInput: React.FC<TagInputProps> = ({
 
   return (
     <div className="relative" ref={containerRef}>
-      <div className="flex flex-wrap gap-2 p-2 border border-gray-200 rounded-lg bg-white focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent">
+      <div className="flex flex-wrap gap-2 p-2 border border-gray-200 rounded-lg bg-white focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent" role="combobox" aria-expanded={showDropdown} aria-haspopup="listbox" aria-labelledby="tag-input-label">
         {selectedTagObjects.map((tag) => (
           <motion.div
             key={tag.id}
@@ -135,12 +135,14 @@ export const TagInput: React.FC<TagInputProps> = ({
             exit={{ opacity: 0, scale: 0.9 }}
             className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium text-white"
             style={{ backgroundColor: tag.color }}
+            role="listitem"
           >
             {tag.name}
             <button
               type="button"
               onClick={() => removeTag(tag.id)}
               className="hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 rounded-full"
+              aria-label={`Remove ${tag.name} tag`}
             >
               <X size={12} />
             </button>
@@ -148,6 +150,7 @@ export const TagInput: React.FC<TagInputProps> = ({
         ))}
         <input
           ref={inputRef}
+          id="tag-input-label"
           type="text"
           value={inputValue}
           onChange={handleInputChange}
@@ -156,13 +159,15 @@ export const TagInput: React.FC<TagInputProps> = ({
           onKeyDown={handleKeyDown}
           placeholder={selectedTags.length === 0 ? 'Add tags...' : ''}
           className="flex-1 min-w-[120px] outline-none text-sm text-gray-900 placeholder-gray-400"
+          aria-autocomplete="list"
+          aria-controls="tag-listbox"
         />
         {inputValue && (
           <button
             type="button"
             onClick={() => addNewTag(inputValue)}
             className="p-1 text-blue-600 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
-            title="Add tag"
+            aria-label={`Add tag: ${inputValue}`}
           >
             <Plus size={16} />
           </button>
@@ -172,7 +177,7 @@ export const TagInput: React.FC<TagInputProps> = ({
       <AnimatePresence>
         {showDropdown && (filteredTags.length > 0 || inputValue) && (
           <>
-            <div className="fixed inset-0 z-40" onClick={() => setShowDropdown(false)} />
+            <div className="fixed inset-0 z-40" onClick={() => setShowDropdown(false)} aria-hidden="true" />
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -183,30 +188,36 @@ export const TagInput: React.FC<TagInputProps> = ({
                 left: dropdownPosition.left,
                 width: dropdownPosition.width,
               }}
+              id="tag-listbox"
+              role="listbox"
             >
-              {filteredTags.map((tag) => (
+              {filteredTags.map((tag, index) => (
                 <button
                   key={tag.id}
                   type="button"
                   onClick={() => selectTag(tag.id)}
                   className="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2 text-gray-700"
+                  role="option"
+                  aria-selected={false}
                 >
                   <div
                     className="w-3 h-3 rounded-full flex-shrink-0"
                     style={{ backgroundColor: tag.color }}
+                    aria-hidden="true"
                   />
                   {tag.name}
                 </button>
               ))}
               {inputValue && (
                 <>
-                  {filteredTags.length > 0 && <div className="h-px bg-gray-100 my-1" />}
+                  {filteredTags.length > 0 && <div className="h-px bg-gray-100 my-1" role="separator" />}
                   <button
                     type="button"
                     onClick={() => addNewTag(inputValue)}
                     className="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2 text-blue-600 font-medium"
+                    role="option"
                   >
-                    <Plus size={14} />
+                    <Plus size={14} aria-hidden="true" />
                     Create "{inputValue}"
                   </button>
                 </>

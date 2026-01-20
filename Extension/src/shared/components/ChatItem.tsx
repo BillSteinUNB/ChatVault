@@ -89,6 +89,8 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact, isSelected, o
         platformColors[chat.platform],
         isSelected && "ring-2 ring-primary-500 ring-offset-2"
       )}
+      role="listitem"
+      aria-label={`${chat.title} from ${chat.platform}`}
     >
       <div className="flex justify-between items-start gap-2">
         <div className="flex-1 min-w-0">
@@ -116,7 +118,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact, isSelected, o
               </>
             )}
           </div>
-          <div className="flex items-center gap-1.5 flex-wrap">
+          <div className="flex items-center gap-1.5 flex-wrap" role="list" aria-label="Tags">
             {visibleTags.map((tag) => (
               <motion.span
                 key={tag.id}
@@ -124,18 +126,20 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact, isSelected, o
                 animate={{ opacity: 1, scale: 1 }}
                 className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[10px] font-medium text-white"
                 style={{ backgroundColor: tag.color }}
+                role="listitem"
               >
                 {tag.name}
                 <button
                   onClick={(e) => handleRemoveTag(e, tag.id)}
                   className="hover:opacity-80 focus:outline-none rounded-full p-0.5"
+                  aria-label={`Remove ${tag.name} tag`}
                 >
                   <X size={8} />
                 </button>
               </motion.span>
             ))}
             {remainingCount > 0 && (
-              <span className="text-[10px] text-gray-400">
+              <span className="text-[10px] text-gray-400" aria-label={`and ${remainingCount} more tags`}>
                 +{remainingCount} more
               </span>
             )}
@@ -143,7 +147,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact, isSelected, o
               ref={tagButtonRef}
               onClick={handleOpenTagEditor}
               className="inline-flex items-center justify-center p-0.5 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
-              title="Add tags"
+              aria-label="Add tags"
             >
               <Plus size={10} />
             </button>
@@ -151,16 +155,21 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact, isSelected, o
         </div>
 
         {/* Hover Actions */}
-        <div className="relative flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity absolute right-2 top-2 bg-white/80 backdrop-blur-sm rounded p-1">
+        <div className="relative flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity absolute right-2 top-2 bg-white/80 backdrop-blur-sm rounded p-1" role="toolbar" aria-label="Chat actions">
            <button
              onClick={(e) => { e.stopPropagation(); togglePin(chat.id); }}
              className={cn("p-1.5 rounded hover:bg-gray-100", chat.isPinned ? "text-primary-500" : "text-gray-400")}
+             aria-label={chat.isPinned ? "Unpin chat" : "Pin chat"}
+             aria-pressed={chat.isPinned}
            >
              <Pin size={14} className={cn(chat.isPinned && "fill-current")} />
            </button>
            <button
              onClick={(e) => { e.stopPropagation(); setShowFolderMenu(!showFolderMenu); }}
              className={cn("p-1.5 rounded hover:bg-gray-100", folder ? "text-primary-500" : "text-gray-400")}
+             aria-label="Move to folder"
+             aria-expanded={showFolderMenu}
+             aria-haspopup="true"
            >
              <Folder size={14} className={cn(folder && "fill-current")} />
            </button>
@@ -168,6 +177,9 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact, isSelected, o
              <button
                onClick={(e) => { e.stopPropagation(); setShowExportMenu(!showExportMenu); setShowFolderMenu(false); }}
                className="p-1.5 rounded hover:bg-gray-100 text-gray-400 hover:text-primary-500"
+               aria-label="Export chat"
+               aria-expanded={showExportMenu}
+               aria-haspopup="true"
              >
                <Download size={14} />
              </button>
@@ -182,13 +194,16 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact, isSelected, o
                    transition={{ duration: 0.15 }}
                    className="absolute top-full left-0 mt-1 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50"
                    onClick={(e) => e.stopPropagation()}
+                   role="menu"
+                   aria-label="Export options"
                  >
-                   <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                   <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide" role="presentation">
                      Export
                    </div>
                    <button
                      onClick={handleExportAsJSON}
                      className="w-full px-3 py-2 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left"
+                     role="menuitem"
                    >
                      <FileText size={16} className="text-gray-400" />
                      <span className="flex-1 text-sm font-medium">Export as JSON</span>
@@ -196,6 +211,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact, isSelected, o
                    <button
                      onClick={handleExportAsMarkdown}
                      className="w-full px-3 py-2 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left"
+                     role="menuitem"
                    >
                      <FileText size={16} className="text-gray-400" />
                      <span className="flex-1 text-sm font-medium">Export as Markdown</span>
@@ -207,6 +223,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact, isSelected, o
            <button
              onClick={(e) => { e.stopPropagation(); deleteChat(chat.id); }}
              className="p-1.5 rounded hover:bg-red-50 text-gray-400 hover:text-red-500"
+             aria-label="Delete chat"
            >
              <Trash2 size={14} />
            </button>
@@ -225,7 +242,11 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact, isSelected, o
         <AnimatePresence>
           {showTagEditor && (
             <>
-              <div className="fixed inset-0 z-40" onClick={(e) => { e.stopPropagation(); setShowTagEditor(false); }} />
+              <div
+                className="fixed inset-0 z-40"
+                onClick={(e) => { e.stopPropagation(); setShowTagEditor(false); }}
+                aria-hidden="true"
+              />
               <motion.div
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -236,6 +257,9 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact, isSelected, o
                   left: tagEditorPosition.left,
                 }}
                 onClick={(e) => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="tag-editor-heading"
               >
                 <TagInput
                   chatId={chat.id}
@@ -249,7 +273,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({ chat, compact, isSelected, o
 
         {/* Persistent Pin Indicator if Pinned */}
         {chat.isPinned && (
-            <div className="absolute right-2 top-2 opacity-100 group-hover:opacity-0 text-primary-500">
+            <div className="absolute right-2 top-2 opacity-100 group-hover:opacity-0 text-primary-500" aria-hidden="true">
                 <Pin size={12} className="fill-current" />
             </div>
         )}

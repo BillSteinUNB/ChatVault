@@ -113,7 +113,7 @@ export const SidePanel: React.FC = () => {
                     <span className="text-white font-bold text-sm">C</span>
                 </div>
                 
-                <nav className="flex flex-col gap-4 w-full px-2">
+                <nav className="flex flex-col gap-4 w-full px-2" role="navigation" aria-label="Main navigation">
                     <NavItem
                         icon={<Home size={20} />}
                         label="All Chats"
@@ -168,6 +168,8 @@ export const SidePanel: React.FC = () => {
                                 size="sm"
                                 onClick={() => setIsExportMenuOpen(!isExportMenuOpen)}
                                 ref={exportButtonRef}
+                                aria-expanded={isExportMenuOpen}
+                                aria-haspopup="true"
                             >
                                 Export
                             </Button>
@@ -257,12 +259,12 @@ export const SidePanel: React.FC = () => {
                         </h2>
 
                     {isLoading ? (
-                        <div className="h-64 flex flex-col items-center justify-center text-gray-400">
+                        <div className="h-64 flex flex-col items-center justify-center text-gray-400" role="status" aria-live="polite">
                             <Loader2 className="w-10 h-10 animate-spin mb-3" />
                             <p className="text-sm">Loading your vault...</p>
                         </div>
                     ) : filteredChats.length === 0 ? (
-                        <div className="h-64 flex flex-col items-center justify-center text-center text-gray-500 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50/50">
+                        <div className="h-64 flex flex-col items-center justify-center text-center text-gray-500 border-2 border-dashed border-gray-200 rounded-xl bg-gray-50/50" role="status" aria-live="polite">
                             <div className="bg-white p-4 rounded-full mb-4 shadow-sm">
                                 <MessageSquare className="w-8 h-8 text-primary-400" />
                             </div>
@@ -274,7 +276,7 @@ export const SidePanel: React.FC = () => {
                             </p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4" role="list">
                             {filteredChats.map(chat => (
                                 <ChatItem key={chat.id} chat={chat} />
                             ))}
@@ -320,12 +322,15 @@ const NavItem = ({
     return (
         <div className="relative">
             <button
+                aria-label={label}
+                aria-pressed={active}
                 className={`w-full aspect-square flex items-center justify-center rounded-lg transition-colors ${
                     active ? 'bg-primary-50 text-primary-600' : 'text-gray-400 hover:bg-gray-100 hover:text-gray-600'
                 }`}
                 onClick={onClick}
                 onMouseEnter={() => setShowTooltip(true)}
                 onMouseLeave={() => setShowTooltip(false)}
+                role="menuitem"
             >
                 {icon}
             </button>
@@ -336,6 +341,7 @@ const NavItem = ({
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -10 }}
                         transition={{ duration: 0.15 }}
+                        role="tooltip"
                         className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-md whitespace-nowrap z-50 pointer-events-none"
                     >
                         {label}
