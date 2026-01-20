@@ -53,6 +53,24 @@ vi.mock('./AnalyticsView', () => ({
     AnalyticsView: () => <div data-testid="analytics-view">Analytics</div>,
 }));
 
+vi.mock('./UsageMeter', () => ({
+    UsageMeter: ({ chatCount, tier }: any) => (
+        <div data-testid="usage-meter">
+            {chatCount} / {tier === 'hobbyist' ? '50' : '∞'}
+        </div>
+    ),
+}));
+
+vi.mock('./UpgradePrompt', () => ({
+    UpgradePrompt: ({ isOpen }: any) =>
+        isOpen ? <div data-testid="upgrade-prompt">Upgrade Prompt</div> : null,
+    LimitWarning: ({ chatCount, maxChats }: any) => (
+        <div data-testid="limit-warning">
+            Warning: {chatCount} / {maxChats}
+        </div>
+    ),
+}));
+
 vi.mock('./ExportMenu', () => ({
     ExportMenu: ({ onClose }: any) => <div data-testid="export-menu">Export</div>,
 }));
@@ -123,6 +141,9 @@ describe('SidePanel - Nav Icons Functionality (PRD-25)', () => {
             activeTags: [],
             settingsOpen: false,
             viewState: { mode: 'all', selectedFolderId: undefined },
+            userTier: 'hobbyist',
+            showUpgradePrompt: false,
+            setShowUpgradePrompt: vi.fn(),
             setViewMode: mockSetViewMode,
             setSettingsOpen: mockSetSettingsOpen,
         });

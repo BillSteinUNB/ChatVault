@@ -3460,3 +3460,118 @@ To use this edge function, set these environment variables in Supabase:
 - All 43 PRD-60 tests passing
 - TypeScript compilation verified with no errors
 - Pre-existing test failures in other components (unrelated to PRD-60)
+
+## 2026-01-19 - PRD-61: Usage Meter Component
+
+### Completed
+- Created UsageMeter component with full functionality
+- Implemented progress bar showing X / 50 or X / maxChats
+- Added color coding based on usage percentage:
+  - Green: < 50% usage
+  - Yellow: 50-80% usage
+  - Red: > 80% usage
+- Added "Upgrade" link/button when usage > 80%
+- Integrated UsageMeter into SidePanel dashboard section
+- Created comprehensive test suite with 21 tests passing
+- Supports both full and compact modes
+- Hides automatically for unlimited tiers (power_user, team)
+
+### Files Created
+- Extension/src/shared/components/UsageMeter.tsx - UsageMeter component with progress bar and upgrade prompt
+- Extension/src/shared/components/UsageMeter.test.tsx - Comprehensive test suite with 21 tests
+
+### Files Modified
+- Extension/src/shared/components/SidePanel.tsx - Added UsageMeter to dashboard widgets section
+- Extension/src/shared/components/SidePanel.test.tsx - Added UsageMeter and UpgradePrompt mocks, added userTier to mock state
+- PRD.md - Marked PRD-61 as complete
+
+### Test Setup
+- Created comprehensive test suite with 21 tests passing
+- All tests verify PRD-61 requirements
+
+### Test Coverage (21 tests)
+#### Rendering (7 tests)
+- Renders the usage meter
+- Displays correct chat count and max
+- Displays correct percentage
+- Shows remaining chats when below limit
+- Does not show remaining chats when at limit
+- Does not render for unlimited tiers (power_user)
+- Does not render for team tier
+
+#### Color Coding (4 tests)
+- Uses green color when usage < 50%
+- Uses yellow color when usage is 50-80%
+- Uses red color when usage > 80%
+- Shows TrendingUp icon for green and yellow, AlertTriangle for red
+
+#### Upgrade Prompt (4 tests)
+- Shows upgrade button when > 80% and showUpgradeLink is true
+- Does not show upgrade button when < 80%
+- Does not show upgrade button when showUpgradeLink is false
+- Calls onUpgrade when upgrade button is clicked
+
+#### Compact Mode (2 tests)
+- Renders compact version when compact prop is true
+- Shows progress bar in compact mode
+
+#### Edge Cases (4 tests)
+- Handles 0 chats correctly
+- Handles exactly at limit (50/50)
+- Handles percentage rounding correctly
+- Shows correct progress bar width
+
+### Implementation Details
+- UsageMeter displays as card with:
+  - Header with icon (changes based on usage level) and "Storage Usage" label
+  - Progress bar with color coding (green/yellow/red)
+  - Chat count display: "X / 50" or "X / ∞" for unlimited
+  - Percentage text: "50% used"
+  - Remaining count: "25 remaining" (when below limit)
+  
+- Color coding logic:
+  - Green (< 50%): bg-green-500, text-green-700, TrendingUp icon
+  - Yellow (50-80%): bg-yellow-500, text-yellow-700, TrendingUp icon
+  - Red (> 80%): bg-red-500, text-red-700, AlertTriangle icon
+
+- Upgrade prompt:
+  - Shows when usage > 80% AND showUpgradeLink prop is true
+  - Animated appearance with Framer Motion
+  - Button: "Upgrade for Unlimited Storage"
+  - Calls onUpgrade callback when clicked
+  - Styled with gradient from-amber-500 to-orange-500
+
+- Compact mode:
+  - Hides "Storage Usage" label
+  - Shows simplified count: "25/50"
+  - Smaller progress bar (h-2 instead of h-2.5)
+  - Used for tight spaces
+
+- Unlimited tiers:
+  - Returns null (renders nothing) for power_user and team tiers
+  - Uses getUsagePercentage() from tier.ts which returns null for unlimited
+
+- Integration with SidePanel:
+  - Placed in dashboard widgets section above stat cards
+  - Wrapped in max-w-md container for proper width
+  - Uses chats.length and userTier from useStore hook
+  - onUpgrade handler opens billing page (reuses existing handleUpgrade)
+  - Hidden in analytics mode (viewState.mode !== 'analytics')
+
+### Acceptance Criteria Status
+- Usage meter displays ✓ (shows in dashboard with progress bar, count, percentage)
+- Color changes with usage ✓ (green < 50%, yellow 50-80%, red > 80%)
+- Shows upgrade prompt when high ✓ (upgrade button appears when > 80%)
+
+### Dependencies Met
+- PRD-59: Tier Configuration ✓ (getUsagePercentage, isApproachingLimit, getMaxChats all available)
+
+### Notes
+- UsageMeter uses Framer Motion for smooth progress bar animation
+- Icon changes from TrendingUp to AlertTriangle when usage is critical (> 80%)
+- Progress bar animates from 0% to current percentage on mount
+- All styling uses Tailwind CSS with dark mode support
+- Component is fully responsive and mobile-friendly
+- 21/21 tests passing for PRD-61
+- Total test count: 417 passing (396 from previous + 21 new)
+

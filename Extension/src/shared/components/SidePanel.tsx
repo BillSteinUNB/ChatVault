@@ -14,6 +14,7 @@ import { ExportMenu } from './ExportMenu';
 import { SettingsPage } from './SettingsPage';
 import { AnalyticsView } from './AnalyticsView';
 import { UpgradePrompt, LimitWarning } from './UpgradePrompt';
+import { UsageMeter } from './UsageMeter';
 import { isApproachingLimit, getMaxChats } from '../lib/tier';
 
 import { motion, AnimatePresence } from 'framer-motion';
@@ -191,10 +192,23 @@ export const SidePanel: React.FC = () => {
 
                 {/* Dashboard Widgets */}
                 {viewState.mode !== 'analytics' && (
-                    <div className="px-6 py-6 grid grid-cols-3 gap-4">
-                         <StatCard label="Total Chats" value={stats.total} />
-                         <StatCard label="Time Saved" value={stats.saved} />
-                         <StatCard label="Top Platform" value={stats.top} />
+                    <div className="px-6 py-6 space-y-4">
+                        {/* PRD-61: Usage Meter */}
+                        <div className="max-w-md">
+                            <UsageMeter
+                                chatCount={chats.length}
+                                tier={userTier}
+                                onUpgrade={handleUpgrade}
+                                showUpgradeLink={true}
+                            />
+                        </div>
+
+                        {/* Stats Cards */}
+                        <div className="grid grid-cols-3 gap-4">
+                            <StatCard label="Total Chats" value={stats.total} />
+                            <StatCard label="Time Saved" value={stats.saved} />
+                            <StatCard label="Top Platform" value={stats.top} />
+                        </div>
                     </div>
                 )}
 

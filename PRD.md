@@ -2488,7 +2488,7 @@ const saveChat = (chat: Chat) => {
 
 ---
 
-- [ ] PRD-61: Usage Meter Component
+- [x] PRD-61: Usage Meter Component
 
 # PRD-61: Usage Meter Component
 
