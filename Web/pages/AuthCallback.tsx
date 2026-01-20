@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
+import { useOnboarding } from '../hooks/useOnboarding';
 
 export const AuthCallback: React.FC = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
+  const { completed } = useOnboarding();
 
   useEffect(() => {
     // Handle OAuth callback
@@ -19,15 +21,25 @@ export const AuthCallback: React.FC = () => {
         }
 
         if (session) {
-          // Successfully authenticated, redirect to dashboard
-          navigate('/');
+          // Check if onboarding is completed
+          if (!completed) {
+            // New user - redirect to onboarding
+            navigate('/onboarding');
+          } else {
+            // Returning user - redirect to dashboard
+            navigate('/');
+          }
         } else {
           // No session found, might be an error or still processing
           // Wait a bit and check again
           setTimeout(async () => {
             const { data: { session: retrySession } } = await supabase.auth.getSession();
             if (retrySession) {
-              navigate('/');
+              if (!completed) {
+                navigate('/onboarding');
+              } else {
+                navigate('/');
+              }
             } else {
               setError('Authentication failed. Please try again.');
             }
@@ -39,7 +51,7 @@ export const AuthCallback: React.FC = () => {
     };
 
     handleAuthCallback();
-  }, [navigate]);
+  }, [navigate, completed]);
 
   if (error) {
     return (

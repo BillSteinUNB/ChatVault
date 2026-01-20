@@ -5,6 +5,7 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { DeleteAccountModal } from '../components/DeleteAccountModal';
 import { useAuth } from '../hooks/useAuth';
+import { useOnboarding } from '../hooks/useOnboarding';
 import { ProfileSection } from '../components/settings/ProfileSection';
 import { SecuritySection } from '../components/settings/SecuritySection';
 import { DataPrivacySection } from '../components/settings/DataPrivacySection';
@@ -27,6 +28,7 @@ const settingsNavItems: SettingsNavItem[] = [
 export const Settings: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { reset: resetOnboarding } = useOnboarding();
   const [activeSection, setActiveSection] = useState<SettingsSection>('profile');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -36,6 +38,11 @@ export const Settings: React.FC = () => {
     window.addEventListener('open-delete-account-modal', handleOpenDeleteModal);
     return () => window.removeEventListener('open-delete-account-modal', handleOpenDeleteModal);
   }, []);
+
+  const handleRestartOnboarding = () => {
+    resetOnboarding();
+    navigate('/onboarding');
+  };
 
   // Redirect if not logged in
   if (!user) {
@@ -95,7 +102,21 @@ export const Settings: React.FC = () => {
                   <User className="text-primary-500" />
                   Profile
                 </h2>
-                <ProfileSection />
+                <div className="space-y-6">
+                  <ProfileSection />
+                  <div className="pt-6 border-t border-white/10">
+                    <h3 className="text-lg font-semibold text-white mb-3">Onboarding</h3>
+                    <p className="text-neutral-400 text-sm mb-4">
+                      Restart the onboarding wizard to see the getting started guide again.
+                    </p>
+                    <Button
+                      variant="secondary"
+                      onClick={handleRestartOnboarding}
+                    >
+                      Restart Onboarding
+                    </Button>
+                  </div>
+                </div>
               </section>
             )}
 

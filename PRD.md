@@ -2735,7 +2735,7 @@ Create individual step components.
 
 ---
 
-- [ ] PRD-67: Onboarding Wizard Page
+- [x] PRD-67: Onboarding Wizard Page
 
 # PRD-67: Onboarding Wizard Page
 

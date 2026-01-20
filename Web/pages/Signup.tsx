@@ -33,6 +33,10 @@ export const Signup: React.FC = () => {
     try {
       await signUp(email, password);
       setSuccess(true);
+      // Navigate to onboarding after a short delay to show success message
+      setTimeout(() => {
+        navigate('/onboarding');
+      }, 2000);
     } catch (err: any) {
       setError(err.message || 'Failed to create account');
     } finally {
