@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { Button } from './ui/Button';
 import { AlertCircle, CheckCircle } from 'lucide-react';
+import { SyncStatus } from './SyncStatus';
+import { useStore } from '../lib/storage';
 
 const WEB_APP_URL = 'http://localhost:5173';
 
@@ -10,6 +12,7 @@ export const AuthBanner: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [resending, setResending] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+  const storeSetUser = useStore((state) => state.setUser);
 
   useEffect(() => {
     checkAuthStatus();
@@ -18,7 +21,9 @@ export const AuthBanner: React.FC = () => {
   const checkAuthStatus = async () => {
     try {
       const response = await chrome.runtime.sendMessage({ type: 'GET_AUTH_STATUS' });
-      setUser(response.user || null);
+      const user = response.user || null;
+      setUser(user);
+      storeSetUser(user);
     } catch (error) {
       console.error('Failed to check auth status:', error);
     } finally {
@@ -30,6 +35,7 @@ export const AuthBanner: React.FC = () => {
     try {
       await chrome.runtime.sendMessage({ type: 'SIGN_OUT' });
       setUser(null);
+      storeSetUser(null);
     } catch (error) {
       console.error('Failed to sign out:', error);
     }
@@ -82,8 +88,8 @@ export const AuthBanner: React.FC = () => {
 
   return (
     <div className={`rounded-lg p-4 mb-4 border ${
-      isVerified 
-        ? 'bg-emerald-500/10 border-emerald-500/30' 
+      isVerified
+        ? 'bg-emerald-500/10 border-emerald-500/30'
         : 'bg-yellow-500/10 border-yellow-500/30'
     }`}>
       <div className="flex items-start justify-between gap-2">
@@ -108,12 +114,14 @@ export const AuthBanner: React.FC = () => {
               {message.text}
             </p>
           )}
+          {/* Add SyncStatus for logged-in users */}
+          {isVerified && <SyncStatus className="mt-2" />}
         </div>
         <div className="flex flex-col gap-2">
           {!isVerified && (
-            <Button 
-              onClick={handleResendVerification} 
-              size="sm" 
+            <Button
+              onClick={handleResendVerification}
+              size="sm"
               variant="secondary"
               disabled={resending}
               className="text-xs"

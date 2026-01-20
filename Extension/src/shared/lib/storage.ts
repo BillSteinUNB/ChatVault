@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { Chat, Folder, Tag, Platform, PersistedChat, STORAGE_KEYS, Settings, DEFAULT_SETTINGS, ViewMode, ViewState, SyncState } from '../types';
 import { persistedChatsToChats } from './utils';
 import { SearchIndexEntry, buildSearchIndex, searchChats } from './search';
+import { User } from '@supabase/supabase-js';
 
 
 interface Store {
@@ -16,6 +17,7 @@ interface Store {
   searchQuery: string;
   searchIndex: SearchIndexEntry[];
   focusSearchTrigger: number;
+  user: User | null;
   setSearchQuery: (query: string) => void;
   searchChats: () => string[];
   activeFolder: string | null;
@@ -43,6 +45,7 @@ interface Store {
   setSelectedFolder: (folderId: string | null) => void;
   setSettingsOpen: (open: boolean) => void;
   setSyncState: (updates: Partial<SyncState>) => void;
+  setUser: (user: User | null) => void;
   focusSearch: () => void;
 }
 
@@ -222,6 +225,7 @@ export const useStore = create<Store>((set, get) => {
     searchQuery: '',
     searchIndex: [],
     focusSearchTrigger: 0,
+    user: null,
     setSearchQuery: (query) => set({ searchQuery: query }),
     searchChats: () => {
       const { searchQuery, searchIndex } = get();
@@ -456,6 +460,7 @@ export const useStore = create<Store>((set, get) => {
     })),
     setSettingsOpen: (open) => set({ settingsOpen: open }),
     setSyncState: (updates) => set(state => ({ syncState: { ...state.syncState, ...updates } })),
+    setUser: (user) => set({ user }),
     focusSearch: () => set(state => ({ focusSearchTrigger: state.focusSearchTrigger + 1 })),
   };
 });

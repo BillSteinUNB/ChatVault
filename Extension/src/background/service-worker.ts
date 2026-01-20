@@ -2,6 +2,7 @@
 
 import { PersistedChat, STORAGE_KEYS, SaveChatPayload, ExtensionMessage } from '../shared/types';
 import { supabase } from '../shared/lib/supabase';
+import { fullSync } from '../shared/lib/sync';
 
 /**
  * Generate a unique ID from URL (simple hash for deduplication)
@@ -20,13 +21,13 @@ function generateChatId(url: string): string {
  * Handle SAVE_CHAT message from content scripts
  * Transforms ScrapedMessage[] to PersistedChat and stores in chrome.storage.local
  */
-async function handleSaveChat(payload: SaveChatPayload): Promise<{ success: boolean; error?: string; chatId?: string }> {
+async function handleSaveChatInternal(payload: SaveChatPayload): Promise<{ success: boolean; error?: string; chatId?: string }> {
   console.log('[ChatVault] Received SAVE_CHAT:', payload.platform, payload.title);
-  
+
   try {
     const chatId = generateChatId(payload.url);
     const now = Date.now();
-    
+
     // Create PersistedChat object (minimal data for Phase 3 - full messages in Phase 4)
     const persistedChat: PersistedChat = {
       id: chatId,
@@ -40,14 +41,14 @@ async function handleSaveChat(payload: SaveChatPayload): Promise<{ success: bool
       tags: [],
       folderId: undefined,
     };
-    
+
     // Read existing chats from storage
     const result = await chrome.storage.local.get(STORAGE_KEYS.CHATS);
     const existingChats: PersistedChat[] = (result[STORAGE_KEYS.CHATS] as PersistedChat[] | undefined) ?? [];
-    
+
     // Check for duplicate by URL (chatId is derived from URL)
     const existingIndex = existingChats.findIndex(c => c.id === chatId);
-    
+
     let updatedChats: PersistedChat[];
     if (existingIndex !== -1) {
       // Update existing chat - preserve createdAt, isPinned, tags, folderId
@@ -56,7 +57,7 @@ async function handleSaveChat(payload: SaveChatPayload): Promise<{ success: bool
       persistedChat.isPinned = existing.isPinned;
       persistedChat.tags = existing.tags;
       persistedChat.folderId = existing.folderId;
-      
+
       updatedChats = [...existingChats];
       updatedChats[existingIndex] = persistedChat;
       console.log('[ChatVault] Updated existing chat:', chatId);
@@ -65,28 +66,28 @@ async function handleSaveChat(payload: SaveChatPayload): Promise<{ success: bool
       updatedChats = [persistedChat, ...existingChats];
       console.log('[ChatVault] Added new chat:', chatId);
     }
-    
+
     // Validate storage before writing (guard against data loss)
     if (!Array.isArray(updatedChats)) {
       throw new Error('Invalid chats array - aborting to prevent data loss');
     }
-    
+
     // Write to storage
     await chrome.storage.local.set({ [STORAGE_KEYS.CHATS]: updatedChats });
-    
+
     console.log('[ChatVault] Storage updated. Total chats:', updatedChats.length);
-    
+
     return { success: true, chatId };
-    
+
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('[ChatVault] SAVE_CHAT error:', errorMessage);
-    
+
     // Check for quota exceeded
     if (errorMessage.includes('QUOTA_BYTES')) {
       return { success: false, error: 'Storage quota exceeded (10MB limit). Please delete some chats.' };
     }
-    
+
     return { success: false, error: errorMessage };
   }
 }
@@ -117,17 +118,80 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
-supabase.auth.onAuthStateChange((event, session) => {
-  console.log('[ChatVault] Auth state changed:', event);
-  if (session) {
-    console.log('[ChatVault] User:', session.user.email);
-  }
-});
-
 // Allow opening side panel from action click if configured
 chrome.action.onClicked.addListener((tab) => {
   if (tab.id) {
     chrome.sidePanel.open({ tabId: tab.id });
+  }
+});
+
+/**
+ * PRD-58: Sync Status UI & Triggers
+ *
+ * Sync triggers:
+ * - On login (user signs in)
+ * - On chat save (after successful save)
+ * - Periodically (every 5 minutes)
+ * - Manual trigger (via SyncStatus component)
+ */
+
+// Trigger sync on login
+supabase.auth.onAuthStateChange(async (event, session) => {
+  console.log('[ChatVault] Auth state changed:', event);
+  if (event === 'SIGNED_IN' && session) {
+    console.log('[ChatVault] User signed in:', session.user.email);
+    // Trigger sync on login after a short delay to ensure everything is ready
+    setTimeout(async () => {
+      try {
+        console.log('[ChatVault] Triggering sync on login...');
+        await fullSync();
+      } catch (error) {
+        console.error('[ChatVault] Sync on login failed:', error);
+      }
+    }, 2000);
+  } else if (event === 'SIGNED_OUT') {
+    console.log('[ChatVault] User signed out');
+  }
+});
+
+// Trigger sync on chat save
+async function handleSaveChat(payload: SaveChatPayload): Promise<{ success: boolean; error?: string; chatId?: string }> {
+  const result = await handleSaveChatInternal(payload);
+
+  // Trigger sync after successful chat save
+  if (result.success && result.chatId) {
+    // Check if user is authenticated before triggering sync
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      console.log('[ChatVault] Triggering sync after chat save...');
+      // Non-blocking sync - don't await
+      fullSync().catch(error => {
+        console.error('[ChatVault] Sync after chat save failed:', error);
+      });
+    }
+  }
+
+  return result;
+}
+
+// Periodic sync every 5 minutes
+chrome.alarms.create('periodicSync', { periodInMinutes: 5 });
+
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+  if (alarm.name === 'periodicSync') {
+    console.log('[ChatVault] Triggering periodic sync...');
+
+    // Check if user is authenticated before triggering sync
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      try {
+        await fullSync();
+      } catch (error) {
+        console.error('[ChatVault] Periodic sync failed:', error);
+      }
+    } else {
+      console.log('[ChatVault] Skipping periodic sync - no authenticated user');
+    }
   }
 });
 
@@ -159,9 +223,14 @@ chrome.runtime.onMessage.addListener((message: ExtensionMessage, sender, sendRes
   }
 
   if (message.type === 'RESEND_VERIFICATION') {
+    const email = (message.payload as { email?: string })?.email;
+    if (!email) {
+      sendResponse({ success: false, error: 'Email is required' });
+      return true;
+    }
     supabase.auth.resend({
       type: 'signup',
-      email: message.email
+      email: email
     })
       .then(() => sendResponse({ success: true }))
       .catch(err => sendResponse({ success: false, error: err.message }));

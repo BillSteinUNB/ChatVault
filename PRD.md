@@ -2360,7 +2360,7 @@ async function downloadChats(): Promise<Chat[]> {
 
 ---
 
-- [ ] PRD-58: Sync Status UI & Triggers
+- [x] PRD-58: Sync Status UI & Triggers
 
 # PRD-58: Sync Status UI & Triggers
 
