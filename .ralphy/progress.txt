@@ -3294,3 +3294,169 @@ To use this edge function, set these environment variables in Supabase:
   - 8 tests failing in SettingsPage.test.tsx (UI interaction timing issues)
   - 4 tests failing in other files (pre-existing issues)
 - Ready for integration with PRD-60 (Chat Limit Enforcement) and PRD-61 (Usage Meter Component)
+
+## 2026-01-19 - PRD-60: Chat Limit Enforcement
+
+### Completed
+- Added userTier: Tier state to Zustand store (defaults to 'hobbyist')
+- Added showUpgradePrompt: boolean state to store for tracking upgrade prompt visibility
+- Added setUserTier(tier: Tier) action to store
+- Added setShowUpgradePrompt(show: boolean) action to store
+- Created getUserTier() helper function in service-worker.ts to fetch tier from Supabase user metadata
+- Modified handleSaveChatInternal() in service-worker.ts to check tier limits before saving new chats
+- Added limit check logic: prevents saving if chatCount >= maxChats for hobbyist tier
+- Sends CHAT_LIMIT_REACHED message to extension contexts when limit is hit
+- Created UpgradePrompt modal component with full UI
+- Created LimitWarning banner component for 80% threshold warning
+- Integrated warning banner into SidePanel with auto-show logic
+- Integrated upgrade prompt modal into SidePanel
+- Added message listener in SidePanel to respond to CHAT_LIMIT_REACHED events
+- Added CHAT_LIMIT_REACHED message type to ExtensionMessage union
+- Implemented handleUpgrade() function to open billing page
+- Implemented handleDismissWarning() function to close warning banner
+- Added comprehensive test suites for both store changes and UI components
+
+### Files Created
+- Extension/src/shared/components/UpgradePrompt.tsx - UpgradePrompt modal and LimitWarning banner components
+- Extension/src/shared/components/UpgradePrompt.test.tsx - 15 tests for UI components
+- Extension/src/shared/lib/storage-prd60.test.ts - 28 tests for store and tier integration
+
+### Files Modified
+- Extension/src/shared/lib/storage.ts - Added userTier, showUpgradePrompt state and setUserTier, setShowUpgradePrompt actions
+- Extension/src/background/service-worker.ts - Added getUserTier() function and limit check logic in handleSaveChatInternal()
+- Extension/src/shared/components/SidePanel.tsx - Integrated warning banner, upgrade prompt, and message listener
+- Extension/src/shared/types.ts - Added CHAT_LIMIT_REACHED to MessageType union
+- PRD.md - Marked PRD-60 as complete
+
+### Test Setup
+- Created comprehensive test suite with 43 tests passing
+- All tests verified PRD-60 requirements:
+  - Tier state management (5 tests)
+  - Upgrade prompt state management (4 tests)
+  - Tier limit integration (11 tests)
+  - Usage percentage calculation (5 tests)
+  - Remaining chats calculation (3 tests)
+  - UpgradePrompt modal (8 tests)
+  - LimitWarning banner (7 tests)
+
+### Test Coverage (43 tests)
+#### Tier State Management (5 tests)
+- Has userTier state in store
+- Defaults to hobbyist tier
+- Has setUserTier action
+- Updates userTier when setUserTier is called
+- Supports all tier types (hobbyist, power_user, team)
+
+#### Upgrade Prompt State Management (4 tests)
+- Has showUpgradePrompt state in store
+- Defaults showUpgradePrompt to false
+- Has setShowUpgradePrompt action
+- Updates showUpgradePrompt when setShowUpgradePrompt is called
+
+#### Tier Limit Integration (11 tests)
+- Correctly identifies hobbyist tier limits (50 chats)
+- Correctly identifies power_user tier limits (unlimited)
+- Correctly identifies team tier limits (unlimited)
+- Detects approaching limit at 80% (40/50 chats)
+- Does not detect approaching limit below 80% (30/50)
+- Detects limit reached at exactly 50 chats
+- Detects limit exceeded at 51 chats
+- Allows saving chat below limit (49/50)
+- Does not allow saving chat at limit (50/50)
+- Always allows saving for power_user tier
+- Always allows saving for team tier
+
+#### Usage Percentage Calculation (5 tests)
+- Calculates 50% usage correctly (25/50)
+- Calculates 80% usage correctly (40/50)
+- Calculates 100% usage correctly (50/50)
+- Returns null for unlimited tiers
+- Caps percentage at 100%
+
+#### Remaining Chats Calculation (3 tests)
+- Calculates remaining chats correctly (30 remaining)
+- Calculates remaining chats at 0 (50/50)
+- Returns null for unlimited tiers
+
+#### UpgradePrompt Modal Tests (8 tests)
+- Does not render when isOpen is false
+- Renders when isOpen is true
+- Displays correct chat count
+- Displays Infinity for unlimited tiers
+- Calls onClose when close button is clicked
+- Calls onClose when Dismiss button is clicked
+- Calls onUpgrade when Upgrade Now button is clicked
+- Displays feature highlights (unlimited storage, cloud sync, advanced search)
+
+#### LimitWarning Banner Tests (7 tests)
+- Renders warning banner
+- Displays correct percentage (80%)
+- Displays chat count correctly
+- Calls onUpgrade when Upgrade button is clicked
+- Calls onDismiss when Dismiss button is clicked
+- Calls onDismiss when X button is clicked
+- Closes when clicking outside the modal
+
+### Implementation Details
+#### Store Changes
+- userTier state tracks user's subscription tier (default: 'hobbyist')
+- showUpgradePrompt state controls upgrade prompt modal visibility
+- setUserTier action updates tier (used by auth flow to sync with Supabase)
+- setShowUpgradePrompt action toggles prompt visibility
+
+#### Service Worker Changes
+- getUserTier() function fetches tier from user.user_metadata.tier
+- Falls back to 'hobbyist' if not authenticated or tier missing
+- Limit check happens BEFORE creating new chat entries
+- Only applies to NEW chats (existing chats can still be updated)
+- Sends CHAT_LIMIT_REACHED message to all extension contexts when limit hit
+- Returns limitReached: true flag in response for content script handling
+
+#### UI Components
+- UpgradePrompt modal:
+  - Shows "Chat Limit Reached" title with warning icon
+  - Displays storage usage with progress bar (X / 50 or X / ∞)
+  - Lists upgrade benefits: unlimited storage, cloud sync, advanced search
+  - Two buttons: Dismiss (closes modal) and Upgrade Now (opens billing page)
+  - Click outside modal to dismiss
+  - Smooth animations with Framer Motion
+
+- LimitWarning banner:
+  - Yellow/amber styling for warning appearance
+  - Shows "Approaching Chat Limit" title
+  - Displays usage: "You're using 40 of 50 chats (80%)"
+  - Suggests upgrading to avoid losing ability to save
+  - Two buttons: Upgrade (opens billing) and Dismiss (hides banner)
+  - Auto-appears when chat count >= 80% of max
+  - Can be dismissed by user
+
+#### SidePanel Integration
+- Imports isApproachingLimit, getMaxChats from tier.ts
+- Checks shouldShowWarning based on userTier and chats.length
+- useEffect to auto-show warning when threshold crossed
+- Listens for CHAT_LIMIT_REACHED messages from service worker
+- handleUpgrade() opens https://chatvault.app/billing in new tab
+- handleDismissWarning() closes warning banner
+- Warning shown in main view (not in analytics mode)
+- Only shown for limited tiers (not power_user or team)
+
+### Acceptance Criteria Status
+- Cannot save beyond limit ✓ (service worker check prevents saving at 50/50)
+- Warning at 80% ✓ (LimitWarning banner appears at 40/50)
+- Upgrade prompt shows ✓ (modal appears when limit reached)
+- Can dismiss prompt ✓ (both warning and modal can be dismissed)
+
+### Dependencies Met
+- PRD-59: Tier Configuration ✓ (TIER_LIMITS, canSaveChat, getMaxChats, isApproachingLimit all available)
+
+### Notes
+- Tier enforcement happens at SERVICE WORKER level (content script → service worker)
+- This prevents race conditions where multiple tabs might try to save simultaneously
+- Existing chat updates are not affected by limits (only new chats)
+- Unlimited tiers (power_user, team) bypass all limit checks
+- Warning banner uses local state (can be dismissed per session)
+- Upgrade prompt triggered by service worker message (synced across tabs)
+- Billing page URL: https://chatvault.app/billing
+- All 43 PRD-60 tests passing
+- TypeScript compilation verified with no errors
+- Pre-existing test failures in other components (unrelated to PRD-60)

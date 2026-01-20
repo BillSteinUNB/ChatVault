@@ -13,14 +13,50 @@ import { TagFilter } from './TagFilter';
 import { ExportMenu } from './ExportMenu';
 import { SettingsPage } from './SettingsPage';
 import { AnalyticsView } from './AnalyticsView';
+import { UpgradePrompt, LimitWarning } from './UpgradePrompt';
+import { isApproachingLimit, getMaxChats } from '../lib/tier';
 
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const SidePanel: React.FC = () => {
-    const { chats, isLoading, activeFolder, activeTags, settingsOpen, setSettingsOpen, viewState, setViewMode } = useStore();
+    const { chats, isLoading, activeFolder, activeTags, settingsOpen, setSettingsOpen, viewState, setViewMode, userTier, showUpgradePrompt, setShowUpgradePrompt } = useStore();
     const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
     const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
+    const [showLimitWarning, setShowLimitWarning] = useState(false);
     const exportButtonRef = React.useRef<HTMLButtonElement>(null);
+
+    // PRD-60: Check if approaching limit (80%) and show warning
+    const maxChats = getMaxChats(userTier);
+    const shouldShowWarning = maxChats !== Infinity && isApproachingLimit(userTier, chats.length);
+
+    React.useEffect(() => {
+        if (shouldShowWarning && !showLimitWarning) {
+            setShowLimitWarning(true);
+        }
+    }, [shouldShowWarning, showLimitWarning]);
+
+    // PRD-60: Listen for limit reached messages from service worker
+    React.useEffect(() => {
+        const handleMessage = (message: any) => {
+            if (message.type === 'CHAT_LIMIT_REACHED') {
+                setShowUpgradePrompt(true);
+            }
+        };
+
+        chrome.runtime.onMessage.addListener(handleMessage);
+        return () => chrome.runtime.onMessage.removeListener(handleMessage);
+    }, []);
+
+    const handleUpgrade = () => {
+        // Open billing page or upgrade URL
+        chrome.tabs.create({ url: 'https://chatvault.app/billing' });
+        setShowUpgradePrompt(false);
+        setShowLimitWarning(false);
+    };
+
+    const handleDismissWarning = () => {
+        setShowLimitWarning(false);
+    };
 
     // Handle settings view
     if (settingsOpen) {
@@ -140,7 +176,19 @@ export const SidePanel: React.FC = () => {
                         </Button>
                     </div>
                 </header>
-                
+
+                {/* PRD-60: Limit Warning (80% threshold) */}
+                {viewState.mode !== 'analytics' && showLimitWarning && maxChats !== Infinity && (
+                    <div className="px-6 py-4">
+                        <LimitWarning
+                            chatCount={chats.length}
+                            maxChats={maxChats}
+                            onUpgrade={handleUpgrade}
+                            onDismiss={handleDismissWarning}
+                        />
+                    </div>
+                )}
+
                 {/* Dashboard Widgets */}
                 {viewState.mode !== 'analytics' && (
                     <div className="px-6 py-6 grid grid-cols-3 gap-4">
@@ -224,6 +272,15 @@ export const SidePanel: React.FC = () => {
             <CreateFolderModal
                 isOpen={isCreateFolderModalOpen}
                 onClose={() => setIsCreateFolderModalOpen(false)}
+            />
+
+            {/* PRD-60: Upgrade Prompt Modal */}
+            <UpgradePrompt
+                isOpen={showUpgradePrompt}
+                onClose={() => setShowUpgradePrompt(false)}
+                onUpgrade={handleUpgrade}
+                chatCount={chats.length}
+                maxChats={maxChats}
             />
         </div>
     );

@@ -3,6 +3,7 @@ import { Chat, Folder, Tag, Platform, PersistedChat, STORAGE_KEYS, Settings, DEF
 import { persistedChatsToChats } from './utils';
 import { SearchIndexEntry, buildSearchIndex, searchChats } from './search';
 import { User } from '@supabase/supabase-js';
+import { canSaveChat, getUsagePercentage, isApproachingLimit, Tier } from './tier';
 
 
 interface Store {
@@ -18,6 +19,8 @@ interface Store {
   searchIndex: SearchIndexEntry[];
   focusSearchTrigger: number;
   user: User | null;
+  userTier: Tier;
+  showUpgradePrompt: boolean;
   setSearchQuery: (query: string) => void;
   searchChats: () => string[];
   activeFolder: string | null;
@@ -46,6 +49,8 @@ interface Store {
   setSettingsOpen: (open: boolean) => void;
   setSyncState: (updates: Partial<SyncState>) => void;
   setUser: (user: User | null) => void;
+  setUserTier: (tier: Tier) => void;
+  setShowUpgradePrompt: (show: boolean) => void;
   focusSearch: () => void;
 }
 
@@ -226,6 +231,8 @@ export const useStore = create<Store>((set, get) => {
     searchIndex: [],
     focusSearchTrigger: 0,
     user: null,
+    userTier: 'hobbyist',
+    showUpgradePrompt: false,
     setSearchQuery: (query) => set({ searchQuery: query }),
     searchChats: () => {
       const { searchQuery, searchIndex } = get();
@@ -461,6 +468,8 @@ export const useStore = create<Store>((set, get) => {
     setSettingsOpen: (open) => set({ settingsOpen: open }),
     setSyncState: (updates) => set(state => ({ syncState: { ...state.syncState, ...updates } })),
     setUser: (user) => set({ user }),
+    setUserTier: (tier) => set({ userTier: tier }),
+    setShowUpgradePrompt: (show) => set({ showUpgradePrompt: show }),
     focusSearch: () => set(state => ({ focusSearchTrigger: state.focusSearchTrigger + 1 })),
   };
 });

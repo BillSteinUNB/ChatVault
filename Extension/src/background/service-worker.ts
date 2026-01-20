@@ -3,6 +3,30 @@
 import { PersistedChat, STORAGE_KEYS, SaveChatPayload, ExtensionMessage } from '../shared/types';
 import { supabase } from '../shared/lib/supabase';
 import { fullSync } from '../shared/lib/sync';
+import { getMaxChats, Tier } from '../shared/lib/tier';
+
+/**
+ * Get user tier from user metadata or default to hobbyist
+ */
+async function getUserTier(): Promise<Tier> {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) {
+      return 'hobbyist';
+    }
+
+    // Check user metadata for tier
+    const userTier = session.user.user_metadata?.tier as Tier;
+    if (userTier && ['hobbyist', 'power_user', 'team'].includes(userTier)) {
+      return userTier;
+    }
+
+    return 'hobbyist';
+  } catch (error) {
+    console.error('[ChatVault] Error getting user tier:', error);
+    return 'hobbyist';
+  }
+}
 
 /**
  * Generate a unique ID from URL (simple hash for deduplication)
@@ -21,12 +45,40 @@ function generateChatId(url: string): string {
  * Handle SAVE_CHAT message from content scripts
  * Transforms ScrapedMessage[] to PersistedChat and stores in chrome.storage.local
  */
-async function handleSaveChatInternal(payload: SaveChatPayload): Promise<{ success: boolean; error?: string; chatId?: string }> {
+async function handleSaveChatInternal(payload: SaveChatPayload): Promise<{ success: boolean; error?: string; chatId?: string; limitReached?: boolean }> {
   console.log('[ChatVault] Received SAVE_CHAT:', payload.platform, payload.title);
 
   try {
     const chatId = generateChatId(payload.url);
     const now = Date.now();
+
+    // Read existing chats from storage
+    const result = await chrome.storage.local.get(STORAGE_KEYS.CHATS);
+    const existingChats: PersistedChat[] = (result[STORAGE_KEYS.CHATS] as PersistedChat[] | undefined) ?? [];
+
+    // Check for duplicate by URL (chatId is derived from URL)
+    const existingIndex = existingChats.findIndex(c => c.id === chatId);
+
+    // PRD-60: Check tier limits for new chats (not updates)
+    if (existingIndex === -1) {
+      const tier = await getUserTier();
+      const maxChats = getMaxChats(tier);
+
+      if (maxChats !== Infinity && existingChats.length >= maxChats) {
+        console.log('[ChatVault] Chat limit reached:', existingChats.length, '/', maxChats);
+
+        // Send message to all extension contexts to show upgrade prompt
+        chrome.runtime.sendMessage({ type: 'CHAT_LIMIT_REACHED' }).catch(() => {
+          // Ignore errors if no receivers are listening
+        });
+
+        return {
+          success: false,
+          error: `You've reached your chat limit (${maxChats} chats). Please upgrade to save more chats.`,
+          limitReached: true
+        };
+      }
+    }
 
     // Create PersistedChat object (minimal data for Phase 3 - full messages in Phase 4)
     const persistedChat: PersistedChat = {
@@ -41,13 +93,6 @@ async function handleSaveChatInternal(payload: SaveChatPayload): Promise<{ succe
       tags: [],
       folderId: undefined,
     };
-
-    // Read existing chats from storage
-    const result = await chrome.storage.local.get(STORAGE_KEYS.CHATS);
-    const existingChats: PersistedChat[] = (result[STORAGE_KEYS.CHATS] as PersistedChat[] | undefined) ?? [];
-
-    // Check for duplicate by URL (chatId is derived from URL)
-    const existingIndex = existingChats.findIndex(c => c.id === chatId);
 
     let updatedChats: PersistedChat[];
     if (existingIndex !== -1) {
