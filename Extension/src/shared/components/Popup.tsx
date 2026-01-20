@@ -8,6 +8,7 @@ import { Settings, ExternalLink, Search, Loader2, MessageSquare } from 'lucide-r
 import { Button } from './ui/Button';
 import { SettingsPage } from './SettingsPage';
 import { Tooltip } from './ui/Tooltip';
+import { ErrorToast } from './ErrorToast';
 
 export const Popup: React.FC = () => {
   const { chats, folders, searchQuery, activeFilter, isLoading, settingsOpen, setSettingsOpen } = useStore();
@@ -149,6 +150,9 @@ export const Popup: React.FC = () => {
             )}
          </div>
       </div>
+
+      {/* PRD-64: Error Toast */}
+      <ErrorToast position="bottom" />
     </div>
   );
 };

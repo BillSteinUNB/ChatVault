@@ -15,6 +15,7 @@ import { SettingsPage } from './SettingsPage';
 import { AnalyticsView } from './AnalyticsView';
 import { UpgradePrompt, LimitWarning } from './UpgradePrompt';
 import { UsageMeter } from './UsageMeter';
+import { ErrorToast } from './ErrorToast';
 import { isApproachingLimit, getMaxChats } from '../lib/tier';
 
 import { motion, AnimatePresence } from 'framer-motion';
@@ -296,6 +297,9 @@ export const SidePanel: React.FC = () => {
                 chatCount={chats.length}
                 maxChats={maxChats}
             />
+
+            {/* PRD-64: Error Toast */}
+            <ErrorToast position="bottom" />
         </div>
     );
 };

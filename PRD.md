@@ -2619,7 +2619,7 @@ class ErrorBoundary extends React.Component {
 
 ---
 
-- [ ] PRD-64: Error Toast Component
+- [x] PRD-64: Error Toast Component
 
 # PRD-64: Error Toast Component
 

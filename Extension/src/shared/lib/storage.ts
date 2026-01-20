@@ -4,6 +4,7 @@ import { persistedChatsToChats } from './utils';
 import { SearchIndexEntry, buildSearchIndex, searchChats } from './search';
 import { User } from '@supabase/supabase-js';
 import { canSaveChat, getUsagePercentage, isApproachingLimit, Tier } from './tier';
+import { AppError } from './errors';
 
 
 interface Store {
@@ -21,6 +22,9 @@ interface Store {
   user: User | null;
   userTier: Tier;
   showUpgradePrompt: boolean;
+  error: AppError | null;
+  setError: (error: AppError | null) => void;
+  clearError: () => void;
   setSearchQuery: (query: string) => void;
   searchChats: () => string[];
   activeFolder: string | null;
@@ -233,6 +237,9 @@ export const useStore = create<Store>((set, get) => {
     user: null,
     userTier: 'hobbyist',
     showUpgradePrompt: false,
+    error: null,
+    setError: (error) => set({ error }),
+    clearError: () => set({ error: null }),
     setSearchQuery: (query) => set({ searchQuery: query }),
     searchChats: () => {
       const { searchQuery, searchIndex } = get();

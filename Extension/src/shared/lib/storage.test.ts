@@ -216,4 +216,92 @@ describe('PRD-60: Chat Limit Enforcement', () => {
       expect(tierModule.getRemainingChats('team', 100)).toBe(null);
     });
   });
+
+  describe('PRD-64: Error State Management', () => {
+    it('should have error state in store', () => {
+      const { result } = renderHook(() => useStore());
+      expect(result.current.error).toBeDefined();
+    });
+
+    it('should default error to null', () => {
+      const { result } = renderHook(() => useStore());
+      expect(result.current.error).toBeNull();
+    });
+
+    it('should have setError action', () => {
+      const { result } = renderHook(() => useStore());
+      expect(result.current.setError).toBeDefined();
+      expect(typeof result.current.setError).toBe('function');
+    });
+
+    it('should have clearError action', () => {
+      const { result } = renderHook(() => useStore());
+      expect(result.current.clearError).toBeDefined();
+      expect(typeof result.current.clearError).toBe('function');
+    });
+
+    it('should set error when setError is called', () => {
+      const { result } = renderHook(() => useStore());
+      const mockError = {
+        code: 'NETWORK_ERROR' as const,
+        message: 'Network error',
+        userMessage: 'Cannot connect',
+        recoverable: true,
+      };
+
+      act(() => {
+        result.current.setError(mockError);
+      });
+
+      expect(result.current.error).toEqual(mockError);
+    });
+
+    it('should clear error when clearError is called', () => {
+      const { result } = renderHook(() => useStore());
+      const mockError = {
+        code: 'NETWORK_ERROR' as const,
+        message: 'Network error',
+        userMessage: 'Cannot connect',
+        recoverable: true,
+      };
+
+      // Set error first
+      act(() => {
+        result.current.setError(mockError);
+      });
+      expect(result.current.error).toEqual(mockError);
+
+      // Clear error
+      act(() => {
+        result.current.clearError();
+      });
+      expect(result.current.error).toBeNull();
+    });
+
+    it('should update error state when setError is called multiple times', () => {
+      const { result } = renderHook(() => useStore());
+      const error1 = {
+        code: 'NETWORK_ERROR' as const,
+        message: 'Network error',
+        userMessage: 'Cannot connect',
+        recoverable: true,
+      };
+      const error2 = {
+        code: 'AUTH_ERROR' as const,
+        message: 'Auth error',
+        userMessage: 'Authentication failed',
+        recoverable: false,
+      };
+
+      act(() => {
+        result.current.setError(error1);
+      });
+      expect(result.current.error).toEqual(error1);
+
+      act(() => {
+        result.current.setError(error2);
+      });
+      expect(result.current.error).toEqual(error2);
+    });
+  });
 });
